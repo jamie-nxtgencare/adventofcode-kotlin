@@ -4,11 +4,15 @@ class DayTwo(file: String) {
     private val passwordAndRules = getPasswordAndRules(file)
 
    fun part1(): Int {
-        return passwordAndRules.filter { it?.isValid() ?: false }.count()
+       return countValidPasswords { it?.isValid() }
     }
 
     fun part2(): Int {
-        return passwordAndRules.filter { it?.isValid2() ?: false }.count()
+        return countValidPasswords { it?.isValid2() }
+    }
+
+    private fun countValidPasswords(f: (r: PasswordAndRule?) -> Boolean?): Int {
+        return passwordAndRules.filter { f(it) ?: false }.count()
     }
 
     private fun getPasswordAndRules(file: String): List<PasswordAndRule?> {
