@@ -12,7 +12,7 @@ class DayTwo(file: String) {
     }
 
     private fun getPasswordAndRules(file: String): List<PasswordAndRule?> {
-        val rule = "(\\d+)-(\\d+) (.): (.*)".toRegex()
+        val rule = "(.+)-(.+) (.): (.*)".toRegex()
         return getLines(file).map {
             var passwordAndRule : PasswordAndRule? = null
             val matches = rule.findAll(it)
