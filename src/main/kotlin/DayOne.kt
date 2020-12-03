@@ -1,7 +1,7 @@
-class DayOne(file: String) {
+class DayOne(file: String) : Project {
     private val map = getMap(file)
 
-    fun part1(): Int {
+    override fun part1(): Any {
         for (entry in map) {
             val a = entry.key
             val b = 2020 - a
@@ -13,7 +13,7 @@ class DayOne(file: String) {
         return -1
     }
 
-    fun part2(): Int {
+    override fun part2(): Any {
         for (e1 in map) {
             for (e2 in map) {
                 val a = e1.key
