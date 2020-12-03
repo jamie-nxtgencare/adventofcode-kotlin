@@ -1,23 +1,21 @@
 import java.io.File
+import java.lang.Integer.parseInt
 
 fun main(args: Array<String>) {
-    if (args[0] == "1") {
-        val sample = DayOne("day1.sample-input")
-        println(sample.part1())
-        println(sample.part2())
 
-        val input = DayOne("day1.input")
-        println(input.part1())
-        println(input.part2())
-    } else if (args[0] == "2") {
-        val sample = DayTwo("day2.sample-input")
-        println(sample.part1())
-        println(sample.part2())
+    val number = parseInt(args[0])
+    val constructor = Day.byNumber(number).clazz.getDeclaredConstructor(String::class.java)
+    constructor.newInstance("day%d.sample-input".format(number)).run()
+    constructor.newInstance("day%d.input".format(number)).run()
 
-        val input = DayTwo("day2.input")
-        println(input.part1())
-        println(input.part2())
-    }
+}
+
+enum class Day(val arg : Int, val clazz : Class<out Project>) {
+    ONE(1, DayOne::class.java),
+    TWO(2, DayTwo::class.java),
+    THREE(3, DayThree::class.java);
+
+    companion object { fun byNumber(number: Int) : Day { return values().findLast { it.arg == number } ?: ONE } }
 }
 
 fun getLines(file: String) : List<String> {

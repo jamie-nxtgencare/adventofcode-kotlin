@@ -1,13 +1,13 @@
 import java.lang.Integer.parseInt
 
-class DayTwo(file: String) {
+class DayTwo(file: String) : Project {
     private val passwordAndRules = getPasswordAndRules(file)
 
-   fun part1(): Int {
+    override fun part1(): Any {
        return countValidPasswords { it?.isValid() }
     }
 
-    fun part2(): Int {
+    override fun part2(): Any {
         return countValidPasswords { it?.isValid2() }
     }
 
@@ -40,6 +40,5 @@ class DayTwo(file: String) {
             val bOk = password[arg2 - 1] == letter[0]
             return (aOk || bOk) && aOk != bOk
         }
-
     }
 }
