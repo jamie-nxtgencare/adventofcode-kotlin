@@ -1,6 +1,3 @@
-import java.lang.Integer.parseInt
-import java.util.function.Predicate
-
 class DayFour(file: String) : Project {
     private val passports = getPassports(file)
 
