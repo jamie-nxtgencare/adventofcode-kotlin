@@ -13,7 +13,8 @@ fun main(args: Array<String>) {
 enum class Day(val arg : Int, val clazz : Class<out Project>) {
     ONE(1, DayOne::class.java),
     TWO(2, DayTwo::class.java),
-    THREE(3, DayThree::class.java);
+    THREE(3, DayThree::class.java),
+    FOUR(4, DayFour::class.java);
 
     companion object { fun byNumber(number: Int) : Day { return values().findLast { it.arg == number } ?: ONE } }
 }
