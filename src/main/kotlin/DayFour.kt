@@ -45,7 +45,7 @@ class DayFour(file: String) : Project {
                 "byr" to { t: String -> t.toIntOrNull() ?: -1 in 1920..2002 },
                 "iyr" to { t: String -> t.toIntOrNull() ?: -1 in 2010..2020 },
                 "eyr" to { t: String -> t.toIntOrNull() ?: -1 in 2020..2030 },
-                "hgt" to { t: String -> validHeight(t) }, // TODO: fix ranges
+                "hgt" to { t: String -> validHeight(t) },
                 "hcl" to { t: String -> t.matches("#[0-9a-f]{6}".toRegex()) },
                 "ecl" to { t: String -> EyeColors.contains(t) },
                 "pid" to { t: String -> t.matches("[\\d]{9}".toRegex()) }
