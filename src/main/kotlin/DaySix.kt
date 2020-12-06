@@ -2,19 +2,7 @@ class DaySix(file: String) : Project {
     private val customsForms : List<CustomsFormGroup> = getCustomsForms(file)
 
     private fun getCustomsForms(file: String): List<CustomsFormGroup> {
-        val output = ArrayList<CustomsFormGroup>()
-        var group = ArrayList<CustomsForm>()
-        getLines(file).forEach {
-            if (it.isBlank()) {
-                output.add(CustomsFormGroup(group))
-                group = ArrayList()
-            } else {
-                group.add(CustomsForm(it))
-            }
-        }
-        output.add(CustomsFormGroup(group))
-
-        return output
+        return whitelineSeperatedGrouper(file, { CustomsFormGroup(it) }, { CustomsForm(it.toCharArray().map { it2 -> it2 to true }.toMap()) })
     }
 
     override fun part1(): Int {
@@ -27,7 +15,7 @@ class DaySix(file: String) : Project {
 }
 
 class CustomsFormGroup(private val forms: List<CustomsForm>) {
-    private val uniqueAnswers = forms.fold(emptySet<String>(), {form, curr -> form.union(curr.answers.keys) })
+    private val uniqueAnswers = forms.fold(emptySet<Char>(), {form, curr -> form.union(curr.answers.keys) })
 
     fun countAnswers(): Int {
         return uniqueAnswers.size
@@ -38,6 +26,4 @@ class CustomsFormGroup(private val forms: List<CustomsForm>) {
     }
 }
 
-class CustomsForm(val answerStr: String = "") {
-    val answers = answerStr.split("").filter{ it != "" }.map { it to true }.toMap()
-}
+class CustomsForm(val answers: Map<Char, Boolean>)

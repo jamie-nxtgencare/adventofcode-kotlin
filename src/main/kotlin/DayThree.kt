@@ -1,9 +1,5 @@
 class DayThree(file: String) : Project {
-    private val grid = getGrid(file)
-
-    private fun getGrid(file: String): Array<Array<Boolean>> {
-        return getLines(file).map { it.split("").filter { it2 -> it2 != "" }.map { it3 -> it3 == "#" } .toTypedArray() }.toTypedArray()
-    }
+    private val grid = mapLettersPerLines(file) { it.map { it3 -> it3 == '#' }.toTypedArray() }.toTypedArray()
 
     override fun part1(): Int {
         return traverse(3)

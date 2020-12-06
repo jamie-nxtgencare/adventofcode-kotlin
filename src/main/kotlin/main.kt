@@ -1,4 +1,3 @@
-import java.io.File
 import java.lang.Integer.parseInt
 
 fun main(args: Array<String>) {
@@ -47,8 +46,4 @@ enum class Day(val arg : Int) {
     TWENTYFIVE(25);
 
     companion object { fun byNumber(number: Int) : Day { return values().findLast { it.arg == number } ?: ONE } }
-}
-
-fun getLines(file: String) : List<String> {
-    return File({}.javaClass.getResource(file).file).readLines()
 }

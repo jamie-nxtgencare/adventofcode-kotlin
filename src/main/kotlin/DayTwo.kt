@@ -17,7 +17,7 @@ class DayTwo(file: String) : Project {
 
     private fun getPasswordAndRules(file: String): List<PasswordAndRule?> {
         val rule = "(.+)-(.+) (.): (.*)".toRegex()
-        return getLines(file).map {
+        return mapFileLines(file) {
             var passwordAndRule : PasswordAndRule? = null
             val matches = rule.findAll(it)
             matches.forEach { matchResult -> passwordAndRule = PasswordAndRule(
