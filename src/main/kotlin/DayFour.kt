@@ -2,19 +2,7 @@ class DayFour(file: String) : Project {
     private val passports = getPassports(file)
 
     private fun getPassports(file: String): List<Passport> {
-        var s = ""
-        val output = ArrayList<Passport>()
-        getLines(file).forEach {
-            if (it.isBlank()) {
-                output.add(Passport(s))
-                s = ""
-            } else {
-                s += "$it "
-            }
-        }
-        output.add(Passport(s))
-
-        return output
+        return whitelineSeperatedGrouper(file, { Passport(it) }, { it })
     }
 
     override fun part1(): Int {
@@ -25,8 +13,8 @@ class DayFour(file: String) : Project {
         return passports.filter { it.isValid2() }.size
     }
 
-    class Passport(arg1: String) {
-        private val fields = setFields(arg1)
+    class Passport(arg1: List<String>) {
+        private val fields = setFields(arg1.joinToString(" "))
         companion object Constants {
             private val EyeColors = listOf(
                 "amb",

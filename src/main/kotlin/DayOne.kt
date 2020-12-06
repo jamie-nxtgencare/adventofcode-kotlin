@@ -1,5 +1,5 @@
 class DayOne(file: String) : Project {
-    private val map = getMap(file)
+    private val map = getIntLinesToExistsBoolean(file)
 
     override fun part1(): Any {
         for (entry in map) {
@@ -26,9 +26,5 @@ class DayOne(file: String) : Project {
         }
 
         return -1
-    }
-
-    private fun getMap(file: String): Map<Int, Int> {
-        return getLines(file).map { l -> Integer.parseInt(l) to 1 }.toMap()
     }
 }
