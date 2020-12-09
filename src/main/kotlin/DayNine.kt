@@ -3,14 +3,10 @@ import java.math.BigInteger
 class DayNine(file: String) : Project {
     private val window = if (file.contains("sample")) 5 else 25
     private val nums = mapFileLines(file) { it.toBigInteger() }
+    private val numWithoutSum = getNumWithoutSum()
 
     override fun part1(): BigInteger {
-        for (i in window+1 until nums.size) {
-            if (!hasSum(i, window)) {
-                return nums[i]
-            }
-        }
-        return BigInteger.valueOf(-1)
+        return numWithoutSum
     }
 
     override fun part2(): BigInteger {
@@ -24,6 +20,15 @@ class DayNine(file: String) : Project {
             }
         }
 
+        return BigInteger.valueOf(-1)
+    }
+
+    private fun getNumWithoutSum(): BigInteger {
+        for (i in window+1 until nums.size) {
+            if (!hasSum(i, window)) {
+                return nums[i]
+            }
+        }
         return BigInteger.valueOf(-1)
     }
 
@@ -46,11 +51,11 @@ class DayNine(file: String) : Project {
         return out
     }
 
-    fun hasSum(i: Int, window: Int): Boolean {
+    private fun hasSum(i: Int, window: Int): Boolean {
         return getSums(i-1-window until i).contains(nums[i])
     }
 
-    fun getSums(range: IntRange): Set<BigInteger> {
+    private fun getSums(range: IntRange): Set<BigInteger> {
         val out = HashSet<BigInteger>()
 
         range.forEach {

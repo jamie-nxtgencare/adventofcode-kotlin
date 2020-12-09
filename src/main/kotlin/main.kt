@@ -1,16 +1,20 @@
 import java.lang.Integer.parseInt
+import java.time.LocalDateTime
 
 fun main(args: Array<String>) {
-
     val number = parseInt(args[0])
     val day = Day.byNumber(number)
     val dayStr = getDayStr(day)
     @Suppress("UNCHECKED_CAST") val project: Class<out Project> = Class.forName("Day$dayStr") as Class<Project>
+
     val constructor = project.getDeclaredConstructor(String::class.java)
 
-    constructor.newInstance("day%d.sample-input".format(number)).run()
-    constructor.newInstance("day%d.input".format(number)).run()
-
+    println("===Sample===")
+    var start = LocalDateTime.now()
+    constructor.newInstance("day%d.sample-input".format(number)).run(start)
+    println("===Actual===")
+    start = LocalDateTime.now()
+    constructor.newInstance("day%d.input".format(number)).run(start)
 }
 
 fun getDayStr(day: Day): String {
