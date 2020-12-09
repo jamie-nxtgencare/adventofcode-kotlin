@@ -1,5 +1,6 @@
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.math.BigInteger
 
 class Testing {
     @Test
@@ -82,15 +83,25 @@ class Testing {
         test(8, 1818, 631)
     }
 
-    private fun testSample(number: Int, part1: Int, part2: Int) {
+    @Test
+    fun day9Sample() {
+        testSample(9, BigInteger.valueOf(127), BigInteger.valueOf(62))
+    }
+
+    @Test
+    fun day9() {
+        test(9, BigInteger.valueOf(15353384), BigInteger.valueOf(2466556))
+    }
+
+    private fun testSample(number: Int, part1: Any, part2: Any) {
         baseTest("day%d.sample-input".format(number), number, part1, part2)
     }
 
-    private fun test(number: Int, part1: Int, part2: Int) {
+    private fun test(number: Int, part1: Any, part2: Any) {
         baseTest("day%d.input".format(number), number, part1, part2)
     }
 
-    private fun baseTest(file: String, number: Int, part1: Int, part2: Int) {
+    private fun baseTest(file: String, number: Int, part1: Any, part2: Any) {
         val day = Day.byNumber(number)
         val dayStr = getDayStr(day)
         @Suppress("UNCHECKED_CAST") val projectClass: Class<out Project> = Class.forName("Day$dayStr") as Class<Project>
