@@ -95,7 +95,7 @@ class Testing {
 
     @Test
     fun day10Sample() {
-        testSample(10, 220, 19208)
+        testSample(10, 220, BigInteger.valueOf(19208))
     }
 
     @Test
