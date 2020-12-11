@@ -103,6 +103,16 @@ class Testing {
         test(10, 2484, BigInteger.valueOf(15790581481472))
     }
 
+    @Test
+    fun day11Sample() {
+        testSample(11, 37, 26)
+    }
+
+    @Test
+    fun day11() {
+        test(11, 2164, 1974)
+    }
+
     private fun testSample(number: Int, part1: Any, part2: Any) {
         baseTest("day%d.sample-input".format(number), number, part1, part2)
     }
