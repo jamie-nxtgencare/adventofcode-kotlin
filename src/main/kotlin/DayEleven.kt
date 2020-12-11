@@ -1,6 +1,6 @@
 class DayEleven(file: String) : Project {
     private val debug = false
-    private var originalGrid = mapLettersPerLines(file) { it.map { it2 -> Seat.fromLetter(it2) }.toMutableList() }.toMutableList()
+    private var originalGrid = mapLettersPerLines(file) { it.map { it2 -> Seat.fromLetter(it2) }.toTypedArray() }.toTypedArray()
     private var grid = clone(originalGrid)
 
     override fun part1(): Any {
@@ -45,7 +45,7 @@ class DayEleven(file: String) : Project {
             }
         }
 
-        val changed = grid != grid2
+        val changed = !grid.contentDeepEquals(grid2)
         grid = grid2
 
         return changed
@@ -119,18 +119,8 @@ class DayEleven(file: String) : Project {
         return space
     }
 
-    private fun clone(toCopy: MutableList<MutableList<Seat>>): MutableList<MutableList<Seat>> {
-        val copy: MutableList<MutableList<Seat>> = ArrayList()
-
-        toCopy.forEach {
-            val list = ArrayList<Seat>()
-            it.forEach { it2 ->
-                list.add(it2)
-            }
-            copy.add(list)
-        }
-
-        return copy
+    private fun clone(toCopy: Array<Array<Seat>>): Array<Array<Seat>> {
+       return toCopy.copyOf().map { it.copyOf() }.toTypedArray()
     }
 
     fun printGrid() {
@@ -142,12 +132,10 @@ class DayEleven(file: String) : Project {
         }
     }
 
-    enum class Seat(symbol: Char) {
+    enum class Seat(val symbol: Char) {
         OCCUPIED('#'),
         EMPTY('L'),
         FLOOR('.');
-
-        val symbol: Char = symbol
 
         companion object {
             fun fromLetter(letter: Char) : Seat {
