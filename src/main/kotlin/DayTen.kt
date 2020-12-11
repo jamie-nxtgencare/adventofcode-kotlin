@@ -23,13 +23,13 @@ class DayTen(file: String) : Project {
             return memo[i] ?: BigInteger.valueOf(-1)
         }
 
-        if (i+1 <= input.size - 1 && input[i] + 3 >= input[i+1]) {
+        if (i+1 < input.size && input[i] + 3 >= input[i+1]) {
             count += traverse(i+1)
         }
-        if (i+2 <= input.size - 1 && input[i] + 3 >= input[i+2]) {
+        if (i+2 < input.size && input[i] + 3 >= input[i+2]) {
             count += traverse(i+2)
         }
-        if (i+3 <= input.size - 1 && input[i] + 3 >= input[i+3]) {
+        if (i+3 < input.size && input[i] + 3 >= input[i+3]) {
             count += traverse(i+3)
         }
 
