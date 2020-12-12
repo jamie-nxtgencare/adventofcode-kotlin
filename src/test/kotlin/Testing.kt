@@ -120,7 +120,7 @@ class Testing {
 
     @Test
     fun day12() {
-        test(12, 923, -1)
+        test(12, 923, 24769)
     }
 
     private fun testSample(number: Int, part1: Any, part2: Any) {
