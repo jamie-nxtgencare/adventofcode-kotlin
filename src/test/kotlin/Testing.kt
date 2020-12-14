@@ -125,12 +125,22 @@ class Testing {
 
     @Test
     fun day13Sample() {
-        testSample(13, 295, 1068781L)
+        testSample(13, 295L, 1068781L)
     }
 
     @Test
     fun day13() {
-        test(13, 2305, 552612234243498L)
+        test(13, 2305L, 552612234243498L)
+    }
+
+    @Test
+    fun day14Sample() {
+        testSample(14, 51L, 208L)
+    }
+
+    @Test
+    fun day14() {
+        test(14, 10717676595607L, 3974538275659L)
     }
   
     private fun testSample(number: Int, part1: Any, part2: Any) {
