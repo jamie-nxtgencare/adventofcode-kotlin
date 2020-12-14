@@ -130,9 +130,9 @@ class Testing {
 
     @Test
     fun day13() {
-        test(13, 2305, -1)
+        test(13, 2305, 552612234243498L)
     }
-
+  
     private fun testSample(number: Int, part1: Any, part2: Any) {
         baseTest("day%d.sample-input".format(number), number, part1, part2)
     }
