@@ -3,6 +3,14 @@ class DayFifteen(file: String): Project {
     val input = getLines(file)[0].split(",").map { it.toInt() }
 
     override fun part1(): Any {
+        return speak(2020)
+    }
+
+    override fun part2(): Any {
+        return speak(30000000)
+    }
+
+    private fun speak(number: Int): Int {
         val lastSeenMap = HashMap<Int, Int>()
 
         for (i in 0..input.size-2) { lastSeenMap[input[i]] = i }
@@ -10,7 +18,7 @@ class DayFifteen(file: String): Project {
 
         var i = input.size - 1
         var j = i + 2
-        while (j <= 2020) { /* +3 = 1 for 0 index, 1 for reading "last spoken" each i, 1 for "until" */
+        while (j <= number) { /* +3 = 1 for 0 index, 1 for reading "last spoken" each i, 1 for "until" */
 
             when (val maybeLastNum = lastSeenMap[lastNum]) {
                 null -> {
@@ -32,9 +40,5 @@ class DayFifteen(file: String): Project {
         }
 
         return lastNum
-    }
-
-    override fun part2(): Any {
-        return -1
     }
 }
