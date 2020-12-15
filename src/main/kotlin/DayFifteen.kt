@@ -19,17 +19,12 @@ class DayFifteen(file: String): Project {
         var i = input.size - 1
         var j = i + 2
         while (j <= number) { /* +3 = 1 for 0 index, 1 for reading "last spoken" each i, 1 for "until" */
-
-            when (val maybeLastNum = lastSeenMap[lastNum]) {
-                null -> {
-                    lastSeenMap[lastNum] = i
-                    lastNum = 0
-                }
-                else -> {
-                    lastSeenMap[lastNum] = i
-                    lastNum = i - maybeLastNum
-                }
+            val oldLast = lastNum
+            lastNum = when (val maybeLastNum = lastSeenMap[lastNum]) {
+                null -> 0
+                else -> i - maybeLastNum
             }
+            lastSeenMap[oldLast] = i
 
             if (debug) {
                 println("$j: $lastNum")
