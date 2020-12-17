@@ -163,6 +163,16 @@ class Testing {
         test(16, 29019, 517827547723L)
     }
 
+    @Test
+    fun day17Sample() {
+        testSample(17, 112, -1)
+    }
+
+    @Test
+    fun day17() {
+        test(17, 368, -1)
+    }
+
     private fun testSample(number: Int, part1: Any, part2: Any) {
         baseTest("day%d.sample-input".format(number), number, part1, part2)
     }
