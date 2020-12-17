@@ -165,7 +165,7 @@ class Testing {
 
     @Test
     fun day17Sample() {
-        testSample(17, 112, -1)
+        testSample(17, 112, 848)
     }
 
     @Test
