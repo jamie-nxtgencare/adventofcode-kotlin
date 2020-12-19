@@ -25,11 +25,25 @@ class DayNineteen(file: String): Project {
     }
 
     override fun part2(): Any {
-        return -1
+        rules[8] = Rule("8: 42 | 42 8", "(" + rules[42]?.toRegex(rules) + ")+")
+        rules[11] = Rule("11: 42 31 | 42 11 31", getGrossRepeatingBackreferenceRegex(rules[42]?.toRegex(rules), rules[31]?.toRegex(rules)))
+
+        val startingRule = rules[0]
+        val regex = ("^" + startingRule?.toRegex(rules) + "$").toRegex()
+        return messages.filter { it.matches(regex) }.size
+    }
+
+    private fun getGrossRepeatingBackreferenceRegex(regex1: String?, regex2: String?): String { // 277 = too low, //; 297 == too high
+        val out = ArrayList<String>()
+        for (i in 1..10) {
+            out.add("(($regex1){$i}($regex2){$i})")
+        }
+
+        return "(" + out.joinToString("|") + ")"
     }
 
 
-    class Rule(rule: String) {
+    class Rule(rule: String, val regex:String = "") {
 
         var index = 0
         private val ruleType = RuleType.fromRuleString(rule)
@@ -54,6 +68,10 @@ class DayNineteen(file: String): Project {
         }
 
         fun toRegex(rules: Map<Int, Rule>): String? {
+            if (regex.isNotBlank()) {
+                return regex
+            }
+
             return when(ruleType) {
                 RuleType.LETTER_MATCH -> letter
                 RuleType.RULE_LIST -> subRules.joinToString("") { rules[it]?.toRegex(rules) ?: "" }
