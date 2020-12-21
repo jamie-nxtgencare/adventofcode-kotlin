@@ -203,6 +203,16 @@ class Testing {
         test(20, 29293767579581, 1989)
     }
 
+    @Test
+    fun day21Sample() {
+        testSample(21, 5, "mxmxvkd,sqjhc,fvjkl")
+    }
+
+    @Test
+    fun day21() {
+        test(21, 1685, "nhx,chbtp,kfxr,xzhxj,ntft,rrjb,xmhsbd,cqvc")
+    }
+
     private fun testSample(number: Int, part1: Any, part2: Any) {
         baseTest("day%d.sample-input".format(number), number, part1, part2)
     }
@@ -219,7 +229,7 @@ class Testing {
 
         val project = constructor.newInstance(file.format(number))
 
-        //assertEquals(project?.part1(), part1)
+        assertEquals(project?.part1(), part1)
         assertEquals(project?.part2(), part2)
     }
 }
