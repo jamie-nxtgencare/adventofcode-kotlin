@@ -213,9 +213,9 @@ class DayTwenty(file: String): Project {
         // Make a piece fit to the right
         var rightConnection: Piece? = orientAndFindRight(corner, connections)
 
-        if (rightConnection == null) {
-            corner.flip()
-            rightConnection = orientAndFindRight(corner, connections)!!
+        while (rightConnection == null) {
+            corner.rotate()
+            rightConnection = orientAndFindRight(corner, connections)
         }
 
         connections.remove(rightConnection)
