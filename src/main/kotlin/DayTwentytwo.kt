@@ -30,7 +30,7 @@ class DayTwentytwo(val file: String): Project {
             println("=== Game $gameNum ===")
         }
 
-        val gamesMap: HashMap<String, Int> = HashMap()
+        val gamesMap: HashMap<Int, Int> = HashMap()
         var instantWin = false
         var round = 1
 
@@ -72,8 +72,8 @@ class DayTwentytwo(val file: String): Project {
         }
     }
 
-    private fun determinePart2RoundWinner(roundsMap: HashMap<String, Int>, decks: List<Deck>, gameNum: Int, round: Int): Boolean {
-        val roundKey = decks[0].cards.joinToString("").plus("|" + decks[1].cards.joinToString(""))
+    private fun determinePart2RoundWinner(roundsMap: HashMap<Int, Int>, decks: List<Deck>, gameNum: Int, round: Int): Boolean {
+        val roundKey = decks[0].hashCode()+decks[1].hashCode()
 
         if (roundsMap.containsKey(roundKey)) {
             return true
@@ -147,5 +147,19 @@ class Deck() {
     constructor(deck: Deck, quantity: Int): this() {
         player = deck.player
         cards.addAll(deck.cards.subList(0, quantity))
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Deck) return false
+
+        if (player != other.player) return false
+        if (cards != other.cards) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return player + cards.fold(0, { it, it2 -> (it + it2) shl 2 })
     }
 }
