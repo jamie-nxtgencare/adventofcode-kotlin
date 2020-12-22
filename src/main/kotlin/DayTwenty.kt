@@ -208,42 +208,18 @@ class DayTwenty(file: String): Project {
         val corners = cornerEntries.map { it.key }
         val cornerEntry: MutableMap.MutableEntry<Piece, MutableList<Piece>> = cornerEntries.first()
         var corner = cornerEntry.key
-        var connections = cornerEntry.value
+        val connections = cornerEntry.value
 
         // Make a piece fit to the right
-        var rightConnection = connections.first()
+        var rightConnection: Piece? = orientAndFindRight(corner, connections)
 
-        out@ for (j in 0..1) {
-            for (i in 0..3) {
-                val orientedRightConnection = corner.fits(rightConnection)
-
-                if (orientedRightConnection != null && corner.getRight() == orientedRightConnection.getLeft()) {
-                    rightConnection = orientedRightConnection
-                    break@out
-                }
-                corner = corner.rotate()
-            }
-            corner = corner.rotate().flip()
+        if (rightConnection == null) {
+            corner.flip()
+            rightConnection = orientAndFindRight(corner, connections)!!
         }
 
-        // Make a piece fit to the right
-        var bottomConnection = connections[1]
-        var flip = false
-        out@ for (j in 0..1) {
-            for (i in 0..3) {
-                if (corner.getBottom() == bottomConnection.getTop()) {
-                    break@out
-                }
-                if (corner.getTop() == bottomConnection.getBottom()) {
-                    flip = true
-                    break@out
-                }
-                bottomConnection = bottomConnection.rotate()
-            }
-            bottomConnection = bottomConnection.rotate().flip()
-        }
-
-        if (flip) {
+        connections.remove(rightConnection)
+        if (orientAndFindDown(corner, connections) == null) {
             corner = corner.flip()
             rightConnection = rightConnection.flip()
         }
@@ -263,7 +239,7 @@ class DayTwenty(file: String): Project {
 
         while (piecesPlaced < pieces.size) {
             val last = next
-            next = orientAndFindRight(next, fitMap[next])
+            next = orientAndFindRight(next!!, fitMap[next])!!
 
             fitMap[last]?.remove(next)
             fitMap[next]?.remove(last)
@@ -277,7 +253,7 @@ class DayTwenty(file: String): Project {
                 val lastRowStart = rowStart
 
                 if (piecesPlaced < pieces.size) {
-                    rowStart = orientAndFindDown(rowStart, fitMap[rowStart])
+                    rowStart = orientAndFindDown(rowStart, fitMap[rowStart])!!
                     fitMap[rowStart]?.remove(lastRowStart)
                     fitMap[lastRowStart]?.remove(rowStart)
 
@@ -294,37 +270,11 @@ class DayTwenty(file: String): Project {
         return picture
     }
 
-    private fun orientAndFindDown(rowStart: Piece, connections: MutableList<Piece>?): Piece {
-        for (connection in connections!!) {
-            var workingConnection = connection
-            for (j in 0..1) {
-                for (i in 0..3) {
-                    if (rowStart.getBottom() == workingConnection.getTop()) {
-                        return workingConnection
-                    }
-                    workingConnection = workingConnection.rotate()
-                }
-                workingConnection = workingConnection.rotate().flip()
-            }
-        }
-
-        throw Exception("Ugh")
+    private fun orientAndFindDown(next: Piece, connections: MutableList<Piece>?): Piece? {
+        return connections?.map { next.fits(it) }?.firstOrNull { next.getBottom() == it?.getTop() }
     }
 
-    private fun orientAndFindRight(next: Piece, connections: MutableList<Piece>?): Piece {
-        for (connection in connections!!) {
-            var workingConnection = connection
-            for (j in 0..1) {
-                for (i in 0..3) {
-                    if (next.getRight() == workingConnection.getLeft()) {
-                        return workingConnection
-                    }
-                    workingConnection = workingConnection.rotate()
-                }
-                workingConnection = workingConnection.rotate().flip()
-            }
-        }
-
-        throw Exception("Ugh")
+    private fun orientAndFindRight(next: Piece, connections: MutableList<Piece>?): Piece? {
+        return connections?.map { next.fits(it) }?.firstOrNull { next.getRight() == it?.getLeft() }
     }
 }
