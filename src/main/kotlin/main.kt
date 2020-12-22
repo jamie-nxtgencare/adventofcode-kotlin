@@ -9,11 +9,11 @@ fun main(args: Array<String>) {
 
     val constructor = project.getDeclaredConstructor(String::class.java)
 
-    println("===Sample===")
+    /*println("===Sample===")*/
+    /*var start = LocalDateTime.now()
+    constructor.newInstance("day%d.sample-input".format(number)).run(start)*/
+    /*println("===Actual===")*/
     var start = LocalDateTime.now()
-    constructor.newInstance("day%d.sample-input".format(number)).run(start)
-    println("===Actual===")
-    start = LocalDateTime.now()
     constructor.newInstance("day%d.input".format(number)).run(start)
 }
 
