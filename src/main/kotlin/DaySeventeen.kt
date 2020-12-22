@@ -1,6 +1,6 @@
 class DaySeventeen(file: String) : Project {
     private val debug = false
-    private var size = 26
+    private var size = 25
 
     private var grid: Array<Array<Array<Cube?>>> = getEmptyGrid()
     private var originalGrid3D: Array<Array<Array<Cube?>>> = getEmptyGrid()
@@ -59,19 +59,20 @@ class DaySeventeen(file: String) : Project {
 
         for (i in 0 until count) {
             if (part == 1) {
-                update()
+                update(i+7)
             } else {
-                update2()
+                update2(i+7)
             }
         }
     }
 
-    private fun update() {
+    private fun update(i: Int) {
         val grid2 = clone(grid)
+        val range = size/2-i..size/2+i
 
-        grid.forEachIndexed { z, zit ->
-            zit.forEachIndexed { y, yit ->
-                yit.forEachIndexed { x, _ ->
+        for (z in range) {
+            for (y in range) {
+                for (x in range) {
                     grid2[z][y][x] = next(z, y, x)
                 }
             }
@@ -81,13 +82,14 @@ class DaySeventeen(file: String) : Project {
     }
 
 
-    private fun update2() {
+    private fun update2(i: Int) {
         val grid2 = clone2(grid4)
+        val range = size/2-i..size/2+i
 
-        grid4.forEachIndexed { w, wit ->
-            wit.forEachIndexed { z, zit ->
-                zit.forEachIndexed { y, yit ->
-                    yit.forEachIndexed { x, _ ->
+        for (w in range) {
+            for (z in range) {
+                for (y in range) {
+                    for (x in range) {
                         grid2[w][z][y][x] = next2(w, z, y, x)
                     }
                 }
@@ -222,20 +224,6 @@ class DaySeventeen(file: String) : Project {
 
     private fun clone2(toCopy: Array<Array<Array<Array<Cube?>>>>): Array<Array<Array<Array<Cube?>>>> {
         return toCopy.copyOf().map { it.copyOf().map { it2 -> it2.copyOf().map { it3 -> it3.copyOf() }.toTypedArray()}.toTypedArray()}.toTypedArray()
-    }
-
-    fun printGrid(i: Int) {
-        grid[i].forEachIndexed { y, it ->
-            print((y%10).toString() + " :")
-            it.forEach {it2 ->
-                print((it2?.symbol ?: '.'))
-            }
-            println()
-        }
-        println("----========-----------")
-        println("----========-----------")
-        println("----========-----------")
-
     }
 
     enum class Cube(val symbol: Char) {
