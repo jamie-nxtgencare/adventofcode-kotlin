@@ -1,5 +1,5 @@
 class DayTwenty(file: String): Project {
-    val pieces: List<Piece> = whitelineSeperatedGrouper(file, { Piece(it) }, { it.split("").subList(1, it.length + 1)})
+    private val pieces: List<Piece> = whitelineSeperatedGrouper(file, { Piece(it) }, { it.split("").subList(1, it.length + 1)})
 
     class Piece() {
         var number = 0L
@@ -94,13 +94,14 @@ class DayTwenty(file: String): Project {
             return Piece(number, clone(rows))
         }
 
+        @Suppress("UNCHECKED_CAST")
         private fun clone(toCopy: ArrayList<ArrayList<String>>): ArrayList<ArrayList<String>> {
             val clone: ArrayList<ArrayList<String>> = toCopy.clone() as ArrayList<ArrayList<String>>
             return clone.map { it.clone() as ArrayList<String>} as ArrayList<ArrayList<String>>
         }
 
         override fun toString(): String {
-            return "Tile $number:\n" + rows.map { it.joinToString("") }.joinToString("\n")
+            return "Tile $number:\n" + rows.joinToString("\n") { it.joinToString("") }
         }
 
         override fun equals(other: Any?): Boolean {
@@ -161,7 +162,6 @@ class DayTwenty(file: String): Project {
         val mon3 = ".#..#..#..#..#..#...".toRegex()
 
         var bigPiece = Piece(picture.map { it.split("").subList(1,it.length+1) })
-        var hasMonster = false
         var monsterCount = 0
 
         out@ for (a in 0..1) {
@@ -203,7 +203,7 @@ class DayTwenty(file: String): Project {
         return lines
     }
 
-    private fun getPicture(fitMap: MutableMap<Piece, MutableList<Piece>>): ArrayList<ArrayList<Piece>>? {
+    private fun getPicture(fitMap: MutableMap<Piece, MutableList<Piece>>): ArrayList<ArrayList<Piece>> {
         val cornerEntries: List<MutableMap.MutableEntry<Piece, MutableList<Piece>>> = fitMap.entries.filter { it.value.size == 2 }
         val corners = cornerEntries.map { it.key }
         val cornerEntry: MutableMap.MutableEntry<Piece, MutableList<Piece>> = cornerEntries.first()
