@@ -164,7 +164,7 @@ class DayTwenty(file: String): Project {
         var bigPiece = Piece(picture.map { it.split("").subList(1,it.length+1) })
         var monsterCount = 0
 
-        out@ for (a in 0..1) {
+        for (a in 0..1) {
             for (b in 0..3) {
                 for (i in 0..picture.size - 3) {
                     val line1 = bigPiece.rows[i].joinToString("")
