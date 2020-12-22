@@ -239,7 +239,7 @@ class Testing {
 
         val project = constructor.newInstance(file.format(number))
 
-        //assertEquals(project?.part1(), part1)
+        assertEquals(project?.part1(), part1)
         assertEquals(project?.part2(), part2)
     }
 }
