@@ -233,7 +233,6 @@ class Testing {
         test(23, 32897654, 186715244496)
     }
 
-
     @Test
     fun day24Sample() {
         testSample(24, 10, 2208)
@@ -242,6 +241,16 @@ class Testing {
     @Test
     fun day24() {
         test(24, 528, -1)
+    }
+
+    @Test
+    fun day25Sample() {
+        testSample(25, 14897079L, -1)
+    }
+
+    @Test
+    fun day25() {
+        test(25, -1, -1)
     }
 
     private fun testSample(number: Int, part1: Any, part2: Any) {
