@@ -250,7 +250,7 @@ class Testing {
 
     @Test
     fun day25() {
-        test(25, -1, -1)
+        test(25, 18293391L, -1)
     }
 
     private fun testSample(number: Int, part1: Any, part2: Any) {
