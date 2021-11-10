@@ -1,4 +1,4 @@
-class DayTen : Project {
+class DayTen(file: String) : Project {
     override fun part1(): Any {
         return -1
     }
