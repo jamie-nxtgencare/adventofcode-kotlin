@@ -240,7 +240,7 @@ class Testing {
 
     @Test
     fun day24() {
-        test(24, 528, -1)
+        test(24, 528, 4200)
     }
 
     @Test
