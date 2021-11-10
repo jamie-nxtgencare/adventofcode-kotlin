@@ -5,182 +5,182 @@ import java.math.BigInteger
 class Testing {
     @Test
     fun day1Sample() {
-        testSample(1, 514579, 241861950)
+        testSample(1, -1, -1)
     }
 
     @Test
     fun day1() {
-        test(1, 445536, 138688160)
+        test(1, -1, -1)
     }
 
     @Test
     fun day2Sample() {
-        testSample(2, 2, 1)
+        testSample(2, -1, -1)
     }
 
     @Test
     fun day2() {
-        test(2, 460, 251)
+        test(2, -1, -1)
     }
 
     @Test
     fun day3Sample() {
-        testSample(3, 7, 336)
+        testSample(3, -1, -1)
     }
 
     @Test
     fun day3() {
-        test(3, 220, 2138320800)
+        test(3, -1, -1)
     }
 
     @Test
     fun day4Sample() {
-        testSample(4, 2, 2)
+        testSample(4, -1, -1)
     }
 
     @Test
     fun day4() {
-        test(4, 245, 133)
+        test(4, -1, -1)
     }
 
     @Test
     fun day5Sample() {
-        testSample(5, 820, -1)
+        testSample(5, -1, -1)
     }
 
     @Test
     fun day5() {
-        test(5, 878, 504)
+        test(5, -1, -1)
     }
 
     @Test
     fun day6Sample() {
-        testSample(6, 11, 6)
+        testSample(6, -1, -1)
     }
 
     @Test
     fun day6() {
-        test(6, 6587, 3235)
+        test(6, -1, -1)
     }
 
     @Test
     fun day7Sample() {
-        testSample(7, 4, 32)
+        testSample(7, -1, -1)
     }
 
     @Test
     fun day7() {
-        test(7, 185, 89084)
+        test(7, -1, -1)
     }
 
     @Test
     fun day8Sample() {
-        testSample(8, 5, 8)
+        testSample(8, -1, -1)
     }
 
     @Test
     fun day8() {
-        test(8, 1818, 631)
+        test(8, -1, -1)
     }
 
     @Test
     fun day9Sample() {
-        testSample(9, BigInteger.valueOf(127), BigInteger.valueOf(62))
+        testSample(9, -1, -1)
     }
 
     @Test
     fun day9() {
-        test(9, BigInteger.valueOf(15353384), BigInteger.valueOf(2466556))
+        test(9, -1, -1)
     }
 
     @Test
     fun day10Sample() {
-        testSample(10, 220, BigInteger.valueOf(19208))
+        testSample(10, -1, -1)
     }
 
     @Test
     fun day10() {
-        test(10, 2484, BigInteger.valueOf(15790581481472))
+        test(10, -1, -1)
     }
 
     @Test
     fun day11Sample() {
-        testSample(11, 37, 26)
+        testSample(11, -1, -1)
     }
 
     @Test
     fun day11() {
-        test(11, 2164, 1974)
+        test(11, -1, -1)
     }
 
     @Test
     fun day12Sample() {
-        testSample(12, 25, 286)
+        testSample(12, -1, -1)
     }
 
     @Test
     fun day12() {
-        test(12, 923, 24769)
+        test(12, -1, -1)
     }
 
     @Test
     fun day13Sample() {
-        testSample(13, 295L, 1068781L)
+        testSample(13, -1, -1)
     }
 
     @Test
     fun day13() {
-        test(13, 2305L, 552612234243498L)
+        test(13, -1, -1)
     }
 
     @Test
     fun day14Sample() {
-        testSample(14, 51L, 208L)
+        testSample(14, -1, -1)
     }
 
     @Test
     fun day14() {
-        test(14, 10717676595607L, 3974538275659L)
+        test(14, -1, -1)
     }
 
     @Test
     fun day15Sample() {
-        testSample(15, 436, 175594)
+        testSample(15, -1, -1)
     }
 
     @Test
     fun day15() {
-        test(15, 614, 1065)
+        test(15, -1, -1)
     }
 
     @Test
     fun day16Sample() {
-        testSample(16, 71, 1L)
+        testSample(16, -1, -1)
     }
 
     @Test
     fun day16() {
-        test(16, 29019, 517827547723L)
+        test(16, -1, -1)
     }
 
     @Test
     fun day17Sample() {
-        testSample(17, 112, 848)
+        testSample(17, -1, -1)
     }
 
     @Test
     fun day17() {
-        test(17, 368, 2696)
+        test(17, -1, -1)
     }
 
     @Test
     fun day18Sample() {
-        testSample(18, 13632L, 23340L)
+        testSample(18, -1, -1)
     }
 
     @Test
     fun day18() {
-        test(18, 75592527415659L, 360029542265462L)
+        test(18, -1, -1)
     }
 
     @Test
@@ -190,67 +190,67 @@ class Testing {
 
     @Test
     fun day19() {
-        test(19, 122, 287)
+        test(19, -1, -1)
     }
 
     @Test
     fun day20Sample() {
-        testSample(20, 20899048083289, 273)
+        testSample(20, -1, -1)
     }
 
     @Test
     fun day20() {
-        test(20, 29293767579581, 1989)
+        test(20, -1, -1)
     }
 
     @Test
     fun day21Sample() {
-        testSample(21, 5, "mxmxvkd,sqjhc,fvjkl")
+        testSample(21, -1, -1)
     }
 
     @Test
     fun day21() {
-        test(21, 1685, "ntft,nhx,kfxr,xmhsbd,rrjb,xzhxj,chbtp,cqvc")
+        test(21, -1, -1)
     }
 
     @Test
     fun day22Sample() {
-        testSample(22, 306, 291)
+        testSample(22, -1, -1)
     }
 
     @Test
     fun day22() {
-        test(22, 32677, 33661)
+        test(22, -1, -1)
     }
 
     @Test
     fun day23Sample() {
-        testSample(23, 67384529, 149245887792)
+        testSample(23, -1, -1)
     }
 
     @Test
     fun day23() {
-        test(23, 32897654, 186715244496)
+        test(23, -1, -1)
     }
 
     @Test
     fun day24Sample() {
-        testSample(24, 10, 2208)
+        testSample(24, -1, -1)
     }
 
     @Test
     fun day24() {
-        test(24, 528, 4200)
+        test(24, -1, -1)
     }
 
     @Test
     fun day25Sample() {
-        testSample(25, 14897079L, -1)
+        testSample(25, -1, -1)
     }
 
     @Test
     fun day25() {
-        test(25, 18293391L, -1)
+        test(25, -1, -1)
     }
 
     private fun testSample(number: Int, part1: Any, part2: Any) {

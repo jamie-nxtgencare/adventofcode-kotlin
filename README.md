@@ -1,4 +1,4 @@
-# adventofcode2020
+# adventofcode-template
 
 https://adventofcode.com/
 
