@@ -1,3 +1,3 @@
 
-rootProject.name = "adventofcode-template"
+rootProject.name = "adventofcode-2021"
 

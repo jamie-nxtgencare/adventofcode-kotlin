@@ -1,4 +1,4 @@
-# adventofcode-template
+# adventofcode-2021
 
 https://adventofcode.com/
 
