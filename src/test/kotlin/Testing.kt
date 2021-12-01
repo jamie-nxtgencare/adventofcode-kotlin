@@ -5,12 +5,12 @@ import java.math.BigInteger
 class Testing {
     @Test
     fun day1Sample() {
-        testSample(1, -1, -1)
+        testSample(1, 7, -1)
     }
 
     @Test
     fun day1() {
-        test(1, -1, -1)
+        test(1, 1602, -1)
     }
 
     @Test
