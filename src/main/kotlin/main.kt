@@ -1,4 +1,5 @@
 import java.lang.Integer.parseInt
+import java.time.Duration
 import java.time.LocalDateTime
 
 fun main(args: Array<String>) {
@@ -7,14 +8,26 @@ fun main(args: Array<String>) {
     val dayStr = getDayStr(day)
     @Suppress("UNCHECKED_CAST") val project: Class<out Project> = Class.forName("Day$dayStr") as Class<Project>
 
+    println("===Startup===")
+    var start = LocalDateTime.now()
     val constructor = project.getDeclaredConstructor(String::class.java)
+    constructor.newInstance("empty")
+    var next = LocalDateTime.now()
+    println("Using reflection to load day class: %.${2}fms".format(Duration.between(start, next).toNanos()/1_000_000.0))
 
     println("===Sample===")
-    var start = LocalDateTime.now()
-    constructor.newInstance("day%d.sample-input".format(number)).run(start)
+    start = LocalDateTime.now()
+    var instance = constructor.newInstance("day%d.sample-input".format(number))
+    next = LocalDateTime.now()
+    println("Construct/Parse Input: %.${2}fms".format(Duration.between(start, next).toNanos()/1_000_000.0))
+    instance.run(next)
+
     println("===Actual===")
     start = LocalDateTime.now()
-    constructor.newInstance("day%d.input".format(number)).run(start)
+    instance = constructor.newInstance("day%d.input".format(number))
+    next = LocalDateTime.now()
+    println("Construct/Parse Input: %.${2}fms".format(Duration.between(start, next).toNanos()/1_000_000.0))
+    instance.run(next)
 }
 
 fun getDayStr(day: Day): String {

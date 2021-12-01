@@ -8,11 +8,11 @@ interface Project {
 
     fun run(part1: LocalDateTime) {
         println(part1())
-        println("Part One: %dms".format(Duration.between(part1, LocalDateTime.now()).toMillis()))
+        println("Part One: %.${2}fms".format(Duration.between(part1, LocalDateTime.now()).toNanos()/1_000_000.0))
 
         val part2 = LocalDateTime.now()
         println(part2())
-        println("Part Two: %dms".format(Duration.between(part2, LocalDateTime.now()).toMillis()))
+        println("Part Two: %.${2}fms".format(Duration.between(part2, LocalDateTime.now()).toNanos()/1_000_000.0))
     }
 
     fun getLines(file: String) : List<String> {
