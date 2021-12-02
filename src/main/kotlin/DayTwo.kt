@@ -2,17 +2,18 @@ class DayTwo(file: String) : Project {
     private val instructions = mapFileLines(file) { Instruction(it) }
 
     override fun part1(): Any {
-       var output = Triple(0, 0, 0)
-        instructions.forEach { output = it.apply(output, 1) }
-        return output.first * output.second
+        return go(1)
     }
 
     override fun part2(): Any {
-        var output = Triple(0, 0, 0)
-        instructions.forEach { output = it.apply(output, 2) }
-        return output.first * output.second
+        return go(2)
     }
 
+    private fun go(part: Int): Any {
+        var output = Triple(0, 0, 0)
+        instructions.forEach { output = it.apply(output, part) }
+        return output.first * output.second
+    }
 }
 
 class Instruction(it: String) {
