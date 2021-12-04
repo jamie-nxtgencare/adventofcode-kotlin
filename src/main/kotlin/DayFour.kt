@@ -6,16 +6,16 @@ class DayFour(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        return game.playToLoseScore()
     }
 
 }
 
 class Game(lines: List<String>) {
     private val marks: List<Int> = lines[0].split(",").map { it.toInt() }
-    private val cards: List<Card> = getCards(lines.subList(2, lines.size))
+    private val cards: ArrayList<Card> = getCards(lines.subList(2, lines.size))
 
-    private fun getCards(cardsString: List<String>): List<Card> {
+    private fun getCards(cardsString: List<String>): ArrayList<Card> {
         var lineNo = 0
         val cards = ArrayList<Card>()
 
@@ -38,6 +38,26 @@ class Game(lines: List<String>) {
             }
         }
 
+        return -1
+    }
+
+    fun playToLoseScore(): Any {
+        cards.forEach { it.reset() }
+        val cardsToRemove = HashSet<Card>()
+        for (mark in marks) {
+            for (card in cards) {
+                val wins = card.mark(mark)
+
+                if (wins) {
+                    cardsToRemove.add(card)
+                }
+            }
+            cards.removeAll(cardsToRemove)
+            if (cards.size == 0) {
+                return cardsToRemove.first().getScore(mark)
+            }
+            cardsToRemove.clear()
+        }
         return -1
     }
 
@@ -115,5 +135,9 @@ class Card(cardLines: List<String>) {
 
     private fun getUnmarkedSum(): Int {
         return numbers.filter { !it.value }.keys.sum()
+    }
+
+    fun reset() {
+        numbers.forEach { numbers[it.key] = false }
     }
 }
