@@ -4,12 +4,20 @@ class DayFive(file: String) : Project {
     private val lines = mapFileLines(file) { Line(it) }
 
     override fun part1(): Any {
+        return getAnswer(1)
+    }
+
+    override fun part2(): Any {
+        return getAnswer(2)
+    }
+
+    private fun getAnswer(part: Int): Int {
         val maxX = lines.maxOf { it.maxX() }
         val maxY = lines.maxOf { it.maxY() }
 
-        val grid = Array(maxX+1) { Array(maxY+1) { 0 }}
+        val grid = Array(maxX + 1) { Array(maxY + 1) { 0 } }
 
-        lines.forEach { it.drawOn(1, grid) }
+        lines.forEach { it.drawOn(part, grid) }
 
         var result = 0
         for (x in grid.indices) {
@@ -22,11 +30,6 @@ class DayFive(file: String) : Project {
 
         return result
     }
-
-    override fun part2(): Any {
-        return -1
-    }
-
 }
 
 class Line(it: String) {
@@ -62,10 +65,14 @@ class Line(it: String) {
             return
         }
 
-        for (x in min(x, x2)..x.coerceAtLeast(x2)) {
-            for (y in min(y, y2)..y.coerceAtLeast(y2)) {
-                grid[x][y] = grid[x][y] + 1
-            }
+        var xPrime = x;
+        var yPrime = y;
+        grid[xPrime][yPrime] = grid[xPrime][yPrime] + 1
+
+        while (xPrime != x2 || yPrime != y2) {
+            xPrime = if (x < x2) xPrime + 1 else if (x == x2) xPrime else xPrime - 1
+            yPrime = if (y < y2) yPrime + 1 else if (y == y2) yPrime else yPrime - 1
+            grid[xPrime][yPrime] = grid[xPrime][yPrime] + 1
         }
     }
 }
