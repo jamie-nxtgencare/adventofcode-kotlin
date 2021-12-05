@@ -1,5 +1,3 @@
-import java.lang.Integer.min
-
 class DayFive(file: String) : Project {
     private val lines = mapFileLines(file) { Line(it) }
 
