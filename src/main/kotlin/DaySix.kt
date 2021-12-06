@@ -27,7 +27,7 @@ class DaySix(file: String) : Project {
         return ageCounts.sum()
     }
 
-    fun advanceDay() {
+    private fun advanceDay() {
         var tmp = 0L
         for (i in ageCounts.size downTo 0) {
             if (i > 0) {
