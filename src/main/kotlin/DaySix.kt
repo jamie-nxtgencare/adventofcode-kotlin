@@ -1,6 +1,7 @@
 
 class DaySix(file: String) : Project {
-    private val input: List<Int> = getLines(file).first().split(",").map { it.toInt() }
+    private val lines = getLines(file)
+    private val input: List<Int> = if (lines.isNotEmpty()) lines.first().split(",").map { it.toInt() } else ArrayList()
     private val ageCounts: Array<Long> = Array(9) { 0L }
     private val initialAgeCounts: Array<Long> = Array(9) { 0L }
 
