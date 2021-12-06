@@ -40,7 +40,7 @@ class Testing {
 
     @Test
     fun day4() {
-        test(4, 38594, -1)
+        test(4, 38594, 21184)
     }
 
     @Test
@@ -50,7 +50,7 @@ class Testing {
 
     @Test
     fun day5() {
-        test(5, 6189, -1)
+        test(5, 6189, 19164)
     }
 
     @Test
