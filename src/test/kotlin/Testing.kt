@@ -65,7 +65,7 @@ class Testing {
 
     @Test
     fun day7Sample() {
-        testSample(7, -1, -1)
+        testSample(7, 37, -1)
     }
 
     @Test
