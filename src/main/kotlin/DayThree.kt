@@ -20,12 +20,14 @@ class DayThree(file: String) : Project {
         }
 
         this.mostCommonBits = gammaSums.map { it.toInt() }
-        this.leastCommonBits = gammaSums.map { if (it.toInt() == 1) 0 else 1 }
+        this.leastCommonBits = gammaSums.map { flip(it, false) }
 
         val gamma = mostCommonBits.joinToString("").toInt(2)
         val epsilon = leastCommonBits.joinToString("").toInt(2)
         return gamma * epsilon
     }
+
+    private fun flip(it: Double, mostCommon: Boolean) = if (mostCommon) it.toInt() else if (it.toInt() == 1) 0 else 1
 
     override fun part2(): Any {
         val oxygen = getCandidates(input, true).first().joinToString("").toInt(2)
@@ -46,13 +48,7 @@ class DayThree(file: String) : Project {
                 sum += row[subStringSize - 1]
             }
 
-            var targetBit = (sum / candidates.size.toDouble()).roundToInt()
-
-            if (!mostCommon) {
-                targetBit = if (targetBit == 1) 0 else 1
-            }
-
-            targetSubstr += targetBit
+            targetSubstr += flip((sum / candidates.size.toDouble()).roundToInt().toDouble(), mostCommon)
 
             for (candidate in candidates) {
                 val candidateSubstr = candidate.joinToString("").substring(0, subStringSize)
