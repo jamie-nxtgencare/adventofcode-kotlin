@@ -28,66 +28,46 @@ class DayThree(file: String) : Project {
     }
 
     override fun part2(): Any {
-        val oxygenCandidates: MutableList<List<Int>> = ArrayList(input)
-        var mostCommonSubStr = ""
+        val oxygen = getCandidates(input, true).first().joinToString("").toInt(2)
+        val co2 = getCandidates(input, false).first().joinToString("").toInt(2)
+        return oxygen * co2
+    }
+
+    private fun getCandidates(input: List<List<Int>>, mostCommon: Boolean): MutableList<List<Int>> {
+        val candidates = ArrayList(input)
+        var targetSubstr = ""
         var subStringSize = 1;
 
-        while (oxygenCandidates.size > 1) {
+        while (candidates.size > 1) {
             val toRemove = ArrayList<List<Int>>()
 
             var sum = 0.0
-            for (row in oxygenCandidates) {
+            for (row in candidates) {
                 sum += row[subStringSize - 1]
             }
 
-            val mostCommonBit = (sum / oxygenCandidates.size.toDouble()).roundToInt()
-            mostCommonSubStr += mostCommonBit
+            var targetBit = (sum / candidates.size.toDouble()).roundToInt()
 
-            for (candidate in oxygenCandidates) {
+            if (!mostCommon) {
+                targetBit = if (targetBit == 1) 0 else 1
+            }
+
+            targetSubstr += targetBit
+
+            for (candidate in candidates) {
                 val candidateSubstr = candidate.joinToString("").substring(0, subStringSize)
-                if (sum == 0.5 && !candidateSubstr.endsWith("1")) {
+                if (sum == 0.5 && !candidateSubstr.endsWith(if (mostCommon) "1" else "0")) {
                     toRemove.add(candidate)
-                } else if (mostCommonSubStr != candidateSubstr) {
+                } else if (targetSubstr != candidateSubstr) {
                     toRemove.add(candidate)
                 }
-
             }
-            oxygenCandidates.removeAll(toRemove)
+            candidates.removeAll(toRemove.toSet())
             subStringSize++
 
         }
 
-        val co2Candidates: MutableList<List<Int>> = ArrayList(input)
-        var leastCommonSubStr = ""
-        subStringSize = 1;
-
-        while (co2Candidates.size > 1) {
-            val toRemove = ArrayList<List<Int>>()
-
-            var sum = 0.0
-            for (row in co2Candidates) {
-                sum += row[subStringSize - 1]
-            }
-
-            val leastCommonBit = if ((sum / co2Candidates.size.toDouble()).roundToInt() == 1) 0 else 1
-            leastCommonSubStr += leastCommonBit
-
-            for (candidate in co2Candidates) {
-                val candidateSubstr = candidate.joinToString("").substring(0, subStringSize)
-                if (sum == 0.5 && !candidateSubstr.endsWith("0")) {
-                    toRemove.add(candidate)
-                } else if (leastCommonSubStr != candidateSubstr) {
-                    toRemove.add(candidate)
-                }
-            }
-            co2Candidates.removeAll(toRemove)
-            subStringSize++
-
-        }
-
-        val oxygen = oxygenCandidates[0].joinToString("").toInt(2)
-        val co2 = co2Candidates[0].joinToString("").toInt(2)
-        return oxygen * co2
+        return candidates;
     }
 
 }
