@@ -36,29 +36,23 @@ class DayEight(file: String) : Project {
         listOf(one, four, seven, eight).toCollection(found)
 
         val remaining = ArrayList(digitList.filter { !found.contains(it) })
-        val six = remaining.first { it.letters.size == 6 && !it.contains(one) }.harden(6)
-        remaining.remove(six)
-        found.add(six)
-
-        val zero = remaining.first { it.letters.size == 6 && it.subtract(one).subtract(four).letters.size == 3 }.harden(0)
-        remaining.remove(zero)
-        found.add(zero)
-
-        val nine = remaining.first { it.letters.size == 6 && it.subtract(one).letters.size == 4 }.harden(9)
-        remaining.remove(nine)
-        found.add(nine)
-
-        val three = remaining.first { it.letters.size == 5 && it.contains(one) }.harden(3)
-        remaining.remove(three)
-        found.add(three)
-
-        val two = remaining.first { it.letters.size == 5 && it.subtract(nine).letters.size == 1 }.harden(2)
-        remaining.remove(two)
-        found.add(two)
+        locateDigit(remaining, found, 6) { it.letters.size == 6 && !it.contains(one) }
+        locateDigit(remaining, found, 0) { it.letters.size == 6 && it.subtract(four).letters.size == 3 }
+        val nine = locateDigit(remaining, found, 9) { it.letters.size == 6 && it.subtract(one).letters.size == 4 }
+        locateDigit(remaining, found, 3) { it.letters.size == 5 && it.contains(one) }
+        locateDigit(remaining, found, 2) { it.letters.size == 5 && it.subtract(nine).letters.size == 1 }
 
         val five = remaining.first().harden(5)
         found.add(five)
+
         return found
+    }
+
+    private fun locateDigit(remaining: ArrayList<Digit>, found: ArrayList<Digit>, num: Int, predicate: (Digit) -> Boolean): Digit {
+        val digit = remaining.first(predicate).harden(num)
+        remaining.remove(digit)
+        found.add(digit)
+        return digit
     }
 
 }
