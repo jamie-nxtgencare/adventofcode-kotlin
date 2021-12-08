@@ -27,7 +27,7 @@ class DaySeven(file: String) : Project {
     }
 
     private fun getI(i: Int): Int {
-        var orDefault = iMemo.getOrDefault(i, null)
+        val orDefault = iMemo.getOrDefault(i, null)
         if (orDefault != null) {
             return orDefault
         }
