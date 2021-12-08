@@ -16,20 +16,18 @@ class Game(lines: List<String>) {
     private val cards: ArrayList<Card> = getCards(lines.subList(2, lines.size))
 
     private fun getCards(cardsString: List<String>): ArrayList<Card> {
-        var lineNo = 0
         val cards = ArrayList<Card>()
 
-        while (lineNo < cardsString.size) {
+        for (lineNo in 0..cardsString.size step 6) {
             cards.add(Card(cardsString.subList(lineNo, lineNo+5)))
-            lineNo += 6
         }
 
         return cards
     }
 
     fun getScore(): Int {
-        for (mark in marks) {
-            for (card in cards) {
+        marks.forEach { mark ->
+            cards.forEach { card ->
                 if (card.mark(mark)) {
                     return card.getScore(mark)
                 }
@@ -42,16 +40,14 @@ class Game(lines: List<String>) {
     fun playToLoseScore(): Any {
         cards.forEach { it.reset() }
         val cardsToRemove = HashSet<Card>()
-        for (mark in marks) {
-            for (card in cards) {
-                val wins = card.mark(mark)
-
-                if (wins) {
+        marks.forEach { mark ->
+            cards.forEach { card ->
+                if (card.mark(mark)) {
                     cardsToRemove.add(card)
                 }
             }
             cards.removeAll(cardsToRemove)
-            if (cards.size == 0) {
+            if (cards.isEmpty()) {
                 return cardsToRemove.first().getScore(mark)
             }
             cardsToRemove.clear()
@@ -92,12 +88,7 @@ class Card(cardLines: List<String>) {
     fun reset() { numbers.forEach { numbers[it.key] = false }}
 
     private fun isWinningCard(mark: Int): Boolean {
-        val lines:List<List<Int>> = findLinesContainingMark(mark)
-
-        if (lines.any { line -> line.all { numbers[it] == true }}) {
-            return true
-        }
-        return false
+        return findLinesContainingMark(mark).any { line -> line.all { numbers[it] == true }}
     }
 
     private fun findLinesContainingMark(mark: Int): List<List<Int>> {
@@ -108,11 +99,7 @@ class Card(cardLines: List<String>) {
         val lines = ArrayList<List<Int>>(card)
 
         for (i in 0 until 5) {
-            val row = ArrayList<Int>()
-            card.forEach {
-                row.add(it[i])
-            }
-            lines.add(row)
+            lines.add(card.map{it[i]})
         }
 
         return lines
