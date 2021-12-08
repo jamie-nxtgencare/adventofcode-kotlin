@@ -30,9 +30,7 @@ class Game(lines: List<String>) {
     fun getScore(): Int {
         for (mark in marks) {
             for (card in cards) {
-                val wins = card.mark(mark)
-
-                if (wins) {
+                if (card.mark(mark)) {
                     return card.getScore(mark)
                 }
             }
@@ -87,6 +85,12 @@ class Card(cardLines: List<String>) {
         return isWinningCard(mark)
     }
 
+    fun getScore(justCalled: Int): Int {
+        return getUnmarkedSum() * justCalled
+    }
+
+    fun reset() { numbers.forEach { numbers[it.key] = false }}
+
     private fun isWinningCard(mark: Int): Boolean {
         val lines:List<List<Int>> = findLinesContainingMark(mark)
 
@@ -103,7 +107,6 @@ class Card(cardLines: List<String>) {
     private fun findLines(): ArrayList<List<Int>> {
         val lines = ArrayList<List<Int>>(card)
 
-        // Columns
         for (i in 0 until 5) {
             val row = ArrayList<Int>()
             card.forEach {
@@ -112,32 +115,8 @@ class Card(cardLines: List<String>) {
             lines.add(row)
         }
 
-        // Diagonals
-        val diagonal = ArrayList<Int>()
-        val diagonal2 = ArrayList<Int>()
-
-        for (i in 0 until 5) {
-            diagonal.add(lines[i][i])
-            diagonal2.add(lines[i][4-i])
-        }
-        /*
-         * Read the instructions dummy, diagonals don't count
-         * lines.add(diagonal)
-         *  lines.add(diagonal2)
-         **/
-
         return lines
     }
 
-    fun getScore(justCalled: Int): Int {
-        return getUnmarkedSum() * justCalled
-    }
-
-    private fun getUnmarkedSum(): Int {
-        return numbers.filter { !it.value }.keys.sum()
-    }
-
-    fun reset() {
-        numbers.forEach { numbers[it.key] = false }
-    }
+    private fun getUnmarkedSum(): Int { return numbers.filter { !it.value }.keys.sum() }
 }
