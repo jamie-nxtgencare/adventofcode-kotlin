@@ -33,8 +33,8 @@ class DayEight(file: String) : Project {
 
         val found = ArrayList<Digit>()
         listOf(one, four, seven, eight).toCollection(found)
-
         val remaining = ArrayList(digitList.filter { !found.contains(it) })
+
         locateDigit(remaining, found, 6) { it.letters.size == 6 && !it.contains(one) }
         locateDigit(remaining, found, 0) { it.letters.size == 6 && it.subtract(four).letters.size == 3 }
         val nine = locateDigit(remaining, found, 9) { it.letters.size == 6 && it.subtract(one).letters.size == 4 }
