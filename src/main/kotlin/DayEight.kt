@@ -2,7 +2,6 @@ class DayEight(file: String) : Project {
     private val inputOutput: List<List<String>> = mapFileLines(file) { it.split(" | ") }
     private val input = inputOutput.map { it.first().split(" ") }
     private val output = inputOutput.map { it.last().split(" ") }
-
     private val digitLists = input.map { it.map { i -> Digit(i) }}
     private val outputList = output.map { it.map { i -> Digit(i) }}
 
@@ -14,8 +13,8 @@ class DayEight(file: String) : Project {
     override fun part2(): Any {
         var sum = 0
         for (i in digitLists.indices) {
-            val digitList = digitLists[i];
-            val outputs = outputList[i];
+            val digitList = digitLists[i]
+            val outputs = outputList[i]
 
             val solvedInputs = solve(digitList)
             val solvedOutput = outputs.map { output -> solvedInputs.first { output.letters == it.letters }}
