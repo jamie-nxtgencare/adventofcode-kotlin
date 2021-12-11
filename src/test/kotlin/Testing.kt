@@ -90,27 +90,27 @@ class Testing {
 
     @Test
     fun day9() {
-        test(9, 564, -1)
+        test(9, 564, 1038240)
     }
 
     @Test
     fun day10Sample() {
-        testSample(10, 26397, 288957)
+        testSample(10, 26397, 288957L)
     }
 
     @Test
     fun day10() {
-        test(10, 392097, 4263222782)
+        test(10, 392097, 4263222782L)
     }
 
     @Test
     fun day11Sample() {
-        testSample(11, -1, -1)
+        testSample(11, 1656, 195)
     }
 
     @Test
     fun day11() {
-        test(11, -1, -1)
+        test(11, 1719, 232)
     }
 
     @Test
