@@ -17,6 +17,15 @@ class DayTwelve(file: String) : Project {
     }
 
     override fun part1(): Any {
+        return getPaths(1).filter { it.any { node -> node.isSmall }}.size
+    }
+
+
+    override fun part2(): Any {
+        return getPaths(2).size
+    }
+
+    private fun getPaths(part: Int): ArrayList<ArrayList<Node>> {
         val start = nodes["start"]!!
         val end = nodes["end"]!!
         var workingPaths = ArrayList<ArrayList<Node>>()
@@ -29,7 +38,7 @@ class DayTwelve(file: String) : Project {
         while (workingPaths.isNotEmpty()) {
             val newWorkingPaths = ArrayList<ArrayList<Node>>()
             workingPaths.forEach {
-                val nextSteps = it.last().links.filter { link -> link != start && !isVisited(it, link) }
+                val nextSteps = it.last().links.filter { link -> link != start && !isVisited(it, link, part) }
 
                 nextSteps.forEach { node ->
                     val newPath = ArrayList(it)
@@ -43,16 +52,13 @@ class DayTwelve(file: String) : Project {
             }
             workingPaths = newWorkingPaths
         }
-
-        return paths.filter { it.any { node -> node.isSmall }}.size
+        return paths
     }
 
-    override fun part2(): Any {
-        return -1
-    }
-
-    private fun isVisited(path: ArrayList<Node>, node: Node): Boolean {
-        return node.isSmall && path.any { it == node }
+    private fun isVisited(path: ArrayList<Node>, node: Node, part: Int): Boolean {
+        val visited = node.isSmall && path.any { it == node }
+        val hasSmallDoubleVisit = path.any { it.isSmall && path.count { maybeIt -> maybeIt == it } > 1 }
+        return if (part == 1) visited else visited && hasSmallDoubleVisit
     }
 
 }
