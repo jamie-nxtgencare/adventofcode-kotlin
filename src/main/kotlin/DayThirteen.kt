@@ -22,8 +22,8 @@ class DayThirteen(file: String) : Project {
             instructions.add(Pair(pair.first(), pair.last().toInt()))
         }
 
-        val xWidth = coords.maxOf { it.first } + 1
-        val yHeight = coords.maxOf { it.second } + 1
+        val xWidth = instructions.first { it.first == "x" }.second * 2 + 1
+        val yHeight = instructions.first { it.first == "y" }.second * 2 + 1
 
         val templateRow = ArrayList(Collections.nCopies(xWidth, false))
         val tempGrid = ArrayList<ArrayList<Boolean>>(Collections.nCopies(yHeight, ArrayList()))
