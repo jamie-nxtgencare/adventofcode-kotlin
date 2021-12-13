@@ -47,40 +47,29 @@ class DayThirteen(file: String) : Project {
         return countDots(workingGrid)
     }
 
-    private fun printGrid(workingGrid: List<java.util.ArrayList<Boolean>>) {
-        workingGrid.forEach { row ->
-            row.forEach { column ->
-                print(if (column) "█" else ".")
-            }
-            println()
-        }
-        println()
-    }
-
     private fun fold(passedGrid: List<ArrayList<Boolean>>, instruction: Pair<String, Int>): List<ArrayList<Boolean>> {
-        val grid = if (instruction.first == "x") transpose(passedGrid) else passedGrid
-        val newGrid = grid.subList(0, instruction.second)
-        val folded = grid.subList(instruction.second + 1, grid.size)
-        val reversed = folded.reversed()
-
-        var row = folded.size - 1
-        for (i in reversed.size - 1 downTo 0) {
-            for (j in reversed[row].indices) {
-                newGrid[row][j] = if (reversed[i][j]) true else newGrid[row][j]
-            }
-            row--
-        }
-        return if (instruction.first == "x") transpose(newGrid) else newGrid
+        return if (instruction.first == "x") foldX(passedGrid, instruction.second) else foldY(passedGrid, instruction.second)
     }
 
-    private fun transpose(passedGrid: List<ArrayList<Boolean>>): List<ArrayList<Boolean>> {
-        val newGrid = ArrayList<ArrayList<Boolean>>()
+    private fun foldX(grid: List<java.util.ArrayList<Boolean>>, x: Int): List<java.util.ArrayList<Boolean>> {
+        val newGrid = grid.map { ArrayList(it.subList(0, x)) }
+        val folded = grid.map { ArrayList(it.subList(x + 1, it.size).reversed()) }
 
-        for (j in passedGrid.indices) {
-            for (i in passedGrid[j].indices) {
-                if (newGrid.size < i + 1) newGrid.add(ArrayList())
-                if (newGrid[i].size < j + 1) newGrid[i].add(false)
-                newGrid[i][j] = passedGrid[j][i]
+        for (i in folded.indices) {
+            for (j in folded[i].indices) {
+                newGrid[i][j] = folded[i][j] || newGrid[i][j]
+            }
+        }
+        return newGrid
+    }
+
+    private fun foldY(grid: List<java.util.ArrayList<Boolean>>, y: Int): List<java.util.ArrayList<Boolean>> {
+        val newGrid = ArrayList(grid.subList(0, y))
+        val folded = ArrayList(grid.subList(y + 1, grid.size)).reversed()
+
+        for (i in folded.indices) {
+            for (j in folded[i].indices) {
+                newGrid[i][j] = folded[i][j] || newGrid[i][j]
             }
         }
 
@@ -91,4 +80,18 @@ class DayThirteen(file: String) : Project {
         return grid.sumOf { it.map { i: Boolean -> if (i) 1 else 0 }.sum() }
     }
 
+    companion object {
+        private fun printGrid(workingGrid: List<java.util.ArrayList<Boolean>>) {
+            workingGrid.forEach { row ->
+                row.forEach { column ->
+                    print(if (column) "█" else " ")
+                }
+                println()
+            }
+            println()
+        }
+    }
 }
+
+
+
