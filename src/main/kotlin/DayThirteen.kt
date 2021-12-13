@@ -16,11 +16,10 @@ class DayThirteen(file: String) : Project {
             coords.add(Pair(pair.first().toInt(), pair.last().toInt()))
             line = lines[i++]
         }
-        line = lines[i++]
         while (i < lines.size) {
+            line = lines[i++]
             val pair = line.split("fold along ").last().split("=")
             instructions.add(Pair(pair.first(), pair.last().toInt()))
-            line = lines[i++]
         }
 
         val xWidth = coords.maxOf { it.first } + 1
@@ -39,22 +38,38 @@ class DayThirteen(file: String) : Project {
         return countDots(fold(grid, instructions.first()))
     }
 
+    override fun part2(): Any {
+        var workingGrid = grid
+        instructions.forEach {
+            workingGrid = fold(workingGrid, it)
+        }
+        printGrid(workingGrid)
+        return countDots(workingGrid)
+    }
+
+    private fun printGrid(workingGrid: List<java.util.ArrayList<Boolean>>) {
+        workingGrid.forEach { row ->
+            row.forEach { column ->
+                print(if (column) "█" else ".")
+            }
+            println()
+        }
+        println()
+    }
+
     private fun fold(passedGrid: List<ArrayList<Boolean>>, instruction: Pair<String, Int>): List<ArrayList<Boolean>> {
-
         val grid = if (instruction.first == "x") transpose(passedGrid) else passedGrid
-
         val newGrid = grid.subList(0, instruction.second)
         val folded = grid.subList(instruction.second + 1, grid.size)
         val reversed = folded.reversed()
 
         var row = folded.size - 1
         for (i in reversed.size - 1 downTo 0) {
-            for (j in folded[row].indices) {
+            for (j in reversed[row].indices) {
                 newGrid[row][j] = if (reversed[i][j]) true else newGrid[row][j]
             }
             row--
         }
-
         return if (instruction.first == "x") transpose(newGrid) else newGrid
     }
 
@@ -74,10 +89,6 @@ class DayThirteen(file: String) : Project {
 
     private fun countDots(grid: List<ArrayList<Boolean>>): Int {
         return grid.sumOf { it.map { i: Boolean -> if (i) 1 else 0 }.sum() }
-    }
-
-    override fun part2(): Any {
-        return -1
     }
 
 }
