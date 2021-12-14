@@ -133,38 +133,13 @@ class Testing {
     }
 
     @Test
-    fun day14Tests() {
-        /*
-            Template:     NNCB
-            After step 1: NCNBCHB
-            After step 2: NBCCNBBBCBHCB
-            After step 3: NBBBCNCCNBBNBNBBCHBHHBCHB
-            After step 4: NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB
-        */
-        val day14 = DayFourteen("day%d.sample-input".format(14))
-        val counts = HashMap<String, Long>()
-        val workingTemplate = StringBuilder(day14.template)
-
-        workingTemplate.split("").filter { it.isNotBlank() }.forEach {
-            DayFourteen.addOne(counts, it)
-        }
-
-        val results = listOf("NCNBCHB", "NBCCNBBBCBHCB", "NBBBCNCCNBBNBNBBCHBHHBCHB", "NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB")
-
-        for (i in 0..3) {
-            DayFourteen.runLoop(i, day14.pairs, workingTemplate, counts)
-            assertEquals(results[i], workingTemplate.toString())
-        }
-    }
-
-    @Test
     fun day14Sample() {
-        testSample(14, 1588L, -1)
+        testSample(14, 1588L, 2188189693529L)
     }
 
     @Test
     fun day14() {
-        test(14, 2435L, -1)
+        test(14, 2435L, 2587447599164L)
     }
 
     @Test
@@ -293,7 +268,7 @@ class Testing {
 
         val project = constructor.newInstance(file.format(number))
 
-//        assertEquals(project?.part1(), part1)
+        assertEquals(project?.part1(), part1)
         assertEquals(project?.part2(), part2)
     }
 }
