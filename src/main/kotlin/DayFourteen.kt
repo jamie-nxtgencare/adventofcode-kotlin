@@ -1,5 +1,3 @@
-import java.lang.Math.ceil
-
 class DayFourteen(file: String) : Project {
     private val lines = getLines(file)
     val template = lines.first()
