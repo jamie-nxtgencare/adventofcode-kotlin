@@ -1,28 +1,37 @@
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+
 class DayFourteen(file: String) : Project {
     val lines = getLines(file)
     val template = lines.first()
-    var pairs = ArrayList<Pair<Regex, String>>()
+    var pairs = ArrayList<Pair<String, String>>()
 
     init {
         for (i in 2 until lines.size) {
             val pair = lines[i].split(" -> ")
-            val first = pair.first().substring(0,1)
-            val second = pair.first().substring(1,2)
-            val regex = if (first == second) String.format("(?=(%s{2,}))", first) else pair.first()
-            pairs.add(Pair(Regex(regex), pair.last()))
+            pairs.add(Pair(pair.first(), pair.last()))
         }
     }
 
     override fun part1(): Any {
-        val counts = HashMap<String, Int>()
+        return doItNow(10)
+    }
+
+    override fun part2(): Any {
+        return doItNow(40)
+    }
+
+    private fun doItNow(times: Int): Long {
+        val counts = HashMap<String, Long>()
         val workingTemplate = StringBuilder(template)
 
         workingTemplate.split("").filter { it.isNotBlank() }.forEach {
             addOne(counts, it)
         }
 
-        for (i in 0..9) {
+        for (i in 0 until times) {
             runLoop(pairs, workingTemplate, counts)
+            println(i)
         }
 
         val sorted = counts.values.sorted()
@@ -30,16 +39,16 @@ class DayFourteen(file: String) : Project {
         return sorted.last() - sorted.first()
     }
 
-    override fun part2(): Any {
-        return -1
-    }
-
-
     companion object {
-        fun runLoop(pairs: ArrayList<Pair<Regex, String>>, workingTemplate: StringBuilder, counts: java.util.HashMap<String, Int>) {
+        fun runLoop(pairs: ArrayList<Pair<String, String>>, workingTemplate: StringBuilder, counts: java.util.HashMap<String, Long>) {
             val insertionLocations = ArrayList<Pair<Int, String>>()
-            pairs.forEach {
-                it.first.findAll(workingTemplate).forEach { match -> insertionLocations.add(Pair(match.range.first + 1, it.second)) }
+            for (i in 0..workingTemplate.length - 2) {
+                val sub = workingTemplate.substring(i,i+2)
+                pairs.forEach {
+                    if (it.first == sub) {
+                        insertionLocations.add(Pair(i + 1, it.second))
+                    }
+                }
             }
             val sorted = insertionLocations.sortedBy { it.first }
 
@@ -49,9 +58,9 @@ class DayFourteen(file: String) : Project {
             }
         }
 
-        fun addOne(counts: HashMap<String, Int>, it: String) {
-            val count = counts.computeIfAbsent(it) { 0 }
-            counts[it] = count + 1
+        fun addOne(counts: HashMap<String, Long>, it: String) {
+            val count = counts.computeIfAbsent(it) { 0L }
+            counts[it] = count + 1L
         }
     }
 }

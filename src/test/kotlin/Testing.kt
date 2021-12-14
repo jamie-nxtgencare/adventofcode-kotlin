@@ -1,6 +1,5 @@
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.math.BigInteger
 
 class Testing {
     @Test
@@ -294,7 +293,7 @@ class Testing {
 
         val project = constructor.newInstance(file.format(number))
 
-        assertEquals(project?.part1(), part1)
+//        assertEquals(project?.part1(), part1)
         assertEquals(project?.part2(), part2)
     }
 }
