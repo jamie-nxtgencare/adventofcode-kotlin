@@ -143,7 +143,7 @@ class Testing {
             After step 4: NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB
         */
         val day14 = DayFourteen("day%d.sample-input".format(14))
-        val counts = HashMap<String, Int>()
+        val counts = HashMap<String, Long>()
         val workingTemplate = StringBuilder(day14.template)
 
         workingTemplate.split("").filter { it.isNotBlank() }.forEach {
@@ -160,12 +160,12 @@ class Testing {
 
     @Test
     fun day14Sample() {
-        testSample(14, 1588, -1)
+        testSample(14, 1588L, -1)
     }
 
     @Test
     fun day14() {
-        test(14, -1, -1)
+        test(14, 2435L, -1)
     }
 
     @Test
