@@ -1,6 +1,5 @@
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.math.BigInteger
 
 class Testing {
     @Test
@@ -135,12 +134,12 @@ class Testing {
 
     @Test
     fun day14Sample() {
-        testSample(14, -1, -1)
+        testSample(14, 1588L, 2188189693529L)
     }
 
     @Test
     fun day14() {
-        test(14, -1, -1)
+        test(14, 2435L, 2587447599164L)
     }
 
     @Test
