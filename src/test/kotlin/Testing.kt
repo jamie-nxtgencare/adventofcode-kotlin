@@ -152,7 +152,7 @@ class Testing {
         val results = listOf("NCNBCHB", "NBCCNBBBCBHCB", "NBBBCNCCNBBNBNBBCHBHHBCHB", "NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB")
 
         for (i in 0..3) {
-            DayFourteen.runLoop(day14.pairs, workingTemplate, counts)
+            DayFourteen.runLoop(i, day14.pairs, workingTemplate, counts)
             assertEquals(results[i], workingTemplate.toString())
         }
     }

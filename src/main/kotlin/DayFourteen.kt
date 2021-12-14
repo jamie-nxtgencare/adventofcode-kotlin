@@ -1,15 +1,14 @@
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+import java.lang.Math.ceil
 
 class DayFourteen(file: String) : Project {
-    val lines = getLines(file)
+    private val lines = getLines(file)
     val template = lines.first()
-    var pairs = ArrayList<Pair<String, String>>()
+    var pairs = HashMap<String, String>()
 
     init {
         for (i in 2 until lines.size) {
             val pair = lines[i].split(" -> ")
-            pairs.add(Pair(pair.first(), pair.last()))
+            pairs[pair.first()] = pair.last()
         }
     }
 
@@ -18,6 +17,7 @@ class DayFourteen(file: String) : Project {
     }
 
     override fun part2(): Any {
+        //return -1
         return doItNow(40)
     }
 
@@ -30,8 +30,7 @@ class DayFourteen(file: String) : Project {
         }
 
         for (i in 0 until times) {
-            runLoop(pairs, workingTemplate, counts)
-            println(i)
+            runLoop(i, pairs, workingTemplate, counts)
         }
 
         val sorted = counts.values.sorted()
@@ -40,21 +39,20 @@ class DayFourteen(file: String) : Project {
     }
 
     companion object {
-        fun runLoop(pairs: ArrayList<Pair<String, String>>, workingTemplate: StringBuilder, counts: java.util.HashMap<String, Long>) {
-            val insertionLocations = ArrayList<Pair<Int, String>>()
-            for (i in 0..workingTemplate.length - 2) {
-                val sub = workingTemplate.substring(i,i+2)
-                pairs.forEach {
-                    if (it.first == sub) {
-                        insertionLocations.add(Pair(i + 1, it.second))
-                    }
+        fun runLoop(iteration: Int, pairs: HashMap<String, String>, workingTemplate: StringBuilder, counts: java.util.HashMap<String, Long>) {
+            var i = 0
+            var length = workingTemplate.length
+            while (i < length - 1) {
+                val sub = workingTemplate.substring(i, i+2)
+                val match = pairs[sub]
+                if (match != null) {
+                    workingTemplate.insert(i + 1, match)
+                    addOne(counts, match)
+                    length++
+                    i++
                 }
-            }
-            val sorted = insertionLocations.sortedBy { it.first }
-
-            for (i in sorted.indices) {
-                workingTemplate.insert(sorted[i].first + i, sorted[i].second)
-                addOne(counts, sorted[i].second)
+                i++
+                println(iteration.toString() + ": --- " + ceil(i / length.toDouble() * 100.0) + "% ---")
             }
         }
 
