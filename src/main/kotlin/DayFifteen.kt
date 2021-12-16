@@ -1,3 +1,6 @@
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.math.floor
 
 class DayFifteen(file: String) : Project {
@@ -62,6 +65,7 @@ class DayFifteen(file: String) : Project {
 
     private fun dijkstra(unvisited: java.util.HashMap<Pair<Int, Int>, Density>, nodes: java.util.HashMap<Pair<Int, Int>, Density>, start: Density?) {
         var lowest = start
+        val assessedUnvisited = HashSet<Density>()
 
         while (unvisited.isNotEmpty()) {
             val curr = lowest!!
@@ -72,11 +76,13 @@ class DayFifteen(file: String) : Project {
                 .forEach {
                     if (it != null && curr.shortestRisk + it.risk < it.shortestRisk) {
                         it.shortestRisk = curr.shortestRisk + it.risk
+                        assessedUnvisited.add(it)
                     }
                 }
 
             unvisited.remove(curr.coord)
-            lowest = unvisited.values.minByOrNull { it.shortestRisk }
+            lowest = assessedUnvisited.minByOrNull { it.shortestRisk }
+            assessedUnvisited.remove(lowest)
         }
     }
 
