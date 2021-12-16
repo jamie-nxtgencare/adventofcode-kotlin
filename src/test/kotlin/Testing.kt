@@ -154,12 +154,26 @@ class Testing {
 
     @Test
     fun day16Sample() {
-        testSample(16, -1, -1)
+        testSample(16, 31, -1)
     }
 
     @Test
     fun day16() {
         test(16, -1, -1)
+    }
+
+    @Test
+    fun day16Tests() {
+        assertEquals(getPacket("38006F45291200").getVersionSum(), 9)
+        assertEquals(getPacket("EE00D40C823060").getVersionSum(), 14)
+        assertEquals(getPacket("8A004A801A8002F478").getVersionSum(), 16)
+        assertEquals(getPacket("620080001611562C8802118E34").getVersionSum(), 12)
+        assertEquals(getPacket("C0015000016115A2E0802F182340").getVersionSum(), 23)
+        assertEquals(getPacket("A0016C880162017C3686B18A3D4780").getVersionSum(), 31)
+    }
+
+    fun getPacket(input: String): Packet {
+        return Packet(input.toCharArray().asList().map { c -> String.format("%04d", Integer.parseInt(Integer.toBinaryString(Integer.parseInt(c.toString(), 16))))}.joinToString(""))
     }
 
     @Test
