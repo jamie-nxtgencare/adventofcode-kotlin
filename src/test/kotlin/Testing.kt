@@ -154,12 +154,12 @@ class Testing {
 
     @Test
     fun day16Sample() {
-        testSample(16, 31, -1)
+        testSample(16, 31, 54)
     }
 
     @Test
     fun day16() {
-        test(16, -1, -1)
+        test(16, 886, -1)
     }
 
     @Test
@@ -170,6 +170,15 @@ class Testing {
         assertEquals(getPacket("620080001611562C8802118E34").getVersionSum(), 12)
         assertEquals(getPacket("C0015000016115A2E0802F182340").getVersionSum(), 23)
         assertEquals(getPacket("A0016C880162017C3686B18A3D4780").getVersionSum(), 31)
+
+        assertEquals(getPacket("C200B40A82").getResult(), 3)
+        assertEquals(getPacket("04005AC33890").getResult(), 54)
+        assertEquals(getPacket("880086C3E88112").getResult(), 7)
+        assertEquals(getPacket("CE00C43D881120").getResult(), 9)
+        assertEquals(getPacket("D8005AC2A8F0").getResult(), 1)
+        assertEquals(getPacket("F600BC2D8F").getResult(), 0)
+        assertEquals(getPacket("9C005AC2F8F0").getResult(), 0)
+        assertEquals(getPacket("9C0141080250320F1802104A08").getResult(), 1)
     }
 
     fun getPacket(input: String): Packet {
