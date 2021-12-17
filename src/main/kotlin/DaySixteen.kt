@@ -2,6 +2,7 @@ class DaySixteen(file: String) : Project {
     private val packet = Packet(mapLettersPerLines(file) { it.map { c -> String.format("%04d", Integer.parseInt(Integer.toBinaryString(Integer.parseInt(c.toString(), 16)))) }}.flatten().joinToString(""))
 
     override fun part1(): Any {
+        println(packet.toString())
         return packet.getVersionSum()
     }
 
@@ -70,5 +71,15 @@ class Packet(val input: String) {
 
     fun getVersionSum(): Int {
         return version + subpackets.sumOf { it.getVersionSum() }
+    }
+
+    override fun toString(): String {
+        return toString(0)
+    }
+
+    private fun toString(depth: Int): String {
+        val s = String.format("%sVersion: %s (Value: %s)", "\t".repeat(depth), version, if (type == LITERAL) literal.toString() else "operator")
+        val subStr = subpackets.map { it.toString(depth+1) }.joinToString("\n")
+        return "$s\n$subStr"
     }
 }
