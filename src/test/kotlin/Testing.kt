@@ -1,3 +1,4 @@
+import DaySeventeen.Companion.shoot
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -186,13 +187,22 @@ class Testing {
     }
 
     @Test
+    fun day17Tests() {
+        val ranges = DaySeventeen.parseLine("target area: x=20..30, y=-10..-5")
+        assertEquals(shoot(Pair(7L, 2L), ranges), 3L)
+        assertEquals(shoot(Pair(6L, 3L), ranges), 6L)
+        assertEquals(shoot(Pair(9L, 0L), ranges), 0L)
+        assertEquals(shoot(Pair(17L, -4L), ranges), Long.MIN_VALUE)
+    }
+
+    @Test
     fun day17Sample() {
-        testSample(17, -1, -1)
+        testSample(17, 45L, -1)
     }
 
     @Test
     fun day17() {
-        test(17, -1, -1)
+        test(17, 11175, -1)
     }
 
     @Test
