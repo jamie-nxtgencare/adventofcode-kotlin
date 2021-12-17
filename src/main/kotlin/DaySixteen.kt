@@ -18,7 +18,7 @@ class Packet(val input: String) {
     private var version = -1
     private var type = ""
     private var lengthTypeId = ""
-    private var literal = -1
+    private var literal = -1L
     private val subpackets = ArrayList<Packet>()
 
     init {
@@ -32,7 +32,7 @@ class Packet(val input: String) {
                 cont = read(1)
                 rest += read(4)
             }
-            literal = rest.toInt(2)
+            literal = rest.toLong(2)
         } else {
             lengthTypeId = read(1)
 
@@ -53,8 +53,13 @@ class Packet(val input: String) {
                     subpackets.add(packet)
                     rest = packet.rest()
                 }
+                reset(rest)
             }
         }
+    }
+
+    private fun reset(rest: String) {
+        i = input.length - rest.length
     }
 
     private fun rest(): String {
