@@ -1,7 +1,7 @@
 import java.lang.Long.max
 
 class DaySeventeen(file: String) : Project {
-    private val ranges = parseLine(getLines(file)[0])
+    private val ranges = if (file != "empty") parseLine(getLines(file)[0]) else Pair<ClosedRange<Long>, ClosedRange<Long>>(0L..0L,0L..0L)
     private var maxY = Long.MIN_VALUE
     private var countHits = 0
 
