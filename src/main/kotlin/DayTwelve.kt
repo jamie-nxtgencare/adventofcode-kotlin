@@ -63,7 +63,7 @@ class DayTwelve(file: String) : Project {
 
 }
 
-class Node(val label: String) {
+class Node(label: String) {
     val links = ArrayList<Node>()
     val isSmall = label.matches(Regex("[a-z]*")) && label != "start" && label != "end"
 }
