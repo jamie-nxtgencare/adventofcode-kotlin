@@ -2,21 +2,27 @@ import java.lang.Long.max
 
 class DaySeventeen(file: String) : Project {
     private val ranges = parseLine(getLines(file)[0])
+    private var maxY = Long.MIN_VALUE
+    private var countHits = 0
 
-    override fun part1(): Any {
-        var maxY = Long.MIN_VALUE
+    init {
         for (x in -200L..200L) {
             for (y in -200L..200L) {
                 val localMaxY = shoot(Pair(x,y), ranges)
+                if (localMaxY != Long.MIN_VALUE) {
+                    countHits++
+                }
                 maxY = max(maxY, localMaxY)
             }
         }
+    }
 
+    override fun part1(): Any {
         return maxY
     }
 
     override fun part2(): Any {
-        return -1
+        return countHits
     }
 
     companion object {
