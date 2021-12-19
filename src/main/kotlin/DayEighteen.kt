@@ -1,8 +1,8 @@
 import kotlin.math.ceil
 import kotlin.math.floor
 
-class DayEighteen(file: String) : Project {
-    private val equations = mapFileLines(file) { parse(it) }
+class DayEighteen(val file: String) : Project {
+    private var equations = mapFileLines(file) { parse(it) }
 
     override fun part1(): Any {
         val aaa = reducedSum(equations)
@@ -10,7 +10,21 @@ class DayEighteen(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        var max = Long.MIN_VALUE
+        for (i in equations.indices) {
+            for (j in equations.indices) {
+                if (i != j) {
+                    equations = mapFileLines(file) { parse(it) }
+                    val out = equations[i].plus(equations[j])
+                    out.reduce()
+                    val mag = out.getMagnitude()
+                    if (mag > max) {
+                        max = mag
+                    }
+                }
+            }
+        }
+        return max
     }
 
     companion object {
