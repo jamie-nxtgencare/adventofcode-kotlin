@@ -206,13 +206,120 @@ class Testing {
     }
 
     @Test
+    fun day18Tests() {
+        val parseTests = listOf(
+            Pair("[1,2]", listOf(1,2)),
+            Pair("[[1,2],3]", listOf(1,2,3)),
+            Pair("[9,[8,7]]", listOf(9,8,7)),
+            Pair("[[1,9],[8,5]]", listOf(1,9,8,5)),
+            Pair("[[[[1,2],[3,4]],[[5,6],[7,8]]],9]", listOf(1,2,3,4,5,6,7,8,9)),
+            Pair("[[[9,[3,8]],[[0,9],6]],[[[3,7],[4,9]],3]]", listOf(9,3,8,0,9,6,3,7,4,9,3)),
+            Pair("[[[[1,3],[5,3]],[[1,3],[8,7]]],[[[4,9],[6,9]],[[8,2],[7,3]]]]", listOf(1,3,5,3,1,3,8,7,4,9,6,9,8,2,7,3))
+        )
+
+        for (test in parseTests) {
+            val parsed = DayEighteen.parse(test.first)
+            assertEquals(test.first, parsed.toString())
+            assertEquals(test.second.joinToString(), parsed.traverse().joinToString())
+        }
+
+        val eq1 = DayEighteen.parse("[1,2]")
+        val eq2 = DayEighteen.parse("[[3,4],5]")
+
+        assertEquals(eq1.plus(eq2).toString(), "[[1,2],[[3,4],5]]")
+
+        val explodeTests = listOf(
+            Pair("[[[[[9,8],1],2],3],4]", "[[[[0,9],2],3],4]"),
+            Pair("[7,[6,[5,[4,[3,2]]]]]", "[7,[6,[5,[7,0]]]]"),
+            Pair("[[6,[5,[4,[3,2]]]],1]", "[[6,[5,[7,0]]],3]"),
+            Pair("[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]"),
+            Pair("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[7,0]]]]")
+        )
+
+        for (test in explodeTests) {
+            val parsed = DayEighteen.parse(test.first)
+            val exploded = parsed.explode()
+            assertEquals(exploded, true)
+            assertEquals(parsed.toString(), test.second)
+        }
+
+        val splitTests = listOf(
+            Pair("[10,0]", "[[5,5],0]"),
+            Pair("[11,0]", "[[5,6],0]"),
+            Pair("[12,0]", "[[6,6],0]"),
+        )
+
+        for (test in splitTests) {
+            val parsed = DayEighteen.parse(test.first)
+            val split = parsed.split()
+            assertEquals(split, true)
+            assertEquals(parsed.toString(), test.second)
+        }
+
+        val req1 = DayEighteen.parse("[[[[4,3],4],4],[7,[[8,4],9]]]")
+        val req2 = DayEighteen.parse("[1,1]")
+
+        val toReduce = req1.plus(req2)
+        toReduce.reduce()
+
+        assertEquals(toReduce.toString(), "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")
+        assertEquals(DayEighteen.parse("[9,1]").getMagnitude(), 29L)
+        assertEquals(DayEighteen.parse("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]").getMagnitude(), 3488L)
+
+        val reducedSumTests = listOf(
+            Pair(
+                listOf(
+                    DayEighteen.parse("[1,1]"),
+                    DayEighteen.parse("[2,2]"),
+                    DayEighteen.parse("[3,3]"),
+                    DayEighteen.parse("[4,4]")
+                ),
+                "[[[[1,1],[2,2]],[3,3]],[4,4]]"
+            ),
+            Pair(
+                listOf(
+                    DayEighteen.parse("[1,1]"),
+                    DayEighteen.parse("[2,2]"),
+                    DayEighteen.parse("[3,3]"),
+                    DayEighteen.parse("[4,4]"),
+                    DayEighteen.parse("[5,5]")
+                ),
+                "[[[[3,0],[5,3]],[4,4]],[5,5]]"
+            ),
+            Pair(
+                listOf(
+                    DayEighteen.parse("[1,1]"),
+                    DayEighteen.parse("[2,2]"),
+                    DayEighteen.parse("[3,3]"),
+                    DayEighteen.parse("[4,4]"),
+                    DayEighteen.parse("[5,5]"),
+                    DayEighteen.parse("[6,6]")
+                ),
+                "[[[[5,0],[7,4]],[5,5]],[6,6]]"
+            )
+        )
+
+        reducedSumTests.forEach { assertEquals(DayEighteen.reducedSum(it.first).toString(), it.second) }
+    }
+
+    @Test
+    fun day18BrokenTest() {
+        val aaa = DayEighteen.parse("[[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]")
+        val bbb = aaa.plus(DayEighteen.parse("[[[[4,2],2],6],[8,7]]"))
+
+        bbb.reduce()
+
+        assertEquals(bbb.toString(), "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]")
+    }
+
+    @Test
     fun day18Sample() {
-        testSample(18, -1, -1)
+        testSample(18, 4140L, -1)
     }
 
     @Test
     fun day18() {
-        test(18, -1, -1)
+        test(18, 4017, -1)
     }
 
     @Test
