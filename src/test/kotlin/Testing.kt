@@ -323,8 +323,13 @@ class Testing {
     }
 
     @Test
+    fun day19Tests() {
+        assertEquals(Point3D(1,2,3).getPermutations().size, 24)
+    }
+
+    @Test
     fun day19Sample() {
-        testSample(19, -1, -1)
+        testSample(19, 79, -1)
     }
 
     @Test
