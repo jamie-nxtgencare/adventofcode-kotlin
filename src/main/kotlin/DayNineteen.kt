@@ -27,24 +27,28 @@ class DayNineteen(file: String) : Project {
     }
 
     override fun part1(): Any {
-        var result = scan(scanners)
+        val hmm = ArrayList(scanners.filter { it.name == "--- scanner 13 ---" }).first()
+        scanners.remove(hmm)
 
-        while (result.second.isNotEmpty()) {
-            val subResult = scan(ArrayList(result.second))
-            subResult.second.add(result.first)
-            subResult.second.add(subResult.first)
-            result = scan(ArrayList(subResult.second))
+        val aaa = ArrayList(listOf(hmm))
+        aaa.addAll(scanners)
+
+        var result = merge(aaa)
+
+        while (result.size != 1) {
+            result = merge(result)
+            println("${result.size} scanners left")
         }
 
-        result.first.beacons.sortBy { it.x }
-        return result.first.beacons.size
+        return result.first().beacons.size
     }
 
-    private fun scan(scanners: java.util.ArrayList<Scanner>): Pair<Scanner, MutableList<Scanner>> {
+    private fun merge(scanners: java.util.ArrayList<Scanner>): ArrayList<Scanner> {
         val targetScanner = scanners.first()
         val restScanners = scanners.subList(1,scanners.size)
         val knownBeacons: ArrayList<Point3D> = ArrayList(targetScanner.beacons)
         var desperationCount = 0
+        var mergedScanners = ""
 
         giveup@ while (restScanners.isNotEmpty()) {
             var newKnownBeacons: ArrayList<Point3D>? = null
@@ -69,9 +73,10 @@ class DayNineteen(file: String) : Project {
                             restScanners.remove(testScanner)
                             println("Removing resolved scanner, ${restScanners.size} left")
                             newKnownBeacons = ArrayList(resetRestBeacons.filter { !knownBeacons.contains(it) })
+                            mergedScanners += " $testScanner"
                             break@foundOne
                         } else if (desperationCount > restScanners.size) {
-                            println("Giving up and trying a different approach")
+                            println("Try next target")
                             break@giveup
                         }
                     }
@@ -91,7 +96,8 @@ class DayNineteen(file: String) : Project {
             }
         }
 
-        return Pair(Scanner("--- joined scanners ---", knownBeacons), restScanners)
+        restScanners.add(Scanner(if(mergedScanners.isNotEmpty()) targetScanner.name + mergedScanners else targetScanner.name, knownBeacons))
+        return ArrayList(restScanners)
     }
 
     override fun part2(): Any {
