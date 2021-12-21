@@ -26,7 +26,6 @@ class DayNineteen(file: String) : Project {
             }
         }
         scanners.add(scanner!!)
-        scanners.reversed()
     }
 
     override fun part1(): Any {
@@ -81,7 +80,8 @@ class DayNineteen(file: String) : Project {
                                 val newKnownBeacons = ArrayList(resetRestBeacons.filter { !knownBeacons.contains(it) })
 
                                 testScanner.scanners.forEach {
-                                    targetScanner.scanners[it.key] = it.value.translate(initTrans).translate(moveTrans)
+                                    val permutatedScannerLocation = it.value.getPermutations()[perm.id]?.point ?: it.value
+                                    targetScanner.scanners[it.key] = permutatedScannerLocation.translate(initTrans).translate(moveTrans)
                                 }
 
                                 targetScanner.beacons.addAll(newKnownBeacons)
