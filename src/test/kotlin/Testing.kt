@@ -354,7 +354,7 @@ class Testing {
 
     @Test
     fun day21() {
-        test(21, -1, -1)
+        test(21, 671580, 912857726749764)
     }
 
     @Test
