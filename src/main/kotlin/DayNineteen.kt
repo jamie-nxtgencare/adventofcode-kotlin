@@ -30,19 +30,7 @@ class DayNineteen(file: String) : Project {
     }
 
     override fun part1(): Any {
-        lateinit var result: java.util.ArrayList<Scanner>
-
-        if (scanners.size > 5) {
-            val hmm = ArrayList(scanners.filter { it.name == "--- scanner 13 ---" }).first()
-            scanners.remove(hmm)
-
-            val aaa = ArrayList(listOf(hmm))
-            aaa.addAll(scanners)
-
-            result = merge(aaa)
-        } else {
-            result = merge(scanners)
-        }
+        var result = merge(scanners)
 
         while (result.size != 1) {
             result = merge(result)
@@ -71,12 +59,11 @@ class DayNineteen(file: String) : Project {
     private fun merge(scanners: java.util.ArrayList<Scanner>): ArrayList<Scanner> {
         val targetScanner = scanners.first()
         val restScanners = scanners.subList(1,scanners.size)
-        val knownBeacons: ArrayList<Point3D> = ArrayList(targetScanner.beacons)
         var desperationCount = 0
-        val mergedScanners: HashMap<Scanner, Point3D> = HashMap()
+        var foundBeacon = false
 
         giveup@ while (restScanners.isNotEmpty()) {
-            var newKnownBeacons: ArrayList<Point3D>? = null
+            val knownBeacons: ArrayList<Point3D> = ArrayList(targetScanner.beacons)
             foundOne@ for (targetBeacon in knownBeacons) {
                 val testScanner = restScanners.first()
                 for (testBeacon in testScanner.beacons) {
@@ -97,26 +84,26 @@ class DayNineteen(file: String) : Project {
                         if (matchedBeacons.size >= 11) { // 11 + the checked one is 12
                             restScanners.remove(testScanner)
                             println("Removing resolved scanner, ${restScanners.size} left")
-                            newKnownBeacons = ArrayList(resetRestBeacons.filter { !knownBeacons.contains(it) })
-
-                            val adjustedOrigin = targetBeacon.minus(perm.point)
+                            val newKnownBeacons = ArrayList(resetRestBeacons.filter { !knownBeacons.contains(it) })
 
                             testScanner.scanners.forEach {
-                                mergedScanners[it.key] = adjustedOrigin.translate(it.value)
+                                targetScanner.scanners[it.key] = it.value.translate(initTrans).translate(moveTrans)
                             }
 
+                            targetScanner.beacons.addAll(newKnownBeacons)
+                            foundBeacon = true
                             break@foundOne
-                        } else if (desperationCount > restScanners.size) {
+                        } else if (desperationCount >= restScanners.size) {
                             println("Try next target")
                             break@giveup
                         }
                     }
                 }
             }
-            if (newKnownBeacons != null) {
-                knownBeacons.addAll(newKnownBeacons)
-                println("Found some beacons, now at ${knownBeacons.size}")
+            if (foundBeacon) {
+                println("Found some beacons, now at ${targetScanner.beacons.size}")
                 desperationCount = 0
+                foundBeacon = false
             } else {
                 // Shuffle scanners to check for a different one to add
                 val first = restScanners.removeAt(0)
@@ -126,18 +113,13 @@ class DayNineteen(file: String) : Project {
             }
         }
 
-        val newScanner = Scanner(targetScanner.name, knownBeacons)
-        newScanner.origin = targetScanner
-        newScanner.scanners.putAll(targetScanner.scanners)
-        newScanner.scanners.putAll(mergedScanners)
-        restScanners.add(newScanner)
+        restScanners.add(targetScanner)
         return ArrayList(restScanners)
     }
 
 }
 
 class Scanner(val name: String, val beacons: ArrayList<Point3D>) {
-    var origin: Scanner = this
     var scanners = HashMap<Scanner, Point3D>()
 
     init {
