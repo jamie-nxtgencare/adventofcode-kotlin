@@ -55,4 +55,14 @@ interface Project {
 
         return output
     }
+
+    fun printGrid(grid: ArrayList<ArrayList<Int>>) {
+        grid.forEach {
+            it.forEach { o ->
+                print(if (o == 1) "#" else ".")
+            }
+            println()
+        }
+        println()
+    }
 }
