@@ -26,7 +26,6 @@ class DayNineteen(file: String) : Project {
             }
         }
         scanners.add(scanner!!)
-        scanners.reversed()
     }
 
     override fun part1(): Any {
