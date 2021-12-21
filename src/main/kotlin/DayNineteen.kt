@@ -26,19 +26,12 @@ class DayNineteen(file: String) : Project {
             }
         }
         scanners.add(scanner!!)
+        scanners.reversed()
     }
 
     override fun part1(): Any {
-        var result = merge(scanners)
-
-        while (result.size != 1) {
-            result = merge(result)
-            println("${result.size} scanners left")
-        }
-
-        mergedScanners = result
-
-        return result.first().beacons.size
+        mergedScanners = merge(scanners)
+        return mergedScanners.first().beacons.size
     }
 
     override fun part2(): Any {
@@ -56,64 +49,68 @@ class DayNineteen(file: String) : Project {
     }
 
     private fun merge(scanners: java.util.ArrayList<Scanner>): ArrayList<Scanner> {
-        val targetScanner = scanners.first()
-        val restScanners = scanners.subList(1,scanners.size)
-        var desperationCount = 0
-        var foundBeacon = false
+        while (scanners.size != 1) {
+            val targetScanner = scanners.first()
+            val restScanners = scanners.subList(1,scanners.size)
+            var restScannerCount = 0
+            var foundBeacon = false
 
-        giveup@ while (restScanners.isNotEmpty()) {
-            val knownBeacons: ArrayList<Point3D> = ArrayList(targetScanner.beacons)
-            foundOne@ for (targetBeacon in knownBeacons) {
-                val testScanner = restScanners.first()
-                for (testBeacon in testScanner.beacons) {
-                    val restBeacons = testScanner.beacons.filter { it != testBeacon }
-                    val restPerms = restBeacons.map { it.getPermutations() }
+            giveup@ while (restScanners.isNotEmpty()) {
+                val knownBeacons: ArrayList<Point3D> = ArrayList(targetScanner.beacons)
+                foundOne@ for (targetBeacon in knownBeacons) {
+                    val testScanner = restScanners.first()
+                    for (testBeacon in testScanner.beacons) {
+                        val restBeacons = testScanner.beacons.filter { it != testBeacon }
+                        val restPerms = restBeacons.map { it.getPermutations() }
 
-                    for (perm in testBeacon.getPermutations().values) {
-                        // Let testBeacon be 0,0
-                        val initTrans = perm.point.invert()
-                        // Assume testBeacon is targetBeacon
-                        val moveTrans = targetBeacon.clone()
+                        for (perm in testBeacon.getPermutations().values) {
+                            // Let testBeacon be 0,0
+                            val initTrans = perm.point.invert()
+                            // Assume testBeacon is targetBeacon
+                            val moveTrans = targetBeacon.clone()
 
-                        // Get the same permutation we're getting for all the rest of the beacons
-                        val resetRestBeacons = restPerms.map { it[perm.id]?.point?.translate(initTrans)?.translate(moveTrans)!! }
+                            // Get the same permutation we're getting for all the rest of the beacons
+                            val resetRestBeacons = restPerms.map { it[perm.id]?.point?.translate(initTrans)?.translate(moveTrans)!! }
 
-                        val matchedBeacons = resetRestBeacons.filter { knownBeacons.contains(it) }
+                            val matchedBeacons = resetRestBeacons.filter { knownBeacons.contains(it) }
 
-                        if (matchedBeacons.size >= 11) { // 11 + the checked one is 12
-                            restScanners.remove(testScanner)
-                            println("Removing resolved scanner, ${restScanners.size} left")
-                            val newKnownBeacons = ArrayList(resetRestBeacons.filter { !knownBeacons.contains(it) })
+                            if (matchedBeacons.size >= 11) { // 11 + the checked one is 12
+                                restScanners.remove(testScanner)
+                                scanners.remove(testScanner)
+                                println("Removing resolved scanner, ${restScanners.size} left")
+                                val newKnownBeacons = ArrayList(resetRestBeacons.filter { !knownBeacons.contains(it) })
 
-                            testScanner.scanners.forEach {
-                                targetScanner.scanners[it.key] = it.value.translate(initTrans).translate(moveTrans)
+                                testScanner.scanners.forEach {
+                                    targetScanner.scanners[it.key] = it.value.translate(initTrans).translate(moveTrans)
+                                }
+
+                                targetScanner.beacons.addAll(newKnownBeacons)
+                                foundBeacon = true
+                                break@foundOne
+                            } else if (restScannerCount >= restScanners.size) {
+                                val first = scanners.removeAt(0)
+                                scanners.add(first)
+                                println("Trying next target ${scanners.first()}")
+                                break@giveup
                             }
-
-                            targetScanner.beacons.addAll(newKnownBeacons)
-                            foundBeacon = true
-                            break@foundOne
-                        } else if (desperationCount >= restScanners.size) {
-                            println("Try next target")
-                            break@giveup
                         }
                     }
                 }
-            }
-            if (foundBeacon) {
-                println("Found some beacons, now at ${targetScanner.beacons.size}")
-                desperationCount = 0
-                foundBeacon = false
-            } else {
-                // Shuffle scanners to check for a different one to add
-                val first = restScanners.removeAt(0)
-                restScanners.add(first)
-                println("Trying ${restScanners.first()}")
-                desperationCount++
+                if (foundBeacon) {
+                    println("Found some beacons, now at ${targetScanner.beacons.size}")
+                    restScannerCount = 0
+                    foundBeacon = false
+                } else {
+                    // Shuffle scanners to check for a different one to add
+                    val first = restScanners.removeAt(0)
+                    restScanners.add(first)
+                    println("Trying next test ${restScanners.first()}")
+                    restScannerCount++
+                }
             }
         }
 
-        restScanners.add(targetScanner)
-        return ArrayList(restScanners)
+        return scanners
     }
 
 }
