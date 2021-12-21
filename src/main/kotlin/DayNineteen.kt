@@ -1,4 +1,7 @@
+import kotlin.math.abs
+
 class DayNineteen(file: String) : Project {
+    private lateinit var mergedScanners: java.util.ArrayList<Scanner>
     private val lines = getLines(file)
     private val scanners = ArrayList<Scanner>()
 
@@ -27,20 +30,42 @@ class DayNineteen(file: String) : Project {
     }
 
     override fun part1(): Any {
-        val hmm = ArrayList(scanners.filter { it.name == "--- scanner 13 ---" }).first()
-        scanners.remove(hmm)
+        lateinit var result: java.util.ArrayList<Scanner>
 
-        val aaa = ArrayList(listOf(hmm))
-        aaa.addAll(scanners)
+        if (scanners.size > 5) {
+            val hmm = ArrayList(scanners.filter { it.name == "--- scanner 13 ---" }).first()
+            scanners.remove(hmm)
 
-        var result = merge(aaa)
+            val aaa = ArrayList(listOf(hmm))
+            aaa.addAll(scanners)
+
+            result = merge(aaa)
+        } else {
+            result = merge(scanners)
+        }
 
         while (result.size != 1) {
             result = merge(result)
             println("${result.size} scanners left")
         }
 
+        mergedScanners = result
+
         return result.first().beacons.size
+    }
+
+    override fun part2(): Any {
+        var max = Int.MIN_VALUE
+        val locs = mergedScanners.first().scanners.values
+        locs.forEach { one ->
+            locs.forEach { two ->
+                val dist = one.getManhattanDistance(two)
+                if (one != two && dist > max) {
+                    max = dist
+                }
+            }
+        }
+        return max
     }
 
     private fun merge(scanners: java.util.ArrayList<Scanner>): ArrayList<Scanner> {
@@ -48,7 +73,7 @@ class DayNineteen(file: String) : Project {
         val restScanners = scanners.subList(1,scanners.size)
         val knownBeacons: ArrayList<Point3D> = ArrayList(targetScanner.beacons)
         var desperationCount = 0
-        var mergedScanners = ""
+        val mergedScanners: HashMap<Scanner, Point3D> = HashMap()
 
         giveup@ while (restScanners.isNotEmpty()) {
             var newKnownBeacons: ArrayList<Point3D>? = null
@@ -73,7 +98,13 @@ class DayNineteen(file: String) : Project {
                             restScanners.remove(testScanner)
                             println("Removing resolved scanner, ${restScanners.size} left")
                             newKnownBeacons = ArrayList(resetRestBeacons.filter { !knownBeacons.contains(it) })
-                            mergedScanners += " $testScanner"
+
+                            val adjustedOrigin = targetBeacon.minus(perm.point)
+
+                            testScanner.scanners.forEach {
+                                mergedScanners[it.key] = adjustedOrigin.translate(it.value)
+                            }
+
                             break@foundOne
                         } else if (desperationCount > restScanners.size) {
                             println("Try next target")
@@ -85,7 +116,6 @@ class DayNineteen(file: String) : Project {
             if (newKnownBeacons != null) {
                 knownBeacons.addAll(newKnownBeacons)
                 println("Found some beacons, now at ${knownBeacons.size}")
-                newKnownBeacons = null
                 desperationCount = 0
             } else {
                 // Shuffle scanners to check for a different one to add
@@ -96,18 +126,37 @@ class DayNineteen(file: String) : Project {
             }
         }
 
-        restScanners.add(Scanner(if(mergedScanners.isNotEmpty()) targetScanner.name + mergedScanners else targetScanner.name, knownBeacons))
+        val newScanner = Scanner(targetScanner.name, knownBeacons)
+        newScanner.origin = targetScanner
+        newScanner.scanners.putAll(targetScanner.scanners)
+        newScanner.scanners.putAll(mergedScanners)
+        restScanners.add(newScanner)
         return ArrayList(restScanners)
-    }
-
-    override fun part2(): Any {
-        return -1
     }
 
 }
 
 class Scanner(val name: String, val beacons: ArrayList<Point3D>) {
+    var origin: Scanner = this
+    var scanners = HashMap<Scanner, Point3D>()
+
+    init {
+        scanners[this] = Point3D(0,0,0)
+    }
+
     override fun toString() = name
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Scanner) return false
+
+        if (name != other.name) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
 }
 
 class Permutation(val id: Triple<Int, Int, Int>, val point: Point3D) {
@@ -134,6 +183,7 @@ class Point3D(val x: Int, val y: Int, val z: Int) {
     fun translate(amount: Point3D) = Point3D(x+amount.x, y+amount.y, z+amount.z)
     fun invert() = Point3D(-x,-y,-z)
     fun clone() = Point3D(x,y,z)
+    fun minus(amount: Point3D) = Point3D(x-amount.x, y-amount.y, z-amount.z)
 
     fun getPermutations(): java.util.HashMap<Triple<Int, Int, Int>, Permutation> {
         if (cachedPerms != null) {
@@ -189,5 +239,7 @@ class Point3D(val x: Int, val y: Int, val z: Int) {
         result = 31 * result + z
         return result
     }
+
+    fun getManhattanDistance(beacon2: Point3D) = abs(x - beacon2.x) + abs(y - beacon2.y) + abs(z - beacon2.z)
 
 }
