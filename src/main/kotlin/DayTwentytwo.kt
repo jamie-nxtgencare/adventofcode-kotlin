@@ -10,41 +10,30 @@ class DayTwentytwo(file: String) : Project {
         )
     }
 
-    lateinit var grid: HashMap<Triple<Int, Int, Int>, Boolean>
-
     override fun part1(): Any {
-        grid = HashMap()
-        ins.forEach {
-            for(x in it.zIntRange) {
-                if (inRange(x)) {
-                    for (y in it.yIntRange) {
-                        if (inRange(y)) {
-                            for (z in it.xIntRange) {
-                                if (inRange(z)) {
-                                    if (it.on) {
-                                        grid[Triple(x, y, z)] = true
-                                    } else {
-                                        grid.remove(Triple(x, y, z))
-                                    }
-                                }
-                            }
+        var count = 0
+        val range = -50..50
+        for (x in range) {
+            for (y in range) {
+                for (z in range) {
+                    var on = false
+                    for (i in ins) {
+                        if (i.xIntRange.contains(x) && i.yIntRange.contains(y) && i.zIntRange.contains(z)) {
+                            on = i.on
                         }
+                    }
+                    if (on) {
+                        count++
                     }
                 }
             }
         }
-        return grid.size
+        return count
     }
 
     override fun part2(): Any {
-        grid = HashMap()
         return -1
     }
-
-    private fun inRange(i: Int): Boolean {
-        return i <= 50 && i >= -50
-    }
-
 }
 
 class RebootInstruction(val on: Boolean, xRangeS: String, yRangeS: String, zRangeS: String) {
