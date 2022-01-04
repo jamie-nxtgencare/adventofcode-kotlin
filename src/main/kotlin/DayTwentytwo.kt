@@ -38,7 +38,10 @@ class DayTwentytwo(file: String) : Project {
     override fun part2(): Any {
         val prisms = ArrayList<RectangularPrism>()
         var count = 1
+        var prev = 0L
         for (i in ins) {
+            val area = i.prism.area()
+            println("Turning ${if (i.on) "on" else "off"} up to $area cubes")
             val overlappingPrisms = prisms.filter { it.overlaps(i.prism) }
             prisms.removeAll(overlappingPrisms.toSet())
 
@@ -46,12 +49,19 @@ class DayTwentytwo(file: String) : Project {
                 if (overlappingPrisms.isEmpty()) {
                     prisms.add(i.prism)
                 } else {
-                    prisms.addAll(overlappingPrisms.map { it.add(i.prism) }.flatten())
+                    prisms.addAll(overlappingPrisms.map { it.add(i.prism) }.flatten().toSet())
                 }
             } else {
                 prisms.addAll(overlappingPrisms.map { it.subtract(i.prism) }.flatten())
             }
-            println("${count++} and ${prisms.size} prisms (count: ${prisms.sumOf { it.area() }})")
+            val cubes = prisms.sumOf { it.area() }
+            println("${count++} and ${prisms.size} prisms (count: $cubes, prev $prev, diff ${cubes - prev})")
+
+            if (area < cubes - prev) {
+                println("Houston we have a problem")
+            }
+
+            prev = cubes
         }
 
         return prisms.sumOf { it.area() }
@@ -77,7 +87,7 @@ class RebootInstruction(val on: Boolean, xRangeS: String, yRangeS: String, zRang
     }
 }
 
-class RectangularPrism(val x: Long, val y: Long, val z: Long, val x2: Long, val y2: Long, val z2: Long, val label: String = "") {
+class RectangularPrism(var x: Long, var y: Long, var z: Long, var x2: Long, var y2: Long, var z2: Long, val label: String = "") {
     fun area() = length() * width() * height()
     private fun width() =  x2 - x + 1
     private fun length() = y2 - y + 1
