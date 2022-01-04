@@ -358,13 +358,54 @@ class Testing {
     }
 
     @Test
+    fun day22Tests() {
+        val block = RectangularPrism(0,0,0,0,0,0)
+        assertEquals(block.area(), 1)
+        val block2 = RectangularPrism(1,1,1,1,1,1)
+        assertEquals(block.add(block2).sumOf { it.area() }, 2)
+
+
+        val rectangle = RectangularPrism(1,1,1,1,1,2)
+        assertEquals(rectangle.area(), 2)
+        assertEquals(rectangle.subtract(block2).sumOf { it.area() }, 1)
+        assertEquals(RectangularPrism(1,1,2,1,1,3).subtract(block2).sumOf { it.area() }, 2)
+        assertEquals(RectangularPrism(1,1,0,1,1,1).subtract(block2).sumOf { it.area() }, 1)
+        assertEquals(RectangularPrism(0,1,1,1,1,1).subtract(block2).sumOf { it.area() }, 1)
+        assertEquals(RectangularPrism(1,1,1,2,1,1).subtract(block2).sumOf { it.area() }, 1)
+        assertEquals(RectangularPrism(1,0,1,1,1,1).subtract(block2).sumOf { it.area() }, 1)
+        assertEquals(RectangularPrism(1,1,1,1,2,1).subtract(block2).sumOf { it.area() }, 1)
+
+        val int1 = RectangularPrism(10,10,10,12,12,12)
+        val int2 = RectangularPrism(11,11,11,13,13,13)
+
+        val intersection = int1.intersection(int2)
+        assertEquals(int1.area() - intersection?.area()!!, 19)
+
+        val outcome = int1.subtract(int2)
+        assertEquals(outcome.sumOf { it.area() }, 19)
+
+        val addOutcome = int1.add(int2)
+        assertEquals(addOutcome.sumOf { it.area() }, 27 + 19)
+
+        val testPrism = RectangularPrism(10, 10, 10, 12, 12, 10)
+        val testSubPrism = RectangularPrism(9, 9, 9, 11, 11, 11)
+
+        val intersect = testPrism.intersection(testSubPrism)
+        assertEquals(intersect?.area()!!, 4)
+
+        val diff = testPrism.subtract(testSubPrism)
+        assertEquals(diff.sumOf { it.area() }, 5)
+
+    }
+
+    @Test
     fun day22Sample() {
-        testSample(22, 590784, -1)
+        testSample(22, 39, 39L)
     }
 
     @Test
     fun day22() {
-        test(22, 589411, 2758514936282235)
+        test(22, 589411, -1)
     }
 
     @Test

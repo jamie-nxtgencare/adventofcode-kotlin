@@ -1,4 +1,7 @@
+import kotlin.math.min
+
 class DayTwentytwo(file: String) : Project {
+    var i = 0
     val ins = mapFileLines(file) {
         val chunks = it.split(",")
 
@@ -6,7 +9,8 @@ class DayTwentytwo(file: String) : Project {
             it.substring(0,2) == "on",
             chunks[0].split("=").last(),
             chunks[1].split("=").last(),
-            chunks[2].split("=").last()
+            chunks[2].split("=").last(),
+            i++
         )
     }
 
@@ -32,17 +36,233 @@ class DayTwentytwo(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        val prisms = ArrayList<RectangularPrism>()
+        var count = 1
+        for (i in ins) {
+            val overlappingPrisms = prisms.filter { it.overlaps(i.prism) }
+            prisms.removeAll(overlappingPrisms.toSet())
+
+            if (i.on) {
+                if (overlappingPrisms.isEmpty()) {
+                    prisms.add(i.prism)
+                } else {
+                    prisms.addAll(overlappingPrisms.map { it.add(i.prism) }.flatten())
+                }
+            } else {
+                prisms.addAll(overlappingPrisms.map { it.subtract(i.prism) }.flatten())
+            }
+            println("${count++} and ${prisms.size} prisms (count: ${prisms.sumOf { it.area() }})")
+        }
+
+        return prisms.sumOf { it.area() }
     }
 }
 
-class RebootInstruction(val on: Boolean, xRangeS: String, yRangeS: String, zRangeS: String) {
-    val xIntRange = toIntRange(xRangeS)
-    val yIntRange = toIntRange(yRangeS)
-    val zIntRange = toIntRange(zRangeS)
+class RebootInstruction(val on: Boolean, xRangeS: String, yRangeS: String, zRangeS: String, val order: Int) {
+    val xIntRange = toLongRange(xRangeS)
+    val yIntRange = toLongRange(yRangeS)
+    val zIntRange = toLongRange(zRangeS)
+    val prism = RectangularPrism(
+        xIntRange.first,
+        yIntRange.first,
+        zIntRange.first,
+        xIntRange.last,
+        yIntRange.last,
+        zIntRange.last
+    )
 
-    private fun toIntRange(s: String): IntRange {
+    private fun toLongRange(s: String): LongRange {
         val split = s.split("..")
-        return IntRange(split.first().toInt(), split.last().toInt())
+        return LongRange(split.first().toLong(), split.last().toLong())
     }
+}
+
+class RectangularPrism(val x: Long, val y: Long, val z: Long, val x2: Long, val y2: Long, val z2: Long, val label: String = "") {
+    fun area() = length() * width() * height()
+    private fun width() =  x2 - x + 1
+    private fun length() = y2 - y + 1
+    private fun height() = z2 - z + 1
+
+    fun overlaps(prism: RectangularPrism): Boolean {
+        return (x <= prism.x2) && (prism.x <= x2) &&
+                (y <= prism.y2) && (prism.y <= y2) &&
+                (z <= prism.z2) && (prism.z <= z2)
+    }
+
+    fun intersection(prism: RectangularPrism): RectangularPrism? {
+        return if (overlaps(prism)) RectangularPrism(
+            x.coerceAtLeast(prism.x),
+            y.coerceAtLeast(prism.y),
+            z.coerceAtLeast(prism.z),
+            min(x2, prism.x2),
+            min(y2, prism.y2),
+            min(z2, prism.z2),
+        ) else null
+    }
+
+    fun add(prism: RectangularPrism): List<RectangularPrism> {
+        val out = ArrayList<RectangularPrism>()
+
+        // Find intersection
+        val intersection = intersection(prism)
+
+        if (intersection != null) {
+            // Remove the interesection from one side
+            out.addAll(subtract(intersection))
+            // Add the other side back in
+            out.add(prism)
+        } else {
+            out.add(this)
+            out.add(prism)
+        }
+
+        return out
+    }
+
+    fun subtract(prism: RectangularPrism): List<RectangularPrism> {
+        val out = ArrayList<RectangularPrism>()
+        // Find intersection
+        val intersection = intersection(prism)
+
+        if (intersection != null) {
+            var topBottom = z2
+            // Does this prism extend above the intersection?
+            if (z2 > intersection.z2) {
+                topBottom = intersection.z2 + 1
+                out.add(
+                    RectangularPrism(
+                        x,
+                        y,
+                        topBottom,
+                        x2,
+                        y2,
+                        z2,
+                        "top"
+                    )
+                )
+                topBottom--
+            }
+
+            // Does this prism extend below the intersection?
+            var bottomTop = z
+            if (z < intersection.z) {
+                bottomTop = intersection.z - 1
+                out.add(
+                    RectangularPrism(
+                        x,
+                        y,
+                        z,
+                        x2,
+                        y2,
+                        bottomTop,
+                        "bottom"
+                    )
+                )
+                bottomTop++
+            }
+
+            var rightLeft = x2
+            // Does this prism extend to the left of the intersection?
+            if (x2 > intersection.x2) {
+                rightLeft = intersection.x2 + 1
+                out.add(
+                    RectangularPrism(
+                        rightLeft,
+                        y,
+                        bottomTop,
+                        x2,
+                        y2,
+                        topBottom,
+                        "right"
+                    )
+                )
+                rightLeft--
+            }
+
+            var leftRight = x
+            // Does this prism extend to the right of the intersection?
+            if (x < intersection.x) {
+                leftRight = intersection.x - 1
+                out.add(
+                    RectangularPrism(
+                        x,
+                        y,
+                        bottomTop,
+                        leftRight,
+                        y2,
+                        topBottom,
+                        "left"
+                    )
+                )
+                leftRight++
+            }
+
+            // Does this prism extend to the back of the intersection?
+            if (y2 > intersection.y2) {
+                val frontBack = intersection.y2 + 1
+                out.add(
+                    RectangularPrism(
+                        leftRight,
+                        frontBack,
+                        bottomTop,
+                        rightLeft,
+                        y2,
+                        topBottom,
+                        "back"
+                    )
+                )
+            }
+
+            // Does this prism extend to the front of the intersection?
+            if (y < intersection.y) {
+                val backFront = intersection.y - 1
+                out.add(
+                    RectangularPrism(
+                        leftRight,
+                        y,
+                        bottomTop,
+                        rightLeft,
+                        backFront,
+                        topBottom,
+                        "front"
+                    )
+                )
+            }
+
+        } else {
+            out.add(this)
+        }
+
+        return out
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RectangularPrism) return false
+
+        if (x != other.x) return false
+        if (y != other.y) return false
+        if (z != other.z) return false
+        if (x2 != other.x2) return false
+        if (y2 != other.y2) return false
+        if (z2 != other.z2) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        result = 31 * result + z
+        result = 31 * result + x2
+        result = 31 * result + y2
+        result = 31 * result + z2
+        return result.toInt()
+    }
+
+    override fun toString(): String {
+        return "RectangularPrism(x=$x..$x2, y=$y..$y2, z=$z..$z2)${if (label.isBlank()) "" else "($label)"}"
+    }
+
+
 }
