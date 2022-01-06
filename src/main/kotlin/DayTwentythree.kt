@@ -1,11 +1,11 @@
-import kotlin.math.abs
+import java.util.*
 
 class DayTwentythree(file: String) : Project {
     private var rows = 0
     private var cols = 0
     private val grid = mapLettersPerLines(file) {
         val row = it.map { char ->
-            Tile(0, cols++, rows, char.toString())
+            Tile(cols++, rows, char.toString())
         }
         rows++
         cols = 0
@@ -15,62 +15,69 @@ class DayTwentythree(file: String) : Project {
     private val game: AmphipodGame = AmphipodGame(grid)
 
     override fun part1(): Any {
-        val states = HashMap<AmphipodGame, Int>()
-        val solve = game.solve(states)
+        val solve = game.solve()
         return solve
     }
 
     override fun part2(): Any {
-        return -1
+        val grid2 = ArrayList<List<Tile>>()
+
+        grid.forEach {
+            val row = ArrayList<Tile>()
+            row.addAll(it.map { tile -> Tile(tile.x, if(tile.y <= 2) tile.y else tile.y + 2, tile.toString()) })
+            grid2.add(row)
+
+            if (grid2.size == 3) {
+                var cols = 0
+                grid2.add(" #D#C#B#A#".split("").map { char -> Tile(cols++, 3, char) })
+                cols = 0
+                grid2.add(" #D#B#A#C#".split("").map { char -> Tile(cols++, 4, char) })
+            }
+        }
+
+        val part2Game = AmphipodGame(grid2)
+        val solve = part2Game.solve()
+        return solve
     }
 }
 
-class AmphipodGame(startingGrid: List<List<Tile>>, depth: Int = 0) {
+class AmphipodGame(startingGrid: List<List<Tile>>) {
     val amphipodLocations = ArrayList<Tile>()
     val grid = ArrayList<ArrayList<Tile>>()
 
     init {
         startingGrid.forEach {
             val row = ArrayList<Tile>()
-            row.addAll(it.map { tile -> Tile(depth, tile.x, tile.y, tile.toString()) })
+            row.addAll(it.map { tile -> Tile(tile.x, tile.y, tile.toString()) })
             amphipodLocations.addAll(row.filter { it.hasAmphipod() })
             grid.add(row)
         }
     }
 
-    fun solve(solvedAmphipodGames: HashMap<AmphipodGame, Int>): Int {
-        if (solvedAmphipodGames.containsKey(this)) {
-            return solvedAmphipodGames[this]!!
-        }
-
-        if (isDone()) {
-            return 0
-        }
-
+    fun solve(): Int {
         val moveableAmphipods = getMoveableAmphipods()
+        val initialStates = moveableAmphipods.map { getPossibleGameStates(it) }
+        val seenStates = HashSet<Int>()
+        val nextPotentialMoves: PriorityQueue<Pair<AmphipodGame, Int>> = PriorityQueue(compareBy { it.second })
+        nextPotentialMoves.addAll(initialStates.flatten())
 
-        if (moveableAmphipods.isEmpty()) {
-            return -1
-        }
+        while (nextPotentialMoves.isNotEmpty()) {
+            val it = nextPotentialMoves.poll()
 
-        val potentialMoves: List<Pair<AmphipodGame, Int>> = moveableAmphipods.map { getPossibleGameStates(it) }.flatten()
-
-        val solvedMoves = potentialMoves.map {
             val game = it.first
             val cost = it.second
-            var result = -1
-            if (solvedAmphipodGames.containsKey(game) && solvedAmphipodGames[game]!! > 0) {
-                result = solvedAmphipodGames[game]!!
-            } else if (!solvedAmphipodGames.containsKey(game)) {
-                result = game.solve(solvedAmphipodGames)
+
+            if (game.isDone()) {
+                return cost
+            } else {
+                val nextMoveableAmphipods = game.getMoveableAmphipods()
+                val states = nextMoveableAmphipods.map { a -> game.getPossibleGameStates(a) }.flatten().map { s -> Pair(s.first, cost + s.second) }.filter { !seenStates.contains(it.hashCode()) }
+                seenStates.addAll(states.map { it.hashCode() })
+                nextPotentialMoves.addAll(states)
             }
-            Pair(game, if (result >= 0) result + cost else -1)
         }
 
-        val bestMove = solvedMoves.filter { it.second >= 0 }.sortedBy { it.second }.firstOrNull()
-
-        solvedAmphipodGames[this] = bestMove?.second ?: -1
-        return solvedAmphipodGames[this]!!
+        return -1
     }
 
     fun getMoveableAmphipods(): List<Tile> {
@@ -105,11 +112,13 @@ class AmphipodGame(startingGrid: List<List<Tile>>, depth: Int = 0) {
 
         val validMoves = openNeighbours.filter { isValidMove(tile, it.first) }.sortedBy { i -> i.first.second }
 
-        return validMoves.map {
-            val game = clone(grid.first().first().depth)
+        val states = validMoves.map {
+            val game = clone()
             val cost = game.move(game.grid[tile.y][tile.x], it.first, it.second)
             Pair(game, cost)
         }
+
+        return states
     }
 
     private fun isValidMove(tile: Tile, it: Pair<Int, Int>): Boolean {
@@ -132,6 +141,7 @@ class AmphipodGame(startingGrid: List<List<Tile>>, depth: Int = 0) {
         return amphipod.cost * cost
     }
 
+
     fun isDone(tile: Tile): Boolean {
         return tile.isWall || (tile.isDone() && isDone(grid[tile.y+1][tile.x]))
     }
@@ -140,8 +150,12 @@ class AmphipodGame(startingGrid: List<List<Tile>>, depth: Int = 0) {
         return amphipodLocations.none { !isDone(it) }
     }
 
-    private fun clone(depth: Int): AmphipodGame {
-        return AmphipodGame(grid, depth + 1)
+    fun countDone(): Int {
+        return amphipodLocations.count { isDone(it) }
+    }
+
+    private fun clone(): AmphipodGame {
+        return AmphipodGame(grid)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -172,7 +186,7 @@ class AmphipodGame(startingGrid: List<List<Tile>>, depth: Int = 0) {
 
 }
 
-class Tile(val depth: Int, val x: Int, val y: Int, letter: String) {
+class Tile(val x: Int, val y: Int, letter: String) {
     val isHallway: Boolean = y == 1
     val blocksDoor = isHallway && (x == 3 || x == 5 || x == 7 || x == 9)
     val isWall: Boolean = letter == "#"
@@ -195,7 +209,7 @@ class Tile(val depth: Int, val x: Int, val y: Int, letter: String) {
     }
 
     fun isDone(): Boolean {
-        return isGoalFor(amphipod)
+        return isGoalFor(amphipod) || isWall
     }
 
     fun isGoalFor(amphipod: Amphipod?): Boolean {
@@ -210,7 +224,6 @@ class Tile(val depth: Int, val x: Int, val y: Int, letter: String) {
         if (this === other) return true
         if (other !is Tile) return false
 
-        if (depth != other.depth) return false
         if (x != other.x) return false
         if (y != other.y) return false
         if (isHallway != other.isHallway) return false
@@ -222,8 +235,7 @@ class Tile(val depth: Int, val x: Int, val y: Int, letter: String) {
     }
 
     override fun hashCode(): Int {
-        var result = depth
-        result = 31 * result + x
+        var result = x
         result = 31 * result + y
         result = 31 * result + isHallway.hashCode()
         result = 31 * result + blocksDoor.hashCode()
