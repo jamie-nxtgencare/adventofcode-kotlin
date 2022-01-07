@@ -419,6 +419,38 @@ class Testing {
     }
 
     @Test
+    fun day24Test() {
+
+        val neg = Alu(listOf("inp x", "mul x -1").map { AluIns(it) })
+        neg.input = "1"
+        neg.execute()
+        assertEquals(neg.registry, arrayOf(0,-1,0,0))
+        val mulcomp = Alu(listOf("inp z", "inp x", "mul z 3", "eql z x").map { AluIns(it) })
+        mulcomp.input = "26"
+        mulcomp.execute()
+        assertEquals(mulcomp.registry, arrayOf(0,6,0,1))
+
+        val alu = Alu(
+            listOf(
+                "inp w",
+                "add z w",
+                "mod z 2",
+                "div w 2",
+                "add y w",
+                "mod y 2",
+                "div w 2",
+                "add x w",
+                "mod x 2",
+                "div w 2",
+                "mod w 2"
+            ).map { AluIns(it) }
+        )
+        alu.input = "7"
+        alu.execute()
+        assertEquals(alu.registry, arrayOf(0,1,1,1))
+    }
+
+    @Test
     fun day24Sample() {
         testSample(24, -1, -1)
     }
