@@ -1,4 +1,5 @@
 import kotlin.math.floor
+import kotlin.system.measureNanoTime
 
 class DayTwentyfour(file: String) : Project {
     val ins = mapFileLines(file) { AluIns(it) }
@@ -6,27 +7,49 @@ class DayTwentyfour(file: String) : Project {
     override fun part1(): Any {
         val alu = Alu(ins)
 
-        for (i in 99_999_999_999_999 downTo 11_111_111_111_111) {
-            val s = i.toString()
+        var prevOutputs: Set<Int>
+        var outputs: HashSet<Int>
+        val validLastIndexes = HashMap<Int, Int>()
+        var solved = 13
+        var lastSolvedValue = 0
 
-            if (i % 1_000_000 == 0L) {
-                println(i / 99_999_999_999_999.0 * 100)
-                alu.purgeCache()
-            }
+        while(solved >= 0) {
+            prevOutputs = setOf(0)
+            loop@ for (moduleIndex in 0..solved) {
+                println("Module $moduleIndex, ${prevOutputs.size}")
+                outputs = HashSet()
 
-            if (!s.contains("0")) {
-                alu.input = s
-                alu.execute()
+                for (input1 in 9 downTo 1) {
+                    println("${floor((input1 - 1) / 8.0 * 100).toInt()}% (outputs ${outputs.size})")
+                    val input1Str = input1.toString()
+                    val module = alu.getModule(moduleIndex)
+                    for (input2 in prevOutputs) {
+                        module.reset()
+                        module.input = input1Str
+                        module.registry[3] = input2
+                        module.execute()
 
-                if (alu.registry.last() == 0) {
-                    return s.toLong()
+                        outputs.add(module.registry[3])
+
+                        if (moduleIndex == solved && module.registry[3] == lastSolvedValue) {
+                            lastSolvedValue = input2
+                            validLastIndexes[solved] = input1
+                            println("Solved ${solved--}, $input1, searching for $input2")
+                            break@loop
+                        }
+                    }
                 }
-
-                alu.reset()
+                prevOutputs = outputs
             }
         }
 
-        return -1
+        var output = ""
+
+        for (i in 0..13) {
+            output += validLastIndexes[i]!!.toString()
+        }
+
+        return output.toInt()
     }
 
     override fun part2(): Any {
@@ -78,7 +101,6 @@ class AluIns(val it: String) {
 
 class Alu(private val instructions: List<AluIns>, var count: Int = 0) {
     var input:String? = null
-    private val l2Cache = HashMap<Int, HashMap<String, Array<Int>>>()
     var registry = arrayOf(0,0,0,0)
     val inputIns = ArrayList<Int>()
 
@@ -88,10 +110,30 @@ class Alu(private val instructions: List<AluIns>, var count: Int = 0) {
                 inputIns.add(i)
             }
         }
+    }
 
-        for (i in 0..13) {
-            l2Cache[i] = HashMap()
+    fun getModule(i: Int): Alu {
+        var inputCount = 0
+        var index = 0
+        for (j in instructions) {
+            if (j.it.startsWith("inp")) {
+                if (inputCount == i) {
+                    break
+                }
+                inputCount++
+            }
+            index++
         }
+
+        val subinstructions = instructions.subList(index, instructions.size)
+
+        val out = ArrayList<AluIns>()
+        out.add(subinstructions.first())
+
+        val rest = subinstructions.subList(1,subinstructions.size)
+        out.addAll(rest.takeWhile { !it.it.startsWith("inp") })
+
+        return Alu(out)
     }
 
     fun execute() {
@@ -99,12 +141,6 @@ class Alu(private val instructions: List<AluIns>, var count: Int = 0) {
         var i = s.length
         while (i > 0) {
             val substr = s.substring(0, i)
-
-            if (l2Cache.containsKey(substr.length) && l2Cache[substr.length]!!.containsKey(substr)) {
-                registry = l2Cache[substr.length]!![substr]!!.copyOf()
-                break
-            }
-
             i--
         }
 
@@ -113,12 +149,6 @@ class Alu(private val instructions: List<AluIns>, var count: Int = 0) {
 
         while (j < instructions.size) {
             val it = instructions[j]
-            if(it.isInput()) {
-                val substr = input!!.substring(0, insCount++)
-                if (substr.isNotEmpty() && substr.length < 14) {
-                    l2Cache[substr.length]!![substr] = registry.copyOf()
-                }
-            }
             it.func.invoke()
             j++
         }
@@ -127,12 +157,6 @@ class Alu(private val instructions: List<AluIns>, var count: Int = 0) {
     fun reset() {
         count = 0
         registry = arrayOf(0,0,0,0)
-    }
-
-    fun purgeCache() {
-        l2Cache[13]?.clear()
-        l2Cache[13]?.clear()
-        l2Cache[14]?.clear()
     }
 
     init {
