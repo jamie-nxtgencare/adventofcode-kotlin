@@ -1,10 +1,17 @@
 import kotlin.math.floor
-import kotlin.system.measureNanoTime
 
 class DayTwentyfour(file: String) : Project {
     val ins = mapFileLines(file) { AluIns(it) }
 
     override fun part1(): Any {
+        return solve(true)
+    }
+
+    override fun part2(): Any {
+        return solve(false)
+    }
+
+    private fun solve(largest: Boolean): Any {
         val alu = Alu(ins)
 
         var prevOutputs: Set<Int>
@@ -12,14 +19,15 @@ class DayTwentyfour(file: String) : Project {
         val validLastIndexes = HashMap<Int, Int>()
         var solved = 13
         var lastSolvedValue = 0
+        val range = if (largest) 9 downTo 1 else 1..9
 
-        while(solved >= 0) {
+        while (solved >= 0) {
             prevOutputs = setOf(0)
             loop@ for (moduleIndex in 0..solved) {
                 println("Module $moduleIndex, ${prevOutputs.size}")
                 outputs = HashSet()
 
-                for (input1 in 9 downTo 1) {
+                for (input1 in range) {
                     println("${floor((input1 - 1) / 8.0 * 100).toInt()}% (outputs ${outputs.size})")
                     val input1Str = input1.toString()
                     val module = alu.getModule(moduleIndex)
@@ -50,12 +58,8 @@ class DayTwentyfour(file: String) : Project {
         }
 
         return output.toInt()
-    }
 
-    override fun part2(): Any {
-        return -1
     }
-
 }
 
 class AluIns(val it: String) {
