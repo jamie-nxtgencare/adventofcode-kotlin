@@ -60,7 +60,7 @@ class DayTwentyfour(file: String) : Project {
             output += validLastIndexes[i]!!.toString()
         }
 
-        return output.toInt()
+        return output.toLong()
 
     }
 }
