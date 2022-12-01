@@ -9,12 +9,12 @@ import org.junit.Test
 class Testing {
     @Test
     fun day1Sample() {
-        testSample(1, 24000, -1)
+        testSample(1, 24000, 45000)
     }
 
     @Test
     fun day1() {
-        test(1, 67633, -1)
+        test(1, 67633, 199628)
     }
 
     @Test

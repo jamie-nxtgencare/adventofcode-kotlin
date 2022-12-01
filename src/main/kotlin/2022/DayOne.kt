@@ -5,7 +5,7 @@ package `2022`
 import Project
 
 class DayOne(file: String) : Project {
-    private val elves = whitelineSeperatedGrouper(file, { Elf(it) }, { it.toInt() })
+    private val elves = whitelineSeperatedGrouper(file, { Elf(it) }, { it.toInt() }).sortedByDescending { it.totalCalories }
 
     class Elf(it: List<Int>) {
         private val foodItems = it
@@ -13,10 +13,10 @@ class DayOne(file: String) : Project {
     }
 
     override fun part1(): Any {
-        return elves.maxBy { it.totalCalories }.totalCalories
+        return elves.first().totalCalories
     }
 
     override fun part2(): Any {
-        return -1
+        return elves.take(3).sumOf { it.totalCalories }
     }
 }
