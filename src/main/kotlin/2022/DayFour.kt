@@ -6,7 +6,6 @@ import Project
 
 class DayFour(file: String) : Project {
     private val sections = mapFileLines(file) { Section(it) }
-    // 2-4,6-8
 
     class Section(line: String) {
         private val range1 = getRange(line.split(",")[0])
@@ -14,6 +13,10 @@ class DayFour(file: String) : Project {
 
         private fun getRange(s: String): IntRange {
             return IntRange(s.split("-")[0].toInt(), s.split("-")[1].toInt())
+        }
+
+        fun overlaps(): Boolean {
+            return (range1.first <= range2.last && range1.last >= range2.first) || (range2.first <= range1.last && range2.last >= range1.first)
         }
 
         fun fullyOverlaps(): Boolean {
@@ -26,7 +29,7 @@ class DayFour(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        return sections.filter { it.overlaps() }.count()
     }
 
 }
