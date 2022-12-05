@@ -13,9 +13,14 @@ class DayFive(file: String) : Project {
     private val stacks = HashMap<Int, Stack<String>>()
 
     init {
+        restack()
+    }
+
+    private fun restack() {
+        stacks.clear()
         stackStrings.subList(0, stackStrings.size - 1).reversed().forEach {
             for ((stackId, i) in (1 until it.length step 4).withIndex()) {
-                if ((it[i] ?: "").toString().isNotBlank()) {
+                if (it[i].toString().isNotBlank()) {
                     stacks[stackId] = stacks[stackId] ?: Stack()
                     stacks[stackId]!!.push(it[i].toString())
                 }
@@ -34,11 +39,28 @@ class DayFive(file: String) : Project {
                 stacks[to]!!.push(popped)
             }
         }
+
         return stacks.values.map { it.peek() }.joinToString("", "", "") { it }
     }
 
     override fun part2(): Any {
-        return -1
+        restack()
+
+        moves.forEach {
+            val count = it[1].toInt()
+            val from = it[3].toInt() - 1
+            val to = it[5].toInt() - 1
+
+            val substack = Stack<String>()
+
+            for (i in 0 until count) {
+                substack.push(stacks[from]!!.pop())
+            }
+
+            substack.reversed().forEach { i -> stacks[to]!!.push(i) }
+        }
+
+        return stacks.values.map { it.peek() }.joinToString("", "", "") { it }
     }
 
 }

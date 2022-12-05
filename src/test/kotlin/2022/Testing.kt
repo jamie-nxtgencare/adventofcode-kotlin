@@ -49,12 +49,12 @@ class Testing {
 
     @Test
     fun day5Sample() {
-        testSample(5, "CMZ", -1)
+        testSample(5, "CMZ", "MCD")
     }
 
     @Test
     fun day5() {
-        test(5, "RLFNRTNFB", -1)
+        test(5, "RLFNRTNFB", "MHQTLJRLB")
     }
 
     @Test
