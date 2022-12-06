@@ -8,20 +8,24 @@ import java.util.*
 class DaySix(file: String) : Project {
     private val signal = getLines(file)[0]
 
-    override fun part1(): Any {
+    private fun getStart(signal: String, size: Int): Any {
         val queue: Queue<String> = LinkedList()
         signal.forEachIndexed { i, it ->
             while (queue.contains(it.toString())) { queue.poll() }
             queue.add(it.toString())
-            if (queue.size == 4) {
+            if (queue.size == size) {
                 return i + 1
             }
         }
         return -1
     }
 
+    override fun part1(): Any {
+        return getStart(signal, 4)
+    }
+
     override fun part2(): Any {
-        return -1
+        return getStart(signal, 14)
     }
 
 }
