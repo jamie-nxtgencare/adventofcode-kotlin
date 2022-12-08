@@ -70,7 +70,7 @@ class DaySeven(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        return allDirs.filter { (70_000_000 - root.size() + it.size()) > 30_000_000 }.minOf { it.size() }
     }
 
 }
