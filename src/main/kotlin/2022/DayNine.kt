@@ -6,19 +6,6 @@ import Project
 
 class DayNine(file: String) : Project {
     private val motions = mapFileLines(file) { it.split(" ") }.map { Motion(it[0], it[1].toInt()) }
-    private var head = Point(0, 0)
-    private var tail = Point(0, 0)
-    private val tailLocations = HashSet<Point>()
-
-    init {
-        reset()
-    }
-
-    private fun reset() {
-        head = Point(0, 0)
-        tail = Point(0, 0)
-        tailLocations.clear()
-    }
 
     class Point(val x: Int, val y: Int) {
         fun movePoint(direction: Direction): Point {
@@ -38,19 +25,37 @@ class DayNine(file: String) : Project {
             val dX = x - tail.x
             val dY = y - tail.y
 
+            var newX = tail.x
+            var newY = tail.y
+            var movedX = false
+            var movedY = false
+
             if (dX < -1) {
-                return Point(x + 1, y)
+                newX = x + 1
+                movedX = true
             }
             if (dX > 1) {
-                return Point(x - 1, y)
+                newX = x - 1
+                movedX = true
             }
             if (dY < -1) {
-                return Point(x, y + 1)
+                newY = y + 1
+                movedY = true
             }
             if (dY > 1) {
-                return Point(x, y - 1)
+                newY = y - 1
+                movedY = true
             }
-            return tail
+
+            if (movedX && movedY) {
+                return Point(newX, newY)
+            } else if (movedX) {
+                return Point(newX, y)
+            } else if (movedY) {
+                return Point(x, newY)
+            }
+
+            return Point(newX, newY)
         }
 
         override fun equals(other: Any?): Boolean {
@@ -68,14 +73,14 @@ class DayNine(file: String) : Project {
             result = 31 * result + y
             return result
         }
-
-        override fun toString(): String {
-            return "($x, $y)"
-        }
     }
 
     class Motion(dirString: String, val steps: Int) {
         val direction = Direction.values().first { it.dirString == dirString }
+
+        override fun toString(): String {
+            return "\n\n== Motion(direction=$direction, steps=$steps) ==\n\n"
+        }
     }
 
     enum class Direction(val dirString: String) {
@@ -86,6 +91,10 @@ class DayNine(file: String) : Project {
     }
 
     override fun part1(): Any {
+        var head = Point(0, 0)
+        var tail = Point(0, 0)
+        val tailLocations = HashSet<Point>()
+
         tailLocations.add(tail)
 
         motions.forEach { motion ->
@@ -93,15 +102,52 @@ class DayNine(file: String) : Project {
                 head = head.movePoint(motion.direction)
                 tail = head.getTail(tail)
                 tailLocations.add(tail)
-                println("$head $tail")
             }
+            //println(motion)
+            //printGrid(head, arrayListOf(tail))
         }
         return tailLocations.size
     }
 
     override fun part2(): Any {
-        reset()
-        return -1
+        var head = Point(0, 0)
+        val tails = arrayListOf(Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0))
+        val tailLocations = HashSet<Point>()
+
+        tailLocations.add(tails[8])
+        //printGrid(head, tails)
+
+        motions.forEach { motion ->
+            for (j in 1..motion.steps) {
+                head = head.movePoint(motion.direction)
+
+                var subHead = head
+                tails.forEachIndexed { i, tail ->
+                    tails[i] = subHead.getTail(tail)
+                    subHead = tails[i]
+                }
+
+                tailLocations.add(tails[8])
+                //printGrid(head, tails)
+            }
+        }
+
+        return tailLocations.size
     }
 
+/*    private fun printGrid(head: Point, tails: ArrayList<Point>) {
+        for (y in 25 downTo -25) {
+            for (x in -25..25) {
+                val point = Point(x, y)
+                if (head == point) {
+                    print("H")
+                } else if (tails.indexOf(point) >= 0) {
+                    print(tails.indexOf(point) + 1)
+                } else {
+                    print(".")
+                }
+            }
+            println()
+        }
+    }*/
 }
