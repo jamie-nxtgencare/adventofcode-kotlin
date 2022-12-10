@@ -34,6 +34,7 @@ class DayTen(file: String) : Project {
     class Program(var runningInstruction: InstructionExecutionContext) {
         var tickCount = 0
         var registers = HashMap<String, Int>()
+        var crtDisplay = ""
 
         init {
             registers["X"] = 1
@@ -44,12 +45,23 @@ class DayTen(file: String) : Project {
             runningInstruction.runTime++
             println(tickCount.toString() + " : during: " + registers["X"]!!)
             val out = Pair(tickCount, signalStrength())
+
             if (runningInstruction.executionComplete()) {
                 runningInstruction.execute(this)
                 println("${tickCount}: ${runningInstruction.instruction.s} (line: ${runningInstruction.index + 1}) -- complete")
             }
             println(tickCount.toString() + " : after: " + registers["X"]!!)
+            crtDisplay += currentPixel()
             return out
+        }
+
+        private fun currentPixel(): String {
+            val pixel = (tickCount - 1) % 40
+            val outputPixel = registers["X"]!!
+            if (pixel + 1 in outputPixel - 1..outputPixel + 1) {
+                return "#"
+            }
+            return "."
         }
 
         fun signalStrength(): Int {
@@ -79,6 +91,20 @@ class DayTen(file: String) : Project {
     }
 
     override fun part2(): Any {
+        val program = Program(InstructionExecutionContext(0, instructions[0]))
+
+        instructions.forEachIndexed { index, it ->
+            program.runningInstruction = InstructionExecutionContext(index, it)
+            println("${program.tickCount + 1}: ${program.runningInstruction.instruction.s} (line: ${program.runningInstruction.index + 1}) -- started")
+
+            while (!program.runningInstruction.executionComplete()) {
+                program.tick()
+            }
+        }
+
+        for (i in 0..program.crtDisplay.length step 40) {
+            println(program.crtDisplay.substring(i, i+40))
+        }
         return -1
     }
 
