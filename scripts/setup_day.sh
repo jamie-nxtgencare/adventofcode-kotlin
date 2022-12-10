@@ -5,5 +5,5 @@ question=$(echo "$request" | sed -n "/<article.*>/,/<\/article>/p" | sed -e 's/<
 # shellcheck disable=SC2086
 title=$(echo $question | sed -e 's/^--- \([^-]*\)---.*/\1/g')
 
-hub issue create --message "$title $question"
+hub issue create --message "${title:0:100} $question"
 wget -qO- --header "Cookie: session=$session" https://adventofcode.com/2022/day/$1/input > src/test/resources/2022/day$1.input
