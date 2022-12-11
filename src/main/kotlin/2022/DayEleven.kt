@@ -5,6 +5,7 @@ package `2022`
 import Project
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.math.MathContext
 import java.math.RoundingMode
 import kotlin.math.floor
 
@@ -63,7 +64,7 @@ class DayEleven(val file: String) : Project {
                     )
                     println("    Worry level is set to $new.")
                     // Reduce level
-                    new = BigInteger.valueOf(floor(new.toDouble() / 3).toLong())
+                    new = new.toBigDecimal().setScale(2, RoundingMode.FLOOR).divide(BigDecimal.valueOf(3), MathContext.DECIMAL128).toBigInteger()
                     println("    Monkey gets bored with item. Worry level is divided by 3 to $new.")
                     // Test
                     val test = it.test.assert(new)
@@ -85,20 +86,33 @@ class DayEleven(val file: String) : Project {
     override fun part2(): Any {
         monkeys = getMonkeys() // reset monkeys
 
+        var mod = BigDecimal.valueOf(1L)
+
+        monkeys.forEach {
+            mod = mod.times(BigDecimal.valueOf(it.test.arg1.toLong()))
+        }
+
         for (i in 0 until 10_000) {
             monkeys.forEach {
                 it.holdingItems.forEach { item ->
                     // Inspect
                     it.inspectionCount++
-                    val new = it.operation.operator.invoke(
+
+                    var new = it.operation.operator.invoke(
                         if (it.operation.arg1 == "old") item else BigInteger.valueOf(it.operation.arg1.toLong()),
                         if (it.operation.arg2 == "old") item else BigInteger.valueOf(it.operation.arg2.toLong())
                     )
+
+                    // Reduce level
+                    new = new.toBigDecimal().setScale(2, RoundingMode.FLOOR).divideAndRemainder(mod, MathContext.DECIMAL128).last().toBigInteger()
+
                     // Test
                     val test = it.test.assert(new)
+
                     // Throw
                     val target = monkeys.first { other -> other.label == if (test) it.trueTarget else it.falseTarget }
                     target.holdingItems.add(new)
+
                 }
                 it.holdingItems.clear()
             }

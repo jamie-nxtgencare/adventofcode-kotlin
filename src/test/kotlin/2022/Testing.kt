@@ -115,7 +115,7 @@ class Testing {
 
     @Test
     fun day11() {
-        test(11, 78960, -1)
+        test(11, BigInteger.valueOf(78960), BigInteger.valueOf(14561971968))
     }
 
     @Test
