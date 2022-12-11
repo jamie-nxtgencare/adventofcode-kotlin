@@ -5,6 +5,7 @@ import Project
 import getDayStr
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.math.BigInteger
 
 class Testing {
     @Test
@@ -109,7 +110,7 @@ class Testing {
 
     @Test
     fun day11Sample() {
-        testSample(11, 10605, -1)
+        testSample(11, BigInteger.valueOf(10605), BigInteger.valueOf(2713310158))
     }
 
     @Test

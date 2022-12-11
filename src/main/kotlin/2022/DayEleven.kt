@@ -3,10 +3,17 @@
 package `2022`
 
 import Project
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.math.RoundingMode
 import kotlin.math.floor
 
-class DayEleven(file: String) : Project {
-    private val monkeys: List<Monkey> = whitelineSeperatedGrouper(file, { it }, { it }).map { Monkey(it) }
+class DayEleven(val file: String) : Project {
+    private var monkeys: List<Monkey> = getMonkeys()
+
+    private fun getMonkeys(): List<Monkey> {
+        return whitelineSeperatedGrouper(file, { it }, { it }).map { Monkey(it) }
+    }
 
     class Monkey(descriptionLines: List<String>) {
         /*
@@ -18,25 +25,25 @@ class DayEleven(file: String) : Project {
                 If false: throw to monkey 3
          */
         val label = descriptionLines[0].trim().split(" ")[1].split(":")[0]
-        val startingItems = descriptionLines[1].trim().split(": ")[1].split(", ").map { it.toInt() }.toMutableList()
+        val startingItems = descriptionLines[1].trim().split(": ")[1].split(", ").map { BigInteger.valueOf(it.toLong()) }.toMutableList()
         val operation = Operation(descriptionLines[2].trim().split(": new = ")[1].split(" "))
         val test = Test(descriptionLines[3].trim().split(": ")[1].split(" "))
         val trueTarget = descriptionLines[4].trim().split(": ")[1].split(" ")[3]
         val falseTarget = descriptionLines[5].trim().split(": ")[1].split(" ")[3]
         val holdingItems = startingItems
-        var inspectionCount: Int = 0
+        var inspectionCount: BigInteger = BigInteger.valueOf(0)
     }
 
     class Operation(split: List<String>) {
         val arg1 = split[0]
         val arg2 = split[2]
-        val operator: (Int, Int) -> Int = if (split[1] == "+") { a, b  -> a + b } else { a, b  -> a * b }
+        val operator: (BigInteger, BigInteger) -> BigInteger = if (split[1] == "+") { a, b  -> a + b } else { a, b  -> a * b }
     }
 
     class Test(split: List<String>) {
-        val arg1 = split[2].toInt()
-        fun assert(test: Int): Boolean {
-            return test % arg1 == 0
+        val arg1: BigInteger = BigInteger.valueOf(split[2].toLong())
+        fun assert(test: BigInteger): Boolean {
+            return test.mod(arg1) == BigInteger.valueOf(0)
         }
     }
 
@@ -51,12 +58,12 @@ class DayEleven(file: String) : Project {
                     it.inspectionCount++
                     println("  Monkey inspects an item with a worry level of ${item}.")
                     var new = it.operation.operator.invoke(
-                        if (it.operation.arg1 == "old") item else it.operation.arg1.toInt(),
-                        if (it.operation.arg2 == "old") item else it.operation.arg2.toInt()
+                        if (it.operation.arg1 == "old") item else BigInteger.valueOf(it.operation.arg1.toLong()),
+                        if (it.operation.arg2 == "old") item else BigInteger.valueOf(it.operation.arg2.toLong())
                     )
                     println("    Worry level is set to $new.")
                     // Reduce level
-                    new = floor(new.toDouble() / 3).toInt()
+                    new = BigInteger.valueOf(floor(new.toDouble() / 3).toLong())
                     println("    Monkey gets bored with item. Worry level is divided by 3 to $new.")
                     // Test
                     val test = it.test.assert(new)
@@ -76,7 +83,37 @@ class DayEleven(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        monkeys = getMonkeys() // reset monkeys
+
+        for (i in 0 until 10_000) {
+            monkeys.forEach {
+                it.holdingItems.forEach { item ->
+                    // Inspect
+                    it.inspectionCount++
+                    val new = it.operation.operator.invoke(
+                        if (it.operation.arg1 == "old") item else BigInteger.valueOf(it.operation.arg1.toLong()),
+                        if (it.operation.arg2 == "old") item else BigInteger.valueOf(it.operation.arg2.toLong())
+                    )
+                    // Test
+                    val test = it.test.assert(new)
+                    // Throw
+                    val target = monkeys.first { other -> other.label == if (test) it.trueTarget else it.falseTarget }
+                    target.holdingItems.add(new)
+                }
+                it.holdingItems.clear()
+            }
+
+            if (listOf(1, 20, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10_000).contains(i + 1)) {
+                println("== After round ${i + 1} ==")
+                monkeys.forEach {
+                    println("Monkey ${it.label} inspected items ${it.inspectionCount} times.")
+                }
+            }
+        }
+
+        val monkeyBusiness = monkeys.sortedByDescending { it.inspectionCount }.take(2).map { it.inspectionCount }
+
+        return monkeyBusiness[0] * monkeyBusiness[1]
     }
 
 }
