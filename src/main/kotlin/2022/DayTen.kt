@@ -41,6 +41,7 @@ class DayTen(file: String) : Project {
         }
 
         fun tick(): Pair<Int, Int> {
+            crtDisplay += currentPixel()
             tickCount++
             runningInstruction.runTime++
             println(tickCount.toString() + " : during: " + registers["X"]!!)
@@ -51,14 +52,13 @@ class DayTen(file: String) : Project {
                 println("${tickCount}: ${runningInstruction.instruction.s} (line: ${runningInstruction.index + 1}) -- complete")
             }
             println(tickCount.toString() + " : after: " + registers["X"]!!)
-            crtDisplay += currentPixel()
             return out
         }
 
         private fun currentPixel(): String {
-            val pixel = (tickCount - 1) % 40
+            val pixel = tickCount % 40
             val outputPixel = registers["X"]!!
-            if (pixel + 1 in outputPixel - 1..outputPixel + 1) {
+            if (pixel in outputPixel - 1..outputPixel + 1) {
                 return "#"
             }
             return "."
