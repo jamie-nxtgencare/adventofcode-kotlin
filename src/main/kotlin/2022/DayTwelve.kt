@@ -23,6 +23,12 @@ class DayTwelve(file: String) : Project {
     }
 
     override fun part1(): Any {
+        return shortestPath(start)
+    }
+
+    private fun shortestPath(start: Node): Int {
+        grid.flatten().forEach { it.steps = Int.MAX_VALUE }
+
         start.steps = 0
         val toVisit: MutableList<Node> = listOf(start).toMutableList()
         val visited = mutableSetOf<Node>()
@@ -55,7 +61,7 @@ class DayTwelve(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        return grid.flatten().filter { it.height == 'a'.code }.minOf { shortestPath(it) }
     }
 
 }
