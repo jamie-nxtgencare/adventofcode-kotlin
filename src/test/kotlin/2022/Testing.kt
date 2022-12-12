@@ -125,7 +125,7 @@ class Testing {
 
     @Test
     fun day12() {
-        test(12, -1, -1)
+        test(12, 394, -1)
     }
 
     @Test
