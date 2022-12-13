@@ -9,11 +9,9 @@ val numberRegex = Regex("^\\d+$")
 
 
 class DayThirteen(file: String) : Project {
-    val signalPairs = whitelineSeperatedGrouper(file, { SignalPair(it) }, { it })
+    val signalPairs = whitelineSeperatedGrouper(file, { SignalPair(listOf(Signal(it[0]), Signal(it[1]))) }, { it })
 
-    class SignalPair(val it: List<String>) {
-        private val signals = it.map { Signal(it) }
-
+    class SignalPair(val signals: List<Signal>) {
         fun outOfOrder(): Boolean {
             return outOfOrder(signals[0], signals[1])!!
         }
@@ -105,7 +103,32 @@ class DayThirteen(file: String) : Project {
     }
 
     override fun part2(): Any {
-        return -1
+        val allSignals = ArrayList<Signal>()
+
+        signalPairs.forEach { allSignals.addAll(it.signals) }
+
+        val divider1 = Signal("[[2]]")
+        val divider2 = Signal("[[6]]")
+
+        allSignals.add(divider1)
+        allSignals.add(divider2)
+
+        allSignals.sortWith { a, b ->
+            if (SignalPair(listOf(a, b)).outOfOrder()) 1 else -1
+        }
+
+        var divider1Index = -1
+        var divider2Index = -1
+
+        allSignals.forEachIndexed { i, it ->
+            if (it == divider1) {
+                divider1Index = i + 1
+            } else if (it == divider2) {
+                divider2Index = i + 1
+            }
+        }
+
+        return divider1Index * divider2Index
     }
 
 }
