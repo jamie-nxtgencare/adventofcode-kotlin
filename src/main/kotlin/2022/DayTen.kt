@@ -102,7 +102,7 @@ class DayTen(file: String) : Project {
             }
         }
 
-        for (i in 0..program.crtDisplay.length step 40) {
+        for (i in 0 until program.crtDisplay.length step 40) {
             println(program.crtDisplay.substring(i, i+40))
         }
         return -1
