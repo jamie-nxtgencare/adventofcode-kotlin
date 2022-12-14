@@ -139,12 +139,12 @@ class Testing {
 
     @Test
     fun day14Sample() {
-        testSample(14, 31, -1)
+        testSample(14, 180697L, 5586022L)
     }
 
     @Test
     fun day14() {
-        test(14, 2556890, -1)
+        test(14, 2556890L, 1120408)
     }
 
     @Test

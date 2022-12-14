@@ -3,7 +3,7 @@
 package `2019`
 
 import Project
-import kotlin.math.abs
+import kotlin.math.ceil
 
 class DayFourteen(file: String) : Project {
     val reactions : Map<String, Reaction> = getReactions(file)
@@ -46,24 +46,19 @@ class DayFourteen(file: String) : Project {
 
             nonOreRequirements.forEach {
                 val reaction: Reaction = reactions[it.type]!!
-                var requiredCount = it.count
-                var runTimes = 0
-                while(requiredCount > 0) {
-                    reaction.inputs.forEach { input ->
-                        val newCount = (newRequirementsMap[input.type] ?: 0) + input.count
-                        newRequirementsMap[input.type] = newCount
-                    }
-                    requiredCount -= reaction.output.count
-                    runTimes++
-                    if (requiredCount < 0) {
-                        extras[it.type] = (extras[it.type] ?: 0) + abs(requiredCount)
-                    }
-                }
-                println(runTimes)
-            }
+                val requiredCount = it.count
 
-            println(newRequirementsMap)
-            println(extras)
+                val runTimes = ceil(requiredCount.toDouble() / reaction.output.count).toLong()
+                val produces = runTimes * reaction.output.count
+                val extra = produces - requiredCount
+
+                reaction.inputs.forEach { input ->
+                    val newCount = (newRequirementsMap[input.type] ?: 0) + (input.count * runTimes)
+                    newRequirementsMap[input.type] = newCount
+                }
+                extras[it.type] = (extras[it.type] ?: 0) + extra
+
+            }
 
             newRequirementsMap["ORE"] = (newRequirementsMap["ORE"] ?: 0) + if (required.size > 0) required[0].count else 0
             required.clear()
@@ -77,40 +72,41 @@ class DayFourteen(file: String) : Project {
     }
 
     override fun part1(): Any {
-        val fuel = reactions["FUEL"]!!
-        val required = ArrayList<CountAndType>()
-        required.addAll(fuel.inputs)
-        return reduce(required)
+        return getOre(1)
     }
 
     override fun part2(): Any {
-        val fuel = reactions["FUEL"]!!
-        val required = ArrayList<CountAndType>()
+        val goal = 1000000000000L
 
-        var ore = Long.MIN_VALUE
-        var fuelCount = 82892753
+        var ore: Long
+        var fuelCountMin = 0L
+        var fuelCountMax = 100_000_000L
+        var fuelCount: Long = -1
 
-        val requiredMap = HashMap<String, Long>()
+        while (fuelCountMax - fuelCountMin > 2) {
+            fuelCount = (fuelCountMax + fuelCountMin) / 2
+            ore = getOre(fuelCount)
 
-        fuel.inputs.forEach {
-            requiredMap[it.type] = it.count * fuelCount
+            if (ore > goal) {
+               fuelCountMax = fuelCount
+            } else if (ore < goal) {
+                fuelCountMin = fuelCount
+            }
+
+            println("$fuelCount $ore")
         }
-
-        requiredMap.forEach { (key, value) -> required.add(CountAndType(value, key)) }
-
-        if (!required.isEmpty()) {
-            ore = reduce(required)
-        }
-        fuelCount++
-        println(ore)
 
         return fuelCount
     }
 
-    companion object {
-        fun empty(): Reaction {
-            return Reaction(ArrayList(), CountAndType(0, ""))
-        }
+    private fun getOre(fuelCount: Long): Long {
+        val required = ArrayList<CountAndType>()
+        val requiredMap = HashMap<String, Long>()
+
+        requiredMap["FUEL"] = fuelCount
+        requiredMap.forEach { (key, value) -> required.add(CountAndType(value, key)) }
+
+        return reduce(required)
     }
 
     class Reaction(val inputs: List<CountAndType>, val output: CountAndType) {
