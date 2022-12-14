@@ -3,6 +3,7 @@
 package `2019`
 
 import Project
+import kotlin.math.abs
 
 class DayFourteen(file: String) : Project {
     val reactions : Map<String, Reaction> = getReactions(file)
@@ -19,12 +20,59 @@ class DayFourteen(file: String) : Project {
 
             val reaction = Reaction(inputs, CountAndType(output[0].toInt(), output[1]))
             reaction
-        }.groupBy{ it.outputs.type }.mapValues { it.value.first() }
+        }.groupBy{ it.output.type }.mapValues { it.value.first() }
     }
 
     override fun part1(): Any {
-        val output = (reactions["FUEL"] ?: empty()).decompose(reactions)
-        return output["ORE"] ?: 0
+        val fuel = reactions["FUEL"]!!
+        val required = ArrayList<CountAndType>()
+        val extras = HashMap<String, Int>()
+
+        required.addAll(fuel.inputs)
+
+        while (!(required[0].type == "ORE" && required.size == 1)) {
+            val nonOreRequirements = required.filter { it.type != "ORE" }.toHashSet()
+            required.removeAll(nonOreRequirements)
+            val newRequirementsMap = HashMap<String, Int>()
+
+            extras.keys.forEach { extraKey ->
+                nonOreRequirements.forEach { req ->
+                    if (req.type == extraKey) {
+                        while (extras[extraKey]!! > 0 && req.count > 0) {
+                            extras[extraKey] = extras[extraKey]!! - 1
+                            req.count--
+                        }
+                    }
+                }
+            }
+
+            extras.filter { (_, value) -> value == 0 }.keys.forEach { extras.remove(it) }
+
+            nonOreRequirements.forEach {
+                println("Getting $it")
+                val reaction: Reaction = reactions[it.type]!!
+                var requiredCount = it.count
+                while(requiredCount > 0) {
+                    reaction.inputs.forEach { input ->
+                        val newCount = (newRequirementsMap[input.type] ?: 0) + input.count
+                        newRequirementsMap[input.type] = newCount
+                    }
+                    requiredCount -= reaction.output.count
+                    if (requiredCount < 0) {
+                        extras[it.type] = (extras[it.type] ?: 0) + abs(requiredCount)
+                    }
+                }
+            }
+
+            newRequirementsMap["ORE"] = (newRequirementsMap["ORE"] ?: 0) + if (required.size > 0) required[0].count else 0
+            required.clear()
+
+            newRequirementsMap.forEach { (key, value) ->
+                required.add(CountAndType(value, key))
+            }
+        }
+
+        return required[0].count
     }
 
     override fun part2(): Any {
@@ -37,22 +85,15 @@ class DayFourteen(file: String) : Project {
         }
     }
 
-    class Reaction(val inputs: List<CountAndType>, val outputs: CountAndType) {
-        fun decompose(reactions : Map<String, Reaction>): HashMap<String, Int> {
-            val outputReactions : HashMap<String, Int> = HashMap()
-            for (input in inputs) {
-                if (input.type == "ORE") {
-                    outputReactions.put(input.type, input.count)
-                    continue
-                }
-
-                val newReactions : HashMap<String, Int> = (reactions[input.type] ?: empty()).decompose(reactions)
-                outputReactions.putAll(newReactions)
-            }
-            return outputReactions
+    class Reaction(val inputs: List<CountAndType>, val output: CountAndType) {
+        override fun toString(): String {
+            return "${inputs.joinToString(", ","","")} => $output"
         }
     }
-
-    class CountAndType(var count: Int, val type: String)
+    class CountAndType(var count: Int, val type: String) {
+        override fun toString(): String {
+            return "$count $type"
+        }
+    }
 }
 
