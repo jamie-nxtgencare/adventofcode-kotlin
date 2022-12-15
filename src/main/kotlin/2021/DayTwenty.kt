@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayTwenty(file: String) : Project {
+class DayTwenty(file: String) : Project() {
     private val lines = getLines(file)
     private val key = lines[0].split("").filter { it.isNotBlank() }.map { if (it == "#") 1 else 0 }
     private val image: List<List<Int>> = lines.subList(2, lines.size).map { it.split("").filter { s -> s.isNotBlank() }.map { pixel -> if (pixel == "#") 1 else 0 } }

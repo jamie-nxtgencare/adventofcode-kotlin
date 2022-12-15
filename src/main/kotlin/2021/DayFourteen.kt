@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayFourteen(file: String) : Project {
+class DayFourteen(file: String) : Project() {
     private val lines = getLines(file)
     val template = lines.first()
     var pairs = HashMap<String, String>()

@@ -5,7 +5,7 @@ package `2020`
 import Project
 import kotlin.math.pow
 
-class DayFourteen (file: String) : Project {
+class DayFourteen (file: String) : Project() {
     private val instructions = mapFileLines(file) { getInstructions(it) }
     private var mask = 0L
     private var overwrite = 0L

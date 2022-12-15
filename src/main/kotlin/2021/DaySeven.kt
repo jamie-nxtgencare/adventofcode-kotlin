@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.abs
 
-class DaySeven(file: String) : Project {
+class DaySeven(file: String) : Project() {
     private val subs = getLines(file).first().split(",").map { it.toInt() }
     private val uniqueSubs = subs.distinct()
     private val sortedUnique = uniqueSubs.sorted()

@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DaySeven(file: String) : Project {
+class DaySeven(file: String) : Project() {
     private val bagStrMap = mapFileLines(file) { it.replace("bags?".toRegex(), "").split("contain") }
     private val bags : Map<String, List<BagCount>> = getBags()
 

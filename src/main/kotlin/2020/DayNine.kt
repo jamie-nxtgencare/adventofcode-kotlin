@@ -5,7 +5,7 @@ package `2020`
 import Project
 import java.math.BigInteger
 
-class DayNine(file: String) : Project {
+class DayNine(file: String) : Project() {
     private val window = if (file.contains("sample")) 5 else 25
     private val nums = mapFileLines(file) { it.toBigInteger() }
     private val numWithoutSum = getNumWithoutSum()

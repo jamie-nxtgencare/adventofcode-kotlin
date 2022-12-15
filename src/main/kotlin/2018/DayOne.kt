@@ -4,7 +4,7 @@ package `2018`
 
 import Project
 
-class DayOne(file: String) : Project {
+class DayOne(file: String) : Project() {
     private val freqs = mapFileLines(file) { it.toInt() }
 
     override fun part1(): Any {

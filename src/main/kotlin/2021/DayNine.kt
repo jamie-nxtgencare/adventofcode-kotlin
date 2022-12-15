@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayNine(file: String) : Project {
+class DayNine(file: String) : Project() {
     private val grid: List<List<Int>> = mapLettersPerLines(file) { it.map { c -> Character.getNumericValue(c) }}
     private val lowPoints = ArrayList<Pair<Int, Int>>()
 

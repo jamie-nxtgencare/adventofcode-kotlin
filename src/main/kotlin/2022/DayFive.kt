@@ -6,7 +6,7 @@ import Project
 import java.util.*
 import kotlin.collections.HashMap
 
-class DayFive(file: String) : Project {
+class DayFive(file: String) : Project() {
     private val lines = getLines(file)
     private val stackStrings = lines.takeWhile { it.isNotBlank() }
     private val moves = lines.takeLastWhile { it.isNotBlank() }.map { it.split(" ") }

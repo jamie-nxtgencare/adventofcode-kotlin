@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayThree(file: String) : Project {
+class DayThree(file: String) : Project() {
     private val grid = mapLettersPerLines(file) { it.map { it3 -> it3 == '#' }.toTypedArray() }.toTypedArray()
 
     override fun part1(): Int {

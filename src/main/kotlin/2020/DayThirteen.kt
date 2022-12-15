@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayThirteen(file: String) : Project {
+class DayThirteen(file: String) : Project() {
     private val lines = getLines(file)
     private val timestamp = lines[0].toLong()
     private val busses = lines[1].split(",").map { if(it == "x") -1 else it.toLong() }

@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayNineteen(file: String): Project {
+class DayNineteen(file: String): Project() {
     private val rules = HashMap<Int, Rule>()
     private val messages = ArrayList<String>()
 

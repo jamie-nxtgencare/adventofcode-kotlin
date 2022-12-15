@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
-class DayTen(file: String) : Project {
+class DayTen(file: String) : Project() {
     private val lines = getLines(file)
     private val pairs = mapOf("(" to ")", "[" to "]", "<" to ">", "{" to "}")
     private val points = mapOf(")" to 3, "]" to 57, "}" to 1197, ">" to 25137)

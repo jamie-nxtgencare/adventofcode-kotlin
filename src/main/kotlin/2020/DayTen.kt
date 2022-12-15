@@ -5,7 +5,7 @@ package `2020`
 import Project
 import java.math.BigInteger
 
-class DayTen(file: String) : Project {
+class DayTen(file: String) : Project() {
     private val input = mapFileLines(file) { it.toInt() }.sorted().toMutableList()
     private val differences = input.mapIndexed { i, it -> it - (if (i == 0) 0 else input[i - 1]) }.toMutableList()
     private val memo = HashMap<Int, BigInteger>()

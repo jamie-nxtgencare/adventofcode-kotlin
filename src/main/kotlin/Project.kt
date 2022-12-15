@@ -2,9 +2,11 @@ import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
 
-interface Project {
-    fun part1(): Any
-    fun part2(): Any
+abstract class Project {
+    var sample = false
+
+    abstract fun part1(): Any
+    abstract fun part2(): Any
 
     fun run(part1: LocalDateTime) {
         println(part1())

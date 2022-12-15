@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayTwentyfour(file: String): Project {
+class DayTwentyfour(file: String): Project() {
     private val lines = getLines(file)
     private var grid = HashMap<String, Tile>()
 

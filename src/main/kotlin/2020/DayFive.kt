@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayFive(file: String) : Project {
+class DayFive(file: String) : Project() {
     private val passes : List<BoardingPass> = mapLettersPerLines(file) { BoardingPass( it ) }
     private val seats = passes.map { it.traverse() }
 

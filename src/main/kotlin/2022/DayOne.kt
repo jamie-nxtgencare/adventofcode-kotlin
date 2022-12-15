@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayOne(file: String) : Project {
+class DayOne(file: String) : Project() {
     private val elves = whitelineSeperatedGrouper(file, { Elf(it) }, { it.toInt() }).sortedByDescending { it.totalCalories }
 
     class Elf(it: List<Int>) {

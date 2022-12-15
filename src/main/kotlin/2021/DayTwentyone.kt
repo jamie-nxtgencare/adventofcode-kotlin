@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayTwentyone(file: String) : Project {
+class DayTwentyone(file: String) : Project() {
     val lines = getLines(file)
     val ip1 = lines[0].last().toString().toInt() - 1
     val ip2 = lines[1].last().toString().toInt() - 1

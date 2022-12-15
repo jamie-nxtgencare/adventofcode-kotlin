@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayEight(file: String) : Project {
+class DayEight(file: String) : Project() {
     val grid = mapLettersPerLines(file) { it.map { it2 -> it2.toString().toInt() }.toList() }.toList()
 
     private fun isVisible(x: Int, y: Int): Boolean {

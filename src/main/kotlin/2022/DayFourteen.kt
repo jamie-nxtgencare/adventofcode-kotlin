@@ -11,7 +11,7 @@ private infix fun Int.toward(to: Int): IntProgression {
     return IntProgression.fromClosedRange(this, to, step)
 }
 
-class DayFourteen(file: String) : Project {
+class DayFourteen(file: String) : Project() {
 /*
     498,4 -> 498,6 -> 496,6
     503,4 -> 502,4 -> 502,9 -> 494,9

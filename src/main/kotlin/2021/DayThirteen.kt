@@ -4,7 +4,7 @@ import Project
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DayThirteen(file: String) : Project {
+class DayThirteen(file: String) : Project() {
     private val lines = getLines(file)
     private var grid: List<ArrayList<Boolean>>
     private val instructions = ArrayList<Pair<String, Int>>()

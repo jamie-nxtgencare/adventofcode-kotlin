@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayTwelve(file: String) : Project {
+class DayTwelve(file: String) : Project() {
     private val lines = getLines(file)
     private val nodes = HashMap<String, Node>()
 

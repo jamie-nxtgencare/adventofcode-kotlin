@@ -6,7 +6,7 @@ import Project
 import java.lang.Integer.min
 import kotlin.streams.toList
 
-class DayTwelve(file: String) : Project {
+class DayTwelve(file: String) : Project() {
     var col = 0
     val grid = mapFileLines(file) {
         val rowData = it.chars().toList().mapIndexed { index, elem -> Node(elem, index, col) }

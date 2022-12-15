@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayTwentytwo(file: String) : Project {
+class DayTwentytwo(file: String) : Project() {
     override fun part1(): Any {
         return -1
     }

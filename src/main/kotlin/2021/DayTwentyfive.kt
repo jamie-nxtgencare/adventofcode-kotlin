@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayTwentyfive(file: String) : Project {
+class DayTwentyfive(file: String) : Project() {
     val grid: ArrayList<ArrayList<String>> = ArrayList(mapLettersPerLines(file) { ArrayList(it.map { c -> c.toString() }) })
 
     override fun part1(): Any {

@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayFour(file: String) : Project {
+class DayFour(file: String) : Project() {
     private val passports = getPassports(file)
 
     private fun getPassports(file: String): List<Passport> {

@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayEight(file: String) : Project {
+class DayEight(file: String) : Project() {
     private val inputOutput: List<List<String>> = mapFileLines(file) { it.split(" | ") }
     private val input = inputOutput.map { it.first().split(" ") }
     private val output = inputOutput.map { it.last().split(" ") }

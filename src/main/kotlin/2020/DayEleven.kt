@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayEleven(file: String) : Project {
+class DayEleven(file: String) : Project() {
     private val debug = false
     private var originalGrid = mapLettersPerLines(file) { it.map { it2 -> Seat.fromLetter(it2) }.toTypedArray() }.toTypedArray()
     private var grid = clone(originalGrid)

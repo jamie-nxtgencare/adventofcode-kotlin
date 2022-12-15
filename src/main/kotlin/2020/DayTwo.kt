@@ -5,7 +5,7 @@ package `2020`
 import Project
 import java.lang.Integer.parseInt
 
-class DayTwo(file: String) : Project {
+class DayTwo(file: String) : Project() {
     private val passwordAndRules = getPasswordAndRules(file)
 
     override fun part1(): Any {

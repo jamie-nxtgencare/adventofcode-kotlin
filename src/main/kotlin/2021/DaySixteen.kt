@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DaySixteen(file: String) : Project {
+class DaySixteen(file: String) : Project() {
     private val packet = Packet(mapLettersPerLines(file) { it.map { c -> String.format("%04d", Integer.parseInt(Integer.toBinaryString(Integer.parseInt(c.toString(), 16)))) }}.flatten().joinToString(""))
 
     override fun part1(): Any {

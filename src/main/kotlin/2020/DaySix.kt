@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DaySix(file: String) : Project {
+class DaySix(file: String) : Project() {
     private val customsForms : List<CustomsFormGroup> = getCustomsForms(file)
 
     private fun getCustomsForms(file: String): List<CustomsFormGroup> {

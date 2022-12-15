@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayFive(file: String) : Project {
+class DayFive(file: String) : Project() {
     private val lines = mapFileLines(file) { Line(it) }
 
     override fun part1(): Any {

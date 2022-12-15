@@ -5,7 +5,7 @@ package `2022`
 import Project
 import java.util.*
 
-class DaySix(file: String) : Project {
+class DaySix(file: String) : Project() {
     private val signal = getLines(file)[0]
 
     private fun getStart(signal: String, size: Int): Any {

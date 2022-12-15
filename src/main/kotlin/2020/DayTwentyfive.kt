@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayTwentyfive(file: String): Project {
+class DayTwentyfive(file: String): Project() {
     private val lines = getLines(file)
     val cardPubKey = lines[0].toLong()
     val doorPubKey = lines[1].toLong()
