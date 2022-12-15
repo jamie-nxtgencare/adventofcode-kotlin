@@ -87,7 +87,7 @@ class DayFifteen(file: String) : Project() {
 
     override fun part1(): Any {
         val segmentY = if (sample) 10L else 2000000L
-        return covered(segmentY).sumOf { it.size() } // ffff 6438941
+        return covered(segmentY).sumOf { it.size() }
     }
 
     override fun part2(): Any {
