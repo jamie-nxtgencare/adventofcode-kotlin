@@ -4,7 +4,7 @@ import Project
 import kotlin.math.ceil
 import kotlin.math.floor
 
-class DayEighteen(val file: String) : Project {
+class DayEighteen(val file: String) : Project() {
     private var equations = mapFileLines(file) { parse(it) }
 
     override fun part1(): Any {

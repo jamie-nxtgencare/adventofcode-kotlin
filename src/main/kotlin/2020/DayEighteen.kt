@@ -3,7 +3,7 @@ package `2020`
 
 import Project
 
-class DayEighteen(file: String): Project {
+class DayEighteen(file: String): Project() {
     private val lines = getLines(file)
     private val brackets = "(\\([^()]*\\))".toRegex()
     private val addition = "((\\d+) \\+ (\\d+))".toRegex()

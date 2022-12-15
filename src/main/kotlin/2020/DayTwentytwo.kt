@@ -5,7 +5,7 @@ package `2020`
 import Project
 import java.util.*
 
-class DayTwentytwo(val file: String): Project {
+class DayTwentytwo(val file: String): Project() {
     private var debug = false
     private var gameCounter = 2
 

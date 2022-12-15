@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayTwentythree(val file: String): Project {
+class DayTwentythree(val file: String): Project() {
     val debug = false
     private var cache = HashMap<Int, Cup>()
     private var cup = getCup(getLines(file)[0].split("").filter { it.isNotBlank() }.map { it.toInt()} )

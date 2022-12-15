@@ -5,7 +5,7 @@ package `2020`
 import Project
 import kotlin.math.abs
 
-class DayTwelve(file: String) : Project {
+class DayTwelve(file: String) : Project() {
     val debug = false
     val directions = mapFileLines(file) { Direction(it[0], it.removeRange(0,1).toInt()) }
 

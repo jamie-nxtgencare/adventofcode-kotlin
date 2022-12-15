@@ -8,7 +8,7 @@ fun getPriority(char: Int): Int {
     return if (char.toChar().isLowerCase()) char - 96 else char - 38
 }
 
-class DayThree(file: String) : Project {
+class DayThree(file: String) : Project() {
     private val rucksacks = mapFileLines(file) { RuckSack(it) }
 
     class RuckSack(stuff: String) {

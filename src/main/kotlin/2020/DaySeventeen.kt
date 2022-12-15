@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DaySeventeen(file: String) : Project {
+class DaySeventeen(file: String) : Project() {
     private val debug = false
     private var size = 25
 

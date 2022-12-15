@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayFifteen(file: String): Project {
+class DayFifteen(file: String): Project() {
     private val input = getLines(file)[0].split(",").map { it.toInt() }
 
     override fun part1(): Any {

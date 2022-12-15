@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.abs
 
-class DayNineteen(file: String) : Project {
+class DayNineteen(file: String) : Project() {
     private lateinit var mergedScanners: java.util.ArrayList<Scanner>
     private val lines = getLines(file)
     private val scanners = ArrayList<Scanner>()

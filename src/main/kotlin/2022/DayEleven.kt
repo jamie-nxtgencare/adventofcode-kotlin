@@ -9,7 +9,7 @@ import java.math.MathContext
 import java.math.RoundingMode
 import kotlin.math.floor
 
-class DayEleven(val file: String) : Project {
+class DayEleven(val file: String) : Project() {
     private var monkeys: List<Monkey> = getMonkeys()
 
     private fun getMonkeys(): List<Monkey> {

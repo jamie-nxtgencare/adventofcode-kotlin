@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayTwo(file: String) : Project {
+class DayTwo(file: String) : Project() {
     val games = mapFileLines(file) { RPSGame(it) }
 
     enum class Move() {

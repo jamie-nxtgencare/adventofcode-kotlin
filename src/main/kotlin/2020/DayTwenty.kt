@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayTwenty(file: String): Project {
+class DayTwenty(file: String): Project() {
     private val pieces: List<Piece> = whitelineSeperatedGrouper(file, { Piece(it) }, { it.split("").subList(1, it.length + 1)})
 
     class Piece() {

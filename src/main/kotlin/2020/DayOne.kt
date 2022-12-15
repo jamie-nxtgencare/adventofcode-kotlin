@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayOne(file: String) : Project {
+class DayOne(file: String) : Project() {
     private val map = getIntLinesToExistsBoolean(file)
 
     override fun part1(): Any {

@@ -7,7 +7,7 @@ import program.OpCode
 import program.Program
 import program.ProgramContext
 
-class DayEight(file: String) : Project {
+class DayEight(file: String) : Project() {
     val program = Program(getLines(file)/*, debug = true*/)
 
     override fun part1(): Int {

@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DaySixteen(file: String): Project {
+class DaySixteen(file: String): Project() {
     private val tickets: MutableList<List<Int>> = ArrayList()
     private lateinit var yourTicket: List<Int>
     private val rules: HashMap<String, Rule> = HashMap()

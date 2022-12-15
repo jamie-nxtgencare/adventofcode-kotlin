@@ -4,7 +4,7 @@ package `2018`
 
 import Project
 
-class DayThree(file: String) : Project {
+class DayThree(file: String) : Project() {
     val lines = getLines(file)
     val covered = HashMap<Int, HashMap<Int, ArrayList<String>>>()
 

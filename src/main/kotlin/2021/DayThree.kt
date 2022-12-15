@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.roundToInt
 
-class DayThree(file: String) : Project {
+class DayThree(file: String) : Project() {
     private val input: List<List<Int>> = mapLettersPerLines(file) { it.map { it2 -> (it2 + "").toInt() }}
     private var mostCommonBits: List<Int> = ArrayList()
     private var leastCommonBits: List<Int> = ArrayList()

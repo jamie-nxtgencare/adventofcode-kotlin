@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DaySix(file: String) : Project {
+class DaySix(file: String) : Project() {
     private val lines = getLines(file)
     private val input: List<Int> = if (lines.isNotEmpty()) lines.first().split(",").map { it.toInt() } else ArrayList()
     private val ageCounts: Array<Long> = Array(9) { 0L }

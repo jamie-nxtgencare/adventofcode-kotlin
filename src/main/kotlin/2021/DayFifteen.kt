@@ -6,7 +6,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.math.floor
 
-class DayFifteen(file: String) : Project {
+class DayFifteen(file: String) : Project() {
     private val grid = mapLettersPerLines(file) { it.map { c -> Character.getNumericValue(c) } }
     private val nodes = HashMap<Pair<Int, Int>, Density>()
     private val unvisited = HashMap<Pair<Int, Int>, Density>()

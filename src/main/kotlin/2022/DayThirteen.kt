@@ -8,7 +8,7 @@ import kotlin.math.max
 val numberRegex = Regex("^\\d+$")
 
 
-class DayThirteen(file: String) : Project {
+class DayThirteen(file: String) : Project() {
     val signalPairs = whitelineSeperatedGrouper(file, { SignalPair(listOf(Signal(it[0]), Signal(it[1]))) }, { it })
 
     class SignalPair(val signals: List<Signal>) {

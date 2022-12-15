@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.min
 
-class DayTwentytwo(file: String) : Project {
+class DayTwentytwo(file: String) : Project() {
     var i = 0
     val ins = mapFileLines(file) {
         val chunks = it.split(",")

@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DayTwentyone(file: String): Project {
+class DayTwentyone(file: String): Project() {
     private lateinit var unmapped: Set<String>
     private var unmappedCount: Int = 0
     private val lines = getLines(file)

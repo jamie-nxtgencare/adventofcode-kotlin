@@ -3,7 +3,7 @@ package `2021`
 import Project
 import java.util.*
 
-class DayTwentythree(file: String) : Project {
+class DayTwentythree(file: String) : Project() {
     private var rows = 0
     private var cols = 0
     private val grid = mapLettersPerLines(file) {

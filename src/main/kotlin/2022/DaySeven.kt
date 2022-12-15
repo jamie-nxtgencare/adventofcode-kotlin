@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DaySeven(file: String) : Project {
+class DaySeven(file: String) : Project() {
     private val io = getLines(file)
     private val root = Dir("/", null)
     private var pwd = root

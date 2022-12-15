@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayFour(file: String) : Project {
+class DayFour(file: String) : Project() {
     private val sections = mapFileLines(file) { Section(it) }
 
     class Section(line: String) {

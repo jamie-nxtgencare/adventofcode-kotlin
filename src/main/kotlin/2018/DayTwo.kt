@@ -5,7 +5,7 @@ package `2018`
 import Project
 import kotlin.streams.toList
 
-class DayTwo(file: String) : Project {
+class DayTwo(file: String) : Project() {
     val ids = getLines(file)
     val lines = mapFileLines(file) { it.chars().toList().map { c -> c.toChar().toString() }.groupBy { c -> c }.mapValues { v -> v.value.size } }
 

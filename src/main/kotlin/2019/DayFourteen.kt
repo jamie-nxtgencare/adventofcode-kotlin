@@ -5,7 +5,7 @@ package `2019`
 import Project
 import kotlin.math.ceil
 
-class DayFourteen(file: String) : Project {
+class DayFourteen(file: String) : Project() {
     val reactions : Map<String, Reaction> = getReactions(file)
 
     private fun getReactions(file: String): Map<String, Reaction> {

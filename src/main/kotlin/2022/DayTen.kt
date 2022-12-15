@@ -5,7 +5,7 @@ package `2022`
 import Project
 import java.util.*
 
-class DayTen(file: String) : Project {
+class DayTen(file: String) : Project() {
     private val instructions = mapFileLines(file) { Instruction(it) }
 
     class Instruction(val s: String) {

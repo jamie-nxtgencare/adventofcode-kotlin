@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayNine(file: String) : Project {
+class DayNine(file: String) : Project() {
     private val motions = mapFileLines(file) { it.split(" ") }.map { Motion(it[0], it[1].toInt()) }
 
     class Point(val x: Int, val y: Int) {
