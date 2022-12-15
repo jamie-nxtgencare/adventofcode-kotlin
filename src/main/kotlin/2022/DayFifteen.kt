@@ -3,8 +3,6 @@
 package `2022`
 
 import Project
-import java.time.Duration
-import java.time.Instant
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -93,14 +91,17 @@ class DayFifteen(file: String) : Project() {
     override fun part2(): Any {
         val segmentY = if (sample) 20L else 4_000_000L
 
-        for (y in 0..segmentY) {
+        for (y in segmentY downTo 0) {
             val covered = covered(y)
 
             if (covered.size == 1 && covered.first().a < 0 && covered.first().b > segmentY) {
                 continue
             }
 
-            for (x in 0..segmentY) {
+            val sorted = covered.sortedBy { it.a }
+            val start = if (sorted.first().a < 0) sorted.first().b else 0
+
+            for (x in start..segmentY) {
                 if (!covered.any { it.contains(x) }) {
                     return x * 4000000 + y
                 }
