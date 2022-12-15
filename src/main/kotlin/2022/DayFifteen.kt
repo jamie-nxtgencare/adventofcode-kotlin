@@ -92,9 +92,6 @@ class DayFifteen(file: String) : Project() {
 
     override fun part2(): Any {
         val segmentY = if (sample) 20L else 4_000_000L
-        var i = 0
-
-        var prev = Instant.now()
 
         for (y in 0..segmentY) {
             val covered = covered(y)
