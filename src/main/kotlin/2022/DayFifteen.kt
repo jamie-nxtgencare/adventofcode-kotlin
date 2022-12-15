@@ -3,12 +3,14 @@
 package `2022`
 
 import Project
+import java.time.Duration
+import java.time.Instant
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
 class DayFifteen(file: String) : Project() {
-    val sensors = mapFileLines(file) { Sensor(it) }
+    private val sensors = mapFileLines(file) { Sensor(it) }
 
     // Sensor at x=2, y=18: closest beacon is at x=-2, y=15
     class Sensor(s: String) {
@@ -54,10 +56,13 @@ class DayFifteen(file: String) : Project() {
             return "LineSegment(a=$a, b=$b)"
         }
 
+        fun contains(x: Long): Boolean {
+            return x in a..b
+        }
+
     }
 
-    override fun part1(): Any {
-        val segmentY = if (sample) 10L else 2000000L
+    private fun covered(segmentY: Long): ArrayList<LineSegment> {
         val uncheckedSegments = sensors.map { it.getManhattanLineSegment(segmentY) }.filterNotNull().toMutableList()
         val checked = ArrayList<LineSegment>()
 
@@ -77,11 +82,34 @@ class DayFifteen(file: String) : Project() {
                 checked.add(first)
             }
         }
+        return checked
+    }
 
-        return checked.sumOf { it.size() } // ffff 6438941
+    override fun part1(): Any {
+        val segmentY = if (sample) 10L else 2000000L
+        return covered(segmentY).sumOf { it.size() } // ffff 6438941
     }
 
     override fun part2(): Any {
+        val segmentY = if (sample) 20L else 4_000_000L
+        var i = 0
+
+        var prev = Instant.now()
+
+        for (y in 0..segmentY) {
+            val covered = covered(y)
+
+            if (covered.size == 1 && covered.first().a < 0 && covered.first().b > segmentY) {
+                continue
+            }
+
+            for (x in 0..segmentY) {
+                if (!covered.any { it.contains(x) }) {
+                    return x * 4000000 + y
+                }
+
+            }
+        }
         return -1
     }
 
