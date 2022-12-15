@@ -60,8 +60,8 @@ class DayFifteen(file: String) : Project() {
 
     }
 
-    private fun covered(segmentY: Long): ArrayList<LineSegment> {
-        val uncheckedSegments = sensors.map { it.getManhattanLineSegment(segmentY) }.filterNotNull().toMutableList()
+    private fun covered(segmentY: Long, boundary: LineSegment?): ArrayList<LineSegment> {
+        val uncheckedSegments = sensors.mapNotNull { it.getManhattanLineSegment(segmentY) }.toMutableList()
         val checked = ArrayList<LineSegment>()
 
         while (uncheckedSegments.isNotEmpty()) {
@@ -70,6 +70,13 @@ class DayFifteen(file: String) : Project() {
             for (segment in uncheckedSegments) {
                 if (first.overlaps(segment)) {
                     val new = first.merge(segment)
+
+                    if (boundary != null && new.a < boundary.a && new.b > boundary.b) {
+                        val out = ArrayList<LineSegment>()
+                        out.add(new)
+                        return out
+                    }
+
                     uncheckedSegments.remove(segment)
                     uncheckedSegments.add(0, new)
                     merged = true
@@ -85,14 +92,14 @@ class DayFifteen(file: String) : Project() {
 
     override fun part1(): Any {
         val segmentY = if (sample) 10L else 2000000L
-        return covered(segmentY).sumOf { it.size() }
+        return covered(segmentY, LineSegment(0, segmentY)).sumOf { it.size() }
     }
 
     override fun part2(): Any {
         val segmentY = if (sample) 20L else 4_000_000L
 
         for (y in segmentY downTo 0) {
-            val covered = covered(y)
+            val covered = covered(y, LineSegment(0, segmentY))
 
             if (covered.size == 1 && covered.first().a < 0 && covered.first().b > segmentY) {
                 continue
