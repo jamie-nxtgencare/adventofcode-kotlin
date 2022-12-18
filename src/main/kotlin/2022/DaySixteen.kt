@@ -3,6 +3,8 @@
 package `2022`
 
 import Project
+import java.time.Duration
+import java.time.Instant
 import kotlin.math.min
 
 class DaySixteen(file: String) : Project() {
@@ -10,6 +12,8 @@ class DaySixteen(file: String) : Project() {
     private val valveMap = HashMap<String, Valve>()
     private val distances = HashMap<Valve, HashMap<Valve, Int>>()
     private val listDistances = HashMap<List<Valve>, Int>()
+    private var time = Instant.now();
+    private var valveCount = 0
 
     class Valve(it: String) {
         private val tokens = it.split(" ")
@@ -124,13 +128,11 @@ class DaySixteen(file: String) : Project() {
             remaining.remove(closedValve)
             val thisMinutes = minutes - shortestPath(prev, closedValve) - 1
             if (thisMinutes < 0) {
-                //println(path.joinToString("", "", "") { it.label } + " " + pressure.toString())
                 pressure
             } else {
                 val thisPressure = pressure + closedValve.rate * thisMinutes
 
                 if (remaining.isEmpty()) {
-                    //println(path.joinToString("", "", "") { it.label } + closedValve.label + " " + thisPressure.toString())
                     thisPressure
                 } else {
                     val newPath = ArrayList<Valve>()
@@ -143,8 +145,89 @@ class DaySixteen(file: String) : Project() {
         }.max()
     }
 
+    private fun recurse2(
+        pressure: Int, closedValves: ArrayList<Valve>, path: List<Valve>, prev: Valve, minutes: Int, path2: List<Valve>, prev2: Valve, minutes2: Int
+    ): Int {
+        return closedValves.map { closedValve ->
+            if (path.size == 1) {
+                println(closedValve)
+                val nextTime = Instant.now()
+                val seconds = Duration.between(time, nextTime).toSeconds()
+                println("${seconds}s, ${(closedValves.size - valveCount++) * seconds}s remaining")
+                time = nextTime
+            }
+
+            var outPressure = 0
+            if (minutes >= minutes2) {
+                val remaining = ArrayList<Valve>()
+                remaining.addAll(closedValves)
+                remaining.remove(closedValve)
+                val thisMinutes = minutes - shortestPath(prev, closedValve) - 1
+                if (thisMinutes < 0) {
+                    outPressure = pressure
+                    remaining.add(closedValve) // Add it back in again to try on the other side
+                    if (minutes2 > 0) {
+                        outPressure = recurse2(pressure, remaining, path, prev, 0, path2, prev2, minutes2)
+                    }
+                } else {
+                    val thisPressure = pressure + closedValve.rate * thisMinutes
+
+                    if (remaining.isEmpty()) {
+                        outPressure = thisPressure
+                    } else {
+                        val newPath = ArrayList<Valve>()
+                        newPath.addAll(path)
+                        newPath.add(closedValve)
+
+                        if (thisMinutes == 0 && minutes2 == 0) {
+                            outPressure = thisPressure
+                        } else {
+                            outPressure = recurse2(thisPressure, remaining, newPath, closedValve, thisMinutes, path2, prev2, minutes2)
+                        }
+                    }
+                }
+            } else if (minutes < minutes2) {
+                val remaining = ArrayList<Valve>()
+                remaining.addAll(closedValves)
+                remaining.remove(closedValve)
+                val thisMinutes = minutes2 - shortestPath(prev2, closedValve) - 1
+                if (thisMinutes < 0) {
+                    outPressure= pressure
+                    remaining.add(closedValve) // Add it back in again to try on the other side
+                    if (minutes > 0) {
+                        outPressure = recurse2(pressure, remaining, path, prev, minutes, path2, prev2, 0)
+                    }
+                } else {
+                    val thisPressure = pressure + closedValve.rate * thisMinutes
+
+                    if (remaining.isEmpty()) {
+                        outPressure = thisPressure
+                    } else {
+                        val newPath = ArrayList<Valve>()
+                        newPath.addAll(path)
+                        newPath.add(closedValve)
+
+                        if (thisMinutes == 0 && minutes == 0) {
+                            outPressure = thisPressure
+                        } else {
+                            outPressure = recurse2(thisPressure, remaining, path, prev, minutes, newPath, closedValve, thisMinutes)
+                        }
+                    }
+                }
+            }
+
+            outPressure
+        }.max()
+    }
+
     override fun part2(): Any {
-        return -1
+        val closedValves = ArrayList<Valve>()
+        closedValves.addAll(valves.filter { it.rate > 0 })
+
+        val pressure = 0
+        val prev = valveMap["AA"]!!
+        val minutes = 26
+        return recurse2(pressure, closedValves, listOf(prev), prev, minutes, listOf(prev), prev, minutes )
     }
 
 }
