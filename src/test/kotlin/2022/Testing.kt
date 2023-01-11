@@ -180,7 +180,7 @@ class Testing {
 
     @Test
     fun day18Sample() {
-        testSample(18, -1, -1)
+        testSample(18, 64, -1)
     }
 
     @Test
