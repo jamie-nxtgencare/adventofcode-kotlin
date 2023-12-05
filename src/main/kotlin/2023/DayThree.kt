@@ -3,57 +3,73 @@
 package `2023`
 
 import Project
-
-fun getPriority(char: Int): Int {
-    return if (char.toChar().isLowerCase()) char - 96 else char - 38
-}
+import java.lang.Character.isDigit
+import java.lang.Integer.parseInt
+import kotlin.math.max
+import kotlin.math.min
 
 class DayThree(file: String) : Project() {
-    private val rucksacks = mapFileLines(file) { RuckSack(it) }
-
-    class RuckSack(stuff: String) {
-        val charCount: HashMap<Int, Int>
-        private val charCountLeft: HashMap<Int, Int>
-        private val charCountRight: HashMap<Int, Int>
-
-        init {
-            charCount = getCharCounts(stuff)
-            charCountLeft = getCharCounts(stuff.subSequence(0, stuff.length/2).toString())
-            charCountRight = getCharCounts(stuff.subSequence(stuff.length/2, stuff.length).toString())
-        }
-
-        private fun getCharCounts(rucksack: String): HashMap<Int, Int> {
-            val charCount : HashMap<Int, Int> = HashMap()
-            rucksack.chars().forEach {
-                charCount[it] = (charCount[it] ?: 0) + 1
-            }
-            return charCount
-        }
-
-        fun getPriority(): Int {
-            return charCountLeft.filter { charCountRight.containsKey(it.key) }.keys.sumOf { getPriority(it) }
-        }
-
-    }
+    private val lines = getLines(file)
+    private val grid: List<List<Char>> = lines.map { it.split("").filter { it.isNotEmpty() }.map { it[0] } }
 
     override fun part1(): Any {
-        return rucksacks.sumOf { it.getPriority() }
+        var sum = 0
+
+        for (row in grid.indices) {
+            var start = -1
+            var acc = false
+            var maybePartNo = ""
+            for (col in grid[row].indices) {
+                if (isDigit(grid[row][col])) {
+                    acc = true
+                    if (start == -1) {
+                        start = col
+                    }
+                    maybePartNo += grid[row][col]
+                } else if (acc) {
+                    if (isPart(start, row, col - 1)) {
+                        println("a: " + grid[row].subList(start, col))
+                        sum += parseInt(maybePartNo)
+                    }
+                    acc = false
+                    maybePartNo = ""
+                    start = -1
+                }
+            }
+
+            if (acc) {
+                println("b: " + grid[row].subList(start, grid[row].size - 1))
+                if (isPart(start, row, grid[row].size - 1)) {
+                    sum += parseInt(maybePartNo)
+                }
+            }
+        }
+
+        return sum
+    }
+
+    private fun isPart(start: Int, row: Int, end: Int): Boolean {
+        val chars = ArrayList<Char>()
+        if (row > 0) {
+            chars.addAll(grid[row - 1].subList(max(start - 1, 0), min(end + 2, grid[row].size - 1)))
+        }
+        if (row + 1 < grid.size - 1) {
+            chars.addAll(grid[row + 1].subList(max(start - 1, 0), min(end + 2, grid[row].size - 1)))
+        }
+        if (start > 0) {
+            chars.add(grid[row][start - 1])
+        }
+        if (end + 1 < grid[row].size - 1) {
+            chars.add(grid[row][end + 1])
+        }
+
+        return chars.any {
+            !isDigit(it) && it != '.'
+        }
     }
 
     override fun part2(): Any {
-        val badges = ArrayList<Int>()
-        for (i in rucksacks.indices step 3) {
-            val group = rucksacks.subList(i, i + 3)
-            val badge = group[0].charCount.filter {
-                group[1].charCount[it.key] != null && group[2].charCount[it.key] != null
-            }.firstNotNullOf { it }.key
-
-            val priority = getPriority(badge)
-
-            badges.add(priority)
-        }
-
-        return badges.sum()
+        return -1
     }
 
 }
