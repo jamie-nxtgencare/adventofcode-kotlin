@@ -3,64 +3,60 @@
 package `2023`
 
 import Project
+import java.lang.Long.parseLong
 import java.util.*
-import kotlin.collections.HashMap
 
 class DayFive(file: String) : Project() {
-    private val lines = getLines(file)
-    private val stackStrings = lines.takeWhile { it.isNotBlank() }
-    private val moves = lines.takeLastWhile { it.isNotBlank() }.map { it.split(" ") }
-    private val stacks = HashMap<Int, Stack<String>>()
+    private val mappers = whitelineSeperatedGrouper(file, { Mapper(it) }, { it })
 
-    init {
-        restack()
-    }
+    class Mapper(lines: List<String>) {
+        val seeds = ArrayList<Long>()
+        private val sourceRanges = ArrayList<LongRange>()
+        private val offsets = ArrayList<Long>()
 
-    private fun restack() {
-        stacks.clear()
-        stackStrings.subList(0, stackStrings.size - 1).reversed().forEach {
-            for ((stackId, i) in (1 until it.length step 4).withIndex()) {
-                if (it[i].toString().isNotBlank()) {
-                    stacks[stackId] = stacks[stackId] ?: Stack()
-                    stacks[stackId]!!.push(it[i].toString())
+        init {
+            if (lines.size == 1) {
+                seeds.addAll(lines[0].split(": ")[1].split(" ").map { parseLong(it.trim()) })
+            } else {
+                for (line in 1 until lines.size) {
+                    val range = lines[line].split(" ")
+                    val source = parseLong(range[1])
+                    sourceRanges.add(source..source + parseLong(range[2]))
+                    offsets.add(parseLong(range[0]) - source)
                 }
             }
+        }
+
+        fun doMap(needle: Long): Long {
+            var out = -1L
+            for (i in sourceRanges.indices) {
+                if (sourceRanges[i].contains(needle)) {
+                    out = needle + offsets[i]
+                    break
+                }
+            }
+
+            return if (out == -1L) needle else out
         }
     }
 
     override fun part1(): Any {
-        moves.forEach {
-            val count = it[1].toInt()
-            val from = it[3].toInt() - 1
-            val to = it[5].toInt() - 1
+        val seeds = mappers[0].seeds
+        val rest = mappers.subList(1, mappers.size)
 
-            for (i in 0 until count) {
-                val popped = stacks[from]!!.pop()
-                stacks[to]!!.push(popped)
+        val locations = seeds.map {
+            var location = it
+            for (mapper in rest) {
+                location = mapper.doMap(location)
             }
+            location
         }
 
-        return stacks.values.map { it.peek() }.joinToString("", "", "") { it }
+        return locations.min()
     }
 
     override fun part2(): Any {
-        restack()
-
-        moves.forEach {
-            val count = it[1].toInt()
-            val from = it[3].toInt() - 1
-            val to = it[5].toInt() - 1
-
-            val substack = Stack<String>()
-
-            for (i in 0 until count) {
-                substack.push(stacks[from]!!.pop())
-            }
-
-            substack.reversed().forEach { i -> stacks[to]!!.push(i) }
-        }
-
-        return stacks.values.map { it.peek() }.joinToString("", "", "") { it }
+        return -1L
     }
 
 }
