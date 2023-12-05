@@ -4,6 +4,7 @@ package `2023`
 
 import Project
 import java.lang.Integer.parseInt
+import kotlin.math.min
 
 class DayFour(file: String) : Project() {
     private val cards = mapFileLines(file) { Card(it) }
@@ -15,6 +16,7 @@ class DayFour(file: String) : Project() {
         private val numbers = numbersS[1].split(" ").filter { it.isNotBlank() }.map { parseInt(it.trim()) }
         val matches = numbers.filter { winners.contains(it) }.size
         val score = if (matches == 0) 0.0 else Math.pow(2.0, matches.toDouble() - 1)
+        var copies = 1
     }
 
     override fun part1(): Any {
@@ -22,7 +24,14 @@ class DayFour(file: String) : Project() {
     }
 
     override fun part2(): Any {
-        return -1.0
+        cards.forEachIndexed { i, card ->
+            for (copy in 1 .. card.copies) {
+                val winners = cards.subList(min(cards.size, i + 1), min(cards.size, i + 1 + card.matches))
+                winners.forEach { it.copies++ }
+            }
+        }
+
+        return cards.sumOf { it.copies }
     }
 
 }

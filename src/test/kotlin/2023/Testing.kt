@@ -40,12 +40,12 @@ class Testing {
 
     @Test
     fun day4Sample() {
-        testSample(4, 13.0, -1.0)
+        testSample(4, 13.0, 30)
     }
 
     @Test
     fun day4() {
-        test(4, -1.0, -1.0)
+        test(4, 25651.0, -1.0)
     }
 
     @Test
