@@ -11,10 +11,10 @@ import kotlin.math.min
 class DayThree(file: String) : Project() {
     private val lines = getLines(file)
     private val grid: List<List<Char>> = lines.map { it.split("").filter { it.isNotEmpty() }.map { it[0] } }
+    private val gearParts = HashMap<Pair<Int, Int>, MutableList<String>>()
+    private var sum = 0
 
-    override fun part1(): Any {
-        var sum = 0
-
+    init {
         for (row in grid.indices) {
             var start = -1
             var acc = false
@@ -28,9 +28,14 @@ class DayThree(file: String) : Project() {
                     maybePartNo += grid[row][col]
                 } else if (acc) {
                     if (isPart(start, row, col - 1)) {
-                        println("a: " + grid[row].subList(start, col))
                         sum += parseInt(maybePartNo)
+                        val part = grid[row].subList(start, col).joinToString("")
+                        val attachedGears = isGearPart(start, row, col - 1)
+                        attachedGears.forEach {
+                            gearParts.computeIfAbsent(it) { mutableListOf() }.add(part)
+                        }
                     }
+
                     acc = false
                     maybePartNo = ""
                     start = -1
@@ -38,13 +43,20 @@ class DayThree(file: String) : Project() {
             }
 
             if (acc) {
-                println("b: " + grid[row].subList(start, grid[row].size - 1))
-                if (isPart(start, row, grid[row].size - 1)) {
+                val col = grid[row].size
+                if (isPart(start, row, col)) {
                     sum += parseInt(maybePartNo)
+                }
+                val part = grid[row].subList(start, col).joinToString("")
+                val attachedGears = isGearPart(start, row, col - 1)
+                attachedGears.forEach {
+                    gearParts.computeIfAbsent(it) { mutableListOf() }.add(part)
                 }
             }
         }
+    }
 
+    override fun part1(): Any {
         return sum
     }
 
@@ -68,8 +80,23 @@ class DayThree(file: String) : Project() {
         }
     }
 
+    private fun isGearPart(start: Int, row: Int, end: Int): List<Pair<Int, Int>> {
+        val gears = ArrayList<Pair<Int, Int>>()
+        for (r in max(0, row - 1) .. min(row + 1, grid.size - 1)) {
+            for (c in max(0, start - 1) .. min(end + 1, grid[r].size - 1)) {
+                if (grid[r][c] == '*') {
+                    gears.add(Pair(r, c))
+                }
+            }
+        }
+        return gears
+    }
+
     override fun part2(): Any {
-        return -1
+        val gearRatioComponents: Collection<MutableList<String>> = gearParts.filter { it.value.size == 2 }.values
+        println(gearRatioComponents)
+
+        return gearRatioComponents.sumOf { parseInt(it[0]) * parseInt(it[1]) }
     }
 
 }
