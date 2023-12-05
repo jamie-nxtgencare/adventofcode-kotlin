@@ -3,33 +3,26 @@
 package `2023`
 
 import Project
+import java.lang.Integer.parseInt
 
 class DayFour(file: String) : Project() {
-    private val sections = mapFileLines(file) { Section(it) }
+    private val cards = mapFileLines(file) { Card(it) }
 
-    class Section(line: String) {
-        private val range1 = getRange(line.split(",")[0])
-        private val range2 = getRange(line.split(",")[1])
-
-        private fun getRange(s: String): IntRange {
-            return IntRange(s.split("-")[0].toInt(), s.split("-")[1].toInt())
-        }
-
-        fun overlaps(): Boolean {
-            return (range1.first <= range2.last && range1.last >= range2.first) || (range2.first <= range1.last && range2.last >= range1.first)
-        }
-
-        fun fullyOverlaps(): Boolean {
-            return (range1.first >= range2.first && range1.last <= range2.last) || (range2.first >= range1.first && range2.last <= range1.last)
-        }
+    class Card(s: String) {
+        private val split = s.split(": ")
+        private val numbersS = split[1].split(" | ")
+        private val winners = numbersS[0].split(" ").filter { it.isNotBlank() }.map { parseInt(it.trim()) }.toSet()
+        private val numbers = numbersS[1].split(" ").filter { it.isNotBlank() }.map { parseInt(it.trim()) }
+        val matches = numbers.filter { winners.contains(it) }.size
+        val score = if (matches == 0) 0.0 else Math.pow(2.0, matches.toDouble() - 1)
     }
 
     override fun part1(): Any {
-        return sections.filter { it.fullyOverlaps() }.count()
+        return cards.sumOf { it.score }
     }
 
     override fun part2(): Any {
-        return sections.filter { it.overlaps() }.count()
+        return -1.0
     }
 
 }
