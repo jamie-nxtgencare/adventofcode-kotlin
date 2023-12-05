@@ -13,7 +13,7 @@ class DayTwo(file: String) : Project() {
     }
 
     override fun part2(): Any {
-        return games.filter{ !it.isImpossible() }.sumOf { it.gameId }
+        return games.sumOf{ it.getPower() }
     }
 
 }
@@ -21,6 +21,7 @@ class DayTwo(file: String) : Project() {
 class Game(line: String) {
     var gameId: Int;
     var samples: List<Sample>
+
 
     init {
         val split = line.split(": ")
@@ -41,6 +42,21 @@ class Game(line: String) {
                 out
             }
         }
+    }
+
+    fun getPower(): Int {
+        val fewestByColor = HashMap<String, Int>()
+
+        samples.forEach {
+            it.cubes.forEach {
+                val i = fewestByColor[it.color] ?: 0
+                if (it.count > i) {
+                    fewestByColor[it.color] = it.count
+                }
+            }
+        }
+
+        return (fewestByColor["red"] ?: 0) * (fewestByColor["green"] ?: 0) * (fewestByColor["blue"] ?: 0)
     }
 }
 
