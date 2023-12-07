@@ -12,37 +12,62 @@ class DaySeven(file: String) : Project() {
 
     class Hand(val cards: List<Char>, val bid: Int): Comparable<Hand> {
         private val cardCounts = HashMap<Char, Int>()
-        private val rank: Int
+        private val jokerLessCardCounts = HashMap<Char, Int>()
+        private var jokers = 0
+        var rank: Int = 0
+        var useJokers = false
 
         init {
             cards.forEach {
                 cardCounts.merge(it, 1, Integer::sum)
+                if (it != 'J') {
+                    jokerLessCardCounts.merge(it, 1, Integer::sum)
+                } else {
+                    jokers++
+                }
             }
-            rank = getRank()
+            rank = computeRank()
         }
 
-        fun getRank(): Int {
-            if (cardCounts.any { it.value == 5 }) {
-                return 6 // 5 of a kind
-            } else if (cardCounts.any { it.value == 4 }) {
-                return 5 // 4 of a kind
-            } else if (cardCounts.any { it.value == 3 } && cardCounts.any { it.value == 2}) {
-                return 4 // full house
-            } else if (cardCounts.any { it.value == 3 }) {
-                return 3 // 3 of a kind
-            } else if (cardCounts.filter { it.value == 2 }.size == 2) {
-                return 2 // 2 pair
-            } else if (cardCounts.any { it.value == 2 }) {
-                return 1 // pair
+        fun computeRank(): Int {
+            if (!useJokers) {
+                if (cardCounts.any { it.value == 5 }) {
+                    return 6 // 5 of a kind
+                } else if (cardCounts.any { it.value == 4 }) {
+                    return 5 // 4 of a kind
+                } else if (cardCounts.any { it.value == 3 } && cardCounts.any { it.value == 2 }) {
+                    return 4 // full house
+                } else if (cardCounts.any { it.value == 3 }) {
+                    return 3 // 3 of a kind
+                } else if (cardCounts.filter { it.value == 2 }.size == 2) {
+                    return 2 // 2 pair
+                } else if (cardCounts.any { it.value == 2 }) {
+                    return 1 // pair
+                }
+            } else {
+                if (jokerLessCardCounts.any { it.value + jokers == 5} || jokers == 5) {
+                    return 6 // 5 of a kind
+                } else if (jokerLessCardCounts.any { it.value + jokers == 4 }) {
+                    return 5 // 4 of a kind
+                } else if (jokerLessCardCounts.any { it.value == 3 } && jokerLessCardCounts.any { it.value == 2 } || (jokerLessCardCounts.filter { it.value == 2 }.size == 2 && jokers == 1)) {
+                    return 4 // full house
+                } else if (jokerLessCardCounts.any { it.value + jokers == 3 }) {
+                    return 3 // 3 of a kind
+                } else if (jokerLessCardCounts.filter { it.value == 2 }.size == 2) {
+                    return 2 // 2 pair
+                } else if (jokerLessCardCounts.any { it.value + jokers == 2 }) {
+                    return 1 // pair
+                }
             }
+
             return 0
         }
 
-        override fun compareTo(hand: Hand): Int {
-            if (rank == hand.rank) {
+        override fun compareTo(other: Hand): Int {
+            if (rank == other.rank) {
                 for (i in cards.indices) {
                     val rank1 = getCardRank(cards[i])
-                    val rank2 = getCardRank(hand.cards[i])
+                    val rank2 = getCardRank(other.cards[i])
 
                     if (rank1 != rank2) {
                         return rank1 - rank2
@@ -50,7 +75,7 @@ class DaySeven(file: String) : Project() {
                 }
             }
 
-            return rank - hand.rank
+            return rank - other.rank
         }
 
         private fun getCardRank(card: Char): Int {
@@ -60,7 +85,7 @@ class DaySeven(file: String) : Project() {
 
             when (card) {
                 'T' -> return 10
-                'J' -> return 11
+                'J' -> return if (useJokers) 1 else 11
                 'Q' -> return 12
                 'K' -> return 13
                 'A' -> return 14
@@ -84,7 +109,19 @@ class DaySeven(file: String) : Project() {
     }
 
     override fun part2(): Any {
-        return -1
+        hands.forEach {
+            it.useJokers = true
+            it.rank = it.computeRank()
+        }
+        val sortedHands = hands.sorted()
+        var sum = 0
+
+        for (i in sortedHands.indices) {
+            val rank = i + 1
+            sum += sortedHands[i].bid * rank
+        }
+
+        return sum
     }
 
 }
