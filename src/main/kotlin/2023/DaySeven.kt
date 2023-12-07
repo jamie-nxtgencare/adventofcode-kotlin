@@ -3,74 +3,88 @@
 package `2023`
 
 import Project
+import java.lang.Character.isDigit
+import java.lang.Integer.parseInt
 
 class DaySeven(file: String) : Project() {
-    private val io = getLines(file)
-    private val root = Dir("/", null)
-    private var pwd = root
-    private val allDirs: ArrayList<Dir> = ArrayList()
+    val lines = getLines(file).map { it.split(" ") }
+    val hands = lines.map { Hand(it[0].toList(), parseInt(it[1]))  }
 
-    init {
-        allDirs.add(pwd)
-        var mode = IOMode.INPUT
+    class Hand(val cards: List<Char>, val bid: Int): Comparable<Hand> {
+        private val cardCounts = HashMap<Char, Int>()
+        private val rank: Int
 
-        io.subList(1, io.size).forEach {
-            if (it.startsWith("$")) {
-                mode = IOMode.INPUT
+        init {
+            cards.forEach {
+                cardCounts.merge(it, 1, Integer::sum)
             }
+            rank = getRank()
+        }
 
-            val tokens = it.split(" ")
+        fun getRank(): Int {
+            if (cardCounts.any { it.value == 5 }) {
+                return 6 // 5 of a kind
+            } else if (cardCounts.any { it.value == 4 }) {
+                return 5 // 4 of a kind
+            } else if (cardCounts.any { it.value == 3 } && cardCounts.any { it.value == 2}) {
+                return 4 // full house
+            } else if (cardCounts.any { it.value == 3 }) {
+                return 3 // 3 of a kind
+            } else if (cardCounts.filter { it.value == 2 }.size == 2) {
+                return 2 // 2 pair
+            } else if (cardCounts.any { it.value == 2 }) {
+                return 1 // pair
+            }
+            return 0
+        }
 
-            if (mode == IOMode.INPUT) {
-                val command = tokens[1]
-                if (command == "ls") {
-                    mode = IOMode.OUTPUT
-                } else if (command == "cd") {
-                    val subdir = tokens[2]
+        override fun compareTo(hand: Hand): Int {
+            if (rank == hand.rank) {
+                for (i in cards.indices) {
+                    val rank1 = getCardRank(cards[i])
+                    val rank2 = getCardRank(hand.cards[i])
 
-                    pwd = if (subdir == "..") {
-                        pwd.parent!!
-                    } else {
-                        val dir = Dir(subdir, pwd)
-                        allDirs.add(dir)
-                        pwd.subdirs.add(dir)
-                        dir
+                    if (rank1 != rank2) {
+                        return rank1 - rank2
                     }
                 }
-            } else {
-                if (tokens[0] != "dir") {
-                    pwd.files.add(File(tokens[1], tokens[0].toInt()))
-                }
             }
+
+            return rank - hand.rank
+        }
+
+        private fun getCardRank(card: Char): Int {
+            if (isDigit(card)) {
+                return parseInt(card.toString())
+            }
+
+            when (card) {
+                'T' -> return 10
+                'J' -> return 11
+                'Q' -> return 12
+                'K' -> return 13
+                'A' -> return 14
+            }
+
+            return -1
         }
     }
-
-    enum class IOMode {
-        INPUT,
-        OUTPUT
-    }
-
-    class Dir(val name: String, val parent: Dir?) {
-        val subdirs: ArrayList<Dir> = ArrayList()
-        val files: ArrayList<File> = ArrayList()
-        var size: Int? = null
-
-        fun size(): Int {
-            if (size == null) {
-                return files.sumOf { it.size } + subdirs.sumOf { it.size() }
-            }
-            return size!!
-        }
-    }
-
-    class File(val name: String, val size: Int)
 
     override fun part1(): Any {
-        return allDirs.filter { it.size() < 100000 }.sumOf { it.size() }
+        val sortedHands = hands.sorted()
+
+        var sum = 0
+
+        for (i in sortedHands.indices) {
+            val rank = i + 1
+            sum += sortedHands[i].bid * rank
+        }
+
+        return sum
     }
 
     override fun part2(): Any {
-        return allDirs.filter { (70_000_000 - root.size() + it.size()) > 30_000_000 }.minOf { it.size() }
+        return -1
     }
 
 }
