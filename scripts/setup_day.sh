@@ -7,3 +7,4 @@ title=$(echo $question | sed -e 's/^--- \([^-]*\)---.*/\1/g')
 
 hub issue create --message "${title:0:100} $question"
 wget -qO- --header "Cookie: session=$session" https://adventofcode.com/2023/day/$1/input > src/test/resources/2023/day$1.input
+touch src/test/resources/2023/day$1.sample-input
