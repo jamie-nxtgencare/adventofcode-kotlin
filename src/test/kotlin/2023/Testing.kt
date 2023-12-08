@@ -273,7 +273,7 @@ class Testing {
         @Suppress("UNCHECKED_CAST") val projectClass: Class<out Project> = Class.forName("2023.Day$dayStr") as Class<Project>
         val constructor = projectClass.getDeclaredConstructor(String::class.java)
         val input = file.format(number) + customSampleFile
-        var project = constructor.newInstance(input)
+        val project = constructor.newInstance(input)
         project.sample = sample
 
         if (part1 != null) {

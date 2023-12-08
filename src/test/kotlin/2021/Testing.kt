@@ -1,6 +1,5 @@
 @file:Suppress("PackageName")
 package `2021`
-import Day
 import Project
 import getDayStr
 import org.junit.Assert.assertEquals

@@ -9,7 +9,6 @@ class DayFive(file: String) : Project() {
     private val mappers = whitelineSeperatedGrouper(file, { Mapper(it) }, { it })
 
     class Mapper(lines: List<String>) {
-        val name = lines[0]
         val seeds = ArrayList<Long>()
         private val sourceRanges = ArrayList<LongRange>()
         private val offsets = ArrayList<Long>()
