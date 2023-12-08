@@ -3,8 +3,6 @@
 package `2022`
 
 import Project
-import java.lang.Integer.max
-import java.lang.Integer.min
 
 private infix fun Int.toward(to: Int): IntProgression {
     val step = if (this > to) -1 else 1

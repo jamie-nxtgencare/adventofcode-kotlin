@@ -4,7 +4,6 @@ package `2022`
 
 import Project
 import java.util.*
-import kotlin.collections.HashMap
 
 class DayFive(file: String) : Project() {
     private val lines = getLines(file)

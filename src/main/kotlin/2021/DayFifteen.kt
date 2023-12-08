@@ -1,9 +1,6 @@
 @file:Suppress("PackageName")
 package `2021`
 import Project
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.math.floor
 
 class DayFifteen(file: String) : Project() {

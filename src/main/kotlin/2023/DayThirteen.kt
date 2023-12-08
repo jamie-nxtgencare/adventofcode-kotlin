@@ -3,7 +3,6 @@
 package `2023`
 
 import Project
-import kotlin.math.max
 
 val numberRegex = Regex("^\\d+$")
 

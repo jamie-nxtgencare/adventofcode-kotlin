@@ -3,8 +3,6 @@
 package `2023`
 
 import Project
-import java.lang.Integer.parseInt
-import kotlin.math.abs
 
 class DayEighteen(file: String) : Project() {
     override fun part1(): Any {

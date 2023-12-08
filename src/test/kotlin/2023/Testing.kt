@@ -5,8 +5,6 @@ import Project
 import getDayStr
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
-import java.math.BigInteger
 
 class Testing {
     @Test

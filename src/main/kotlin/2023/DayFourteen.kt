@@ -3,8 +3,6 @@
 package `2023`
 
 import Project
-import java.lang.Integer.max
-import java.lang.Integer.min
 
 class DayFourteen(file: String) : Project() {
     override fun part1(): Any {

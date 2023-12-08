@@ -3,7 +3,6 @@
 package `2023`
 
 import Project
-import java.lang.Character.isDigit
 import java.lang.Integer.parseInt
 
 class DayOne(file: String) : Project() {

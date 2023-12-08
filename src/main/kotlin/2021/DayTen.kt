@@ -2,7 +2,6 @@
 package `2021`
 import Project
 import java.util.*
-import kotlin.math.ceil
 import kotlin.math.floor
 
 class DayTen(file: String) : Project() {

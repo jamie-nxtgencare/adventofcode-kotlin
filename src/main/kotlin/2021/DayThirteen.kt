@@ -2,7 +2,6 @@
 package `2021`
 import Project
 import java.util.*
-import kotlin.collections.ArrayList
 
 class DayThirteen(file: String) : Project() {
     private val lines = getLines(file)

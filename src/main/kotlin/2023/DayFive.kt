@@ -4,7 +4,6 @@ package `2023`
 
 import Project
 import java.lang.Long.parseLong
-import java.util.*
 
 class DayFive(file: String) : Project() {
     private val mappers = whitelineSeperatedGrouper(file, { Mapper(it) }, { it })

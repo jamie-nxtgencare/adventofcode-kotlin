@@ -3,7 +3,6 @@
 package `2023`
 
 import Project
-import java.lang.Integer.parseInt
 
 class DayNineteen(file: String) : Project() {
     override fun part1(): Any {
