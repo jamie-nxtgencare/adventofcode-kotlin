@@ -5,6 +5,7 @@ import Project
 import getDayStr
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.File
 import java.math.BigInteger
 
 class Testing {
@@ -80,7 +81,9 @@ class Testing {
 
     @Test
     fun day8Sample() {
-        testSample(8, 6L, 6L)
+        testSample(8, 2L, 2L)
+        testSample(8, 6L, 6L, "2")
+        testSample(8, null, 6L, "3")
     }
 
     @Test
@@ -258,24 +261,27 @@ class Testing {
         test(25, -1, -1)
     }
 
-    private fun testSample(number: Int, part1: Any, part2: Any) {
-        baseTest("2023/day%d.sample-input".format(number), number, part1, part2, true)
+    private fun testSample(number: Int, part1: Any?, part2: Any, customSampleFile: String = "") {
+        baseTest("2023/day%d.sample-input".format(number), number, part1, part2, true, customSampleFile)
     }
 
-    private fun test(number: Int, part1: Any, part2: Any) {
-        baseTest("2023/day%d.input".format(number), number, part1, part2, false)
+    private fun test(number: Int, part1: Any, part2: Any, customSampleFile: String = "") {
+        baseTest("2023/day%d.input".format(number), number, part1, part2, false, customSampleFile)
     }
 
-    private fun baseTest(file: String, number: Int, part1: Any, part2: Any, sample: Boolean) {
+    private fun baseTest(file: String, number: Int, part1: Any?, part2: Any, sample: Boolean, customSampleFile: String) {
         val day = Day.byNumber(number)
         val dayStr = getDayStr(day)
         @Suppress("UNCHECKED_CAST") val projectClass: Class<out Project> = Class.forName("2023.Day$dayStr") as Class<Project>
         val constructor = projectClass.getDeclaredConstructor(String::class.java)
-
-        val project = constructor.newInstance(file.format(number))
+        val input = file.format(number) + customSampleFile
+        var project = constructor.newInstance(input)
         project.sample = sample
 
-        assertEquals(part1, project?.part1())
+        if (part1 != null) {
+            assertEquals(part1, project?.part1())
+        }
+
         assertEquals(part2, project?.part2())
     }
 }

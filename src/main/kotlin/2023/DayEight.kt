@@ -43,26 +43,6 @@ class DayEight(file: String) : Project() {
     }
 
     override fun part2(): Any {
-        /*val lines = listOf(
-            "LR",
-            "",
-            "11A = (11B, XXX)",
-            "11B = (XXX, 11Z)",
-            "11Z = (11B, XXX)",
-            "22A = (22B, XXX)",
-            "22B = (22C, 22C)",
-            "22C = (22Z, 22Z)",
-            "22Z = (22B, 22B)",
-            "XXX = (XXX, XXX)"
-        )
-        val instructions = lines[0].split("").filter { it.isNotBlank() }
-        val graph: MutableMap<String, Pair<String, String>> = HashMap()
-        for (i in 2 until lines.size) {
-            val path = lines[i].split(" = (")
-            val dirs = path[1].replace(")","").split(", ")
-            graph[path[0]] = Pair(dirs[0], dirs[1])
-        }*/
-
         val rings = graph.keys.filter { it.endsWith("A") }.map { getSteps(graph, instructions, it) { location: String -> !location.endsWith("Z") } }
         return lcm(rings.toLongArray())
     }

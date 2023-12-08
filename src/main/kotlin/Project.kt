@@ -18,7 +18,7 @@ abstract class Project {
     }
 
     fun getLines(file: String) : List<String> {
-        return File({}.javaClass.getResource(file).file).readLines()
+        return File({}.javaClass.getResource(file)!!.file).readLines()
     }
 
     fun <R> mapFileLines(file: String, mapper: (String) -> R) : List<R> {
