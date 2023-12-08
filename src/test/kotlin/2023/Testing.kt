@@ -16,7 +16,7 @@ class Testing {
 
     @Test
     fun day1() {
-        test(1, 54770, 199628)
+        test(1, 54770, 54770)
     }
 
     @Test
@@ -36,7 +36,7 @@ class Testing {
 
     @Test
     fun day3() {
-        test(3, 536576, 2825)
+        test(3, 536576, 75741499)
     }
 
     @Test
@@ -46,7 +46,7 @@ class Testing {
 
     @Test
     fun day4() {
-        test(4, 25651.0, -1.0)
+        test(4, 25651.0, 19499881)
     }
 
     @Test
@@ -66,7 +66,7 @@ class Testing {
 
     @Test
     fun day6() {
-        test(6, 1108800, -1)
+        test(6, 1108800, 36919753)
     }
 
     @Test
@@ -76,7 +76,7 @@ class Testing {
 
     @Test
     fun day7() {
-        test(7, 246163188, -1)
+        test(7, 246163188, 245794069)
     }
 
     @Test
@@ -93,102 +93,102 @@ class Testing {
 
     @Test
     fun day9Sample() {
-        testSample(9, 88, 36)
+        testSample(9, -1, -1)
     }
 
     @Test
     fun day9() {
-        test(9, 6018, 2619)
+        test(9, -1, -1)
     }
 
     @Test
     fun day10Sample() {
-        testSample(10, 13140, -1)
+        testSample(10, -1, -1)
     }
 
     @Test
     fun day10() {
-        test(10, 17180, -1)
+        test(10, -1, -1)
     }
 
     @Test
     fun day11Sample() {
-        testSample(11, BigInteger.valueOf(10605), BigInteger.valueOf(2713310158))
+        testSample(11, -1, -1)
     }
 
     @Test
     fun day11() {
-        test(11, BigInteger.valueOf(78960), BigInteger.valueOf(14561971968))
+        test(11, -1, -1)
     }
 
     @Test
     fun day12Sample() {
-        testSample(12, 31, 29)
+        testSample(12, -1, -1)
     }
 
     @Test
     fun day12() {
-        test(12, 394, 388)
+        test(12, -1, -1)
     }
 
     @Test
     fun day13Sample() {
-        testSample(13, 13, 140)
+        testSample(13, -1, -1)
     }
 
     @Test
     fun day13() {
-        test(13, 6076, 24805)
+        test(13, -1, -1)
     }
 
     @Test
     fun day14Sample() {
-        testSample(14, 24, 93)
+        testSample(14, -1, -1)
     }
 
     @Test
     fun day14() {
-        test(14, 655, 26484)
+        test(14, -1, -1)
     }
 
     @Test
     fun day15Sample() {
-        testSample(15, 26L, 56000011L)
+        testSample(15, -1, -1)
     }
 
     @Test
     fun day15() {
-        test(15, 4811413L, 13171855019123L)
+        test(15, -1, -1)
     }
 
     @Test
     fun day16Sample() {
-        testSample(16, 1651, 1707)
+        testSample(16, -1, -1)
     }
 
     @Test
     fun day16() {
-        test(16, 1986, 2464)
+        test(16, -1, -1)
     }
 
     @Test
     fun day17Sample() {
-        testSample(17, 3068L, 1514285714288L)
+        testSample(17, -1, -1)
     }
 
     @Test
     fun day17() {
-        test(17, 3232L, 1585632183915L)
+        test(17, -1, -1)
     }
 
     @Test
     fun day18Sample() {
-        testSample(18, 64, 58)
+        testSample(18, -1, -1)
     }
 
     @Test
     fun day18() {
-        test(18, 4308, 2540)
+        test(18, -1, -1)
     }
 
     @Test

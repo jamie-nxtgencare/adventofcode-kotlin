@@ -32,7 +32,8 @@ class DayFive(file: String) : Project() {
             val out = ArrayList<LongRange>()
 
             for (seedRange in seedRanges) {
-                println("\nMapping input range: $seedRange")
+                //println("\nMapping input range: $seedRange")
+
                 val unmatchedRange = mutableListOf(seedRange)
                 for (i in sourceRanges.indices) {
                     if (unmatchedRange.isEmpty()) {
@@ -45,22 +46,22 @@ class DayFive(file: String) : Project() {
 
                     for (range in checkRanges) {
                         val segments = RangeSegments(range, sourceRanges[i])
-                        println("Trying to map: " + range + " with " + sourceRanges[i] + " offset by: " + offsets[i])
+                        //println("Trying to map: " + range + " with " + sourceRanges[i] + " offset by: " + offsets[i])
 
                         if (segments.left != null) {
                             unmatchedRange.add(segments.left!!)
-                            println("Left: " + segments.left!!)
+                            //println("Left: " + segments.left!!)
                         }
 
                         if (segments.overlapping != null) {
                             val mapped = LongRange(segments.overlapping!!.first + offsets[i], segments.overlapping!!.last + offsets[i])
                             out.add(mapped)
-                            println("Mapped: ${segments.overlapping!!} to $mapped")
+                            //println("Mapped: ${segments.overlapping!!} to $mapped")
                         }
 
                         if (segments.right != null) {
                             unmatchedRange.add(segments.right!!)
-                            println("Right: " + segments.right!!)
+                            // println("Right: " + segments.right!!)
                         }
                     }
                 }
@@ -120,7 +121,7 @@ class DayFive(file: String) : Project() {
     }
 
     override fun part2(): Any {
-        println("Part 2 ---------")
+        //println("Part 2 ---------")
         val seedRangeSetup = mappers[0].seeds
         val seedRanges = ArrayList<List<LongRange>>()
 
@@ -133,17 +134,17 @@ class DayFive(file: String) : Project() {
         val ranges = seedRanges.flatMap {
             var location = it
             for (mapper in rest) {
-                println("\nDoing mapper: ${mapper.name}")
+                //println("\nDoing mapper: ${mapper.name}")
                 location = mapper.doMap(location)
             }
             location
         }
 
-        ranges.sortedBy { it.first }.forEach {
+/*        ranges.sortedBy { it.first }.forEach {
             println(it)
-        }
+        }*/
 
-        return ranges.minOf { it.first } // tried 11554136
+        return ranges.minOf { it.first }
     }
 
 }
