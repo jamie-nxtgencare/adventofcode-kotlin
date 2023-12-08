@@ -5,108 +5,92 @@ package `2023`
 import Project
 
 class DayEight(file: String) : Project() {
-    val grid = mapLettersPerLines(file) { it.map { it2 -> it2.toString().toInt() }.toList() }.toList()
+    private val lines = getLines(file)
+    private val instructions = lines[0].split("").filter { it.isNotBlank() }
 
-    private fun isVisible(x: Int, y: Int): Boolean {
-        if (x == 0 || y == 0 || x == grid[y].size - 1 || y == grid.size - 1) {
-            return true
+    private val graph: MutableMap<String, Pair<String, String>> = HashMap()
+
+    init {
+        for (i in 2 until lines.size) {
+            val path = lines[i].split(" = (")
+            val dirs = path[1].replace(")","").split(", ")
+            graph[path[0]] = Pair(dirs[0], dirs[1])
         }
-
-        val leftVisible = checkRow(0, x, x, y)
-        val rightVisible = checkRow(x + 1, grid[y].size, x, y)
-        val topVisible = checkCol(0, y, x, y)
-        val bottomVisible = checkCol(y + 1, grid.size, x, y)
-
-        return leftVisible || rightVisible || topVisible || bottomVisible
-    }
-
-    private fun getScenicScore(x: Int, y: Int): Int {
-        val upScore = checkCol2(y - 1 downTo 0, x, y)
-        val leftScore = checkRow2(x - 1 downTo 0, x, y)
-        val downScore = checkCol2(y + 1 until grid.size, x, y)
-        val rightScore = checkRow2(x + 1 until grid[y].size, x, y)
-
-        return upScore * leftScore * downScore * rightScore
-    }
-
-    private fun checkRow(start: Int, end: Int, x:Int, y: Int): Boolean {
-        var visible = true
-        for (i in start until end) {
-            if (!visible) {
-                break
-            }
-
-            visible = grid[y][i] < grid[y][x]
-        }
-
-        return visible
-    }
-
-    private fun checkRow2(range: IntProgression, x:Int, y: Int): Int {
-        var visible = true
-        var score = 0
-        for (i in range) {
-            if (!visible) {
-                break
-            }
-
-            visible = grid[y][i] < grid[y][x]
-            score++
-        }
-
-        return score
-    }
-
-    private fun checkCol(start: Int, end: Int, x:Int, y: Int): Boolean {
-        var visible = true
-        for (i in start until end) {
-            if (!visible) {
-                break
-            }
-
-            visible = grid[i][x] < grid[y][x]
-        }
-
-        return visible
-    }
-
-    private fun checkCol2(range: IntProgression, x:Int, y: Int): Int {
-        var visible = true
-        var score = 0
-        for (i in range) {
-            if (!visible) {
-                break
-            }
-
-            visible = grid[i][x] < grid[y][x]
-            score++
-        }
-
-        return score
     }
 
     override fun part1(): Any {
-        var visible = 0
-        for (y in grid.indices) {
-            for (x in grid[y].indices) {
-                if (isVisible(x, y)) {
-                    visible++
-                }
+        return getSteps(graph, instructions, "AAA") { location: String -> location != "ZZZ" }
+    }
+
+    private fun getSteps(graph: MutableMap<String, Pair<String, String>>, instructions: List<String>, start: String, endCondition: (String) -> Boolean): Long {
+        var steps = 0L
+        var location = start
+
+        while(endCondition.invoke(location)) {
+            val paths = graph[location]!!
+            val i = (steps % instructions.size).toInt()
+
+            location = if (instructions[i] == "L") {
+                paths.first
+            } else {
+                paths.second
             }
+            steps++
         }
 
-        return visible
+
+        return steps
     }
 
     override fun part2(): Any {
-        val scores: ArrayList<Int> = ArrayList()
+        /*val lines = listOf(
+            "LR",
+            "",
+            "11A = (11B, XXX)",
+            "11B = (XXX, 11Z)",
+            "11Z = (11B, XXX)",
+            "22A = (22B, XXX)",
+            "22B = (22C, 22C)",
+            "22C = (22Z, 22Z)",
+            "22Z = (22B, 22B)",
+            "XXX = (XXX, XXX)"
+        )
+        val instructions = lines[0].split("").filter { it.isNotBlank() }
+        val graph: MutableMap<String, Pair<String, String>> = HashMap()
+        for (i in 2 until lines.size) {
+            val path = lines[i].split(" = (")
+            val dirs = path[1].replace(")","").split(", ")
+            graph[path[0]] = Pair(dirs[0], dirs[1])
+        }*/
 
-        for (y in grid.indices) {
-            for (x in grid[y].indices) {
-                scores.add(getScenicScore(x, y))
-            }
+        val rings = graph.keys.filter { it.endsWith("A") }.map { getSteps(graph, instructions, it) { location: String -> !location.endsWith("Z") } }
+        return lcm(rings.toLongArray())
+    }
+
+    private fun gcd(aStart: Long, bStart: Long): Long {
+        var a = aStart
+        var b = bStart
+        while (b > 0) {
+            val temp = b
+            b = a % b
+            a = temp
         }
+        return a
+    }
 
-        return scores.max()
+    private fun gcd(input: LongArray): Long {
+        var result = input[0]
+        for (i in 1 until input.size) result = gcd(result, input[i])
+        return result
+    }
+
+    private fun lcm(a: Long, b: Long): Long {
+        return a * (b / gcd(a, b))
+    }
+
+    private fun lcm(input: LongArray): Long {
+        var result = input[0]
+        for (i in 1 until input.size) result = lcm(result, input[i])
+        return result
     }
 }
