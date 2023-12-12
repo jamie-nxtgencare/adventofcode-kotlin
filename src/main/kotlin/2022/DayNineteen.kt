@@ -84,7 +84,9 @@ class DayNineteen(file: String) : Project() {
     class Scenario(val robots: MutableList<Robot>, val inventory: MutableMap<String, Int>) {
         var minute = 1
         val buyRobots = mutableListOf<Robot>()
-        var maxGeodeValue = updateMaxValue("geode", 24)
+        var maxGeodeValue = updateMaxValue("geode", 25)
+        var maxObsidianValue = updateMaxValue("obsidian", 24)
+        var maxClayValue = updateMaxValue("clay", 23)
 
         fun updateMaxValue(type: String, minutesRemaining: Int): Double {
             return (inventory[type]?.toDouble() ?: 0.0) +
@@ -117,7 +119,7 @@ class DayNineteen(file: String) : Project() {
         }
 
         override fun toString(): String {
-            return "Scenario(robots=$robots, inventory=$inventory)"
+            return "Scenario(minute=$minute, robots=$robots, inventory=$inventory)"
         }
 
     }
@@ -125,6 +127,9 @@ class DayNineteen(file: String) : Project() {
     override fun part1(): Any {
         return bluePrints.sumOf { bluePrint ->
             val decisions = Stack<Scenario>()
+            val geodeObsidianCost = bluePrint.robotMakers.first { it.produces == "geode" }.costs.first { it.type == "obsidian"}.amount
+            val obsidianClayCost = bluePrint.robotMakers.first { it.produces == "clay" }.costs.first { it.type == "ore"}.amount
+
             decisions.push(Scenario(mutableListOf(Robot("ore")), mutableMapOf()))
             var bestCountSoFar = 0
 
@@ -139,24 +144,28 @@ class DayNineteen(file: String) : Project() {
                 }
 
                 if (scenario.minute <= 24) {
-                    val newScenarios = mutableSetOf<Scenario>()
+                    val newScenarios = mutableSetOf<Scenario>(scenario)
+                    var oldCount = 0
 
-                    // do nothing
-                    newScenarios.add(scenario)
+                    while (oldCount != newScenarios.size) {
+                        oldCount = newScenarios.size
+                        val toAdd = mutableListOf<Scenario>()
+                        newScenarios.forEach {
+                            bluePrint.robotMakers.forEach { maker ->
+                                if (maker.canMakeWith(it.inventory)) {
+                                    val newScenario = Scenario.clone(it) // Make a scenario where we made it
+                                    newScenario.buyRobots.add(maker.make(newScenario.inventory))
 
-                    var newCount = 0
-                    while (newCount != newScenarios.size) {
-                        newCount = newScenarios.size
-                        bluePrint.robotMakers.forEach { maker ->
-                            if (maker.canMakeWith(scenario.inventory)) {
-                                val newScenario = Scenario.clone(scenario) // Make a scenario where we made it
-                                newScenario.buyRobots.add(maker.make(newScenario.inventory))
-                                newScenarios.add(newScenario)
-
-                                val newScenario2 = Scenario.clone(scenario) // Make a scenario where we didn't
-                                newScenarios.add(newScenario2)
+                                    // if we're trying to harvest more, can we even get enough to make another higher level bot?
+                                    if (maker.produces != "obsidian" || geodeObsidianCost < scenario.maxObsidianValue) {
+                                        if (maker.produces != "clay" || obsidianClayCost < scenario.maxClayValue) {
+                                            toAdd.add(newScenario)
+                                        }
+                                    }
+                                }
                             }
                         }
+                        newScenarios.addAll(toAdd)
                     }
 
                     newScenarios.forEach {
@@ -166,6 +175,8 @@ class DayNineteen(file: String) : Project() {
                         it.robots.sortBy { it.produces }
                         it.minute++
                         it.maxGeodeValue = it.updateMaxValue("geode",  25 - it.minute)
+                        it.maxObsidianValue = it.updateMaxValue("obsidian",  24 - it.minute)
+                        it.maxClayValue = it.updateMaxValue("clay",  23 - it.minute)
 
                         if (it.maxGeodeValue >= bestCountSoFar) {
                             decisions.push(it)
