@@ -5,6 +5,7 @@ package `2022`
 import Project
 import java.lang.Integer.parseInt
 import kotlin.math.ceil
+import kotlin.math.max
 
 class DayNineteen(file: String) : Project() {
     private val bluePrints: List<BluePrint> = mapFileLines(file) { BluePrint(it) }
@@ -58,9 +59,13 @@ class DayNineteen(file: String) : Project() {
             return depletableInventory.all { it.value >= 0 }
         }
 
-        fun shouldMakeWith(scenario: Scenario, biggerBots: List<RobotMaker>): Boolean {
+        fun shouldMakeWith(scenario: Scenario, biggerBots: List<RobotMaker>, maxRobotsRequired: Double): Boolean {
             val purchaseScenario = Scenario.clone(scenario)
             make(purchaseScenario.inventory)
+
+            if (scenario.robotCount(produces).toDouble() == maxRobotsRequired) {
+                return false
+            }
 
             val aaa = biggerBots.map { nextMaker ->
                 // Does this prevent me from making ANYTHING bigger when I can?
@@ -176,20 +181,25 @@ class DayNineteen(file: String) : Project() {
             val clayMaker = bluePrint.getMaker("clay")
             val oreMaker = bluePrint.getMaker("ore")
 
+            val maxObsidianRequired = geodeMaker.getCost("obsidian")
+            val maxClayRequired = obsidianMaker.getCost("clay")
+            val maxOreRequired = maxOf(geodeMaker.getCost("ore"), obsidianMaker.getCost("ore"), clayMaker.getCost("ore"), oreMaker.getCost("ore"))
+
             for (minute in 1 .. 24) {
                 println("== Minute $minute ==")
-                if (geodeMaker.canMakeWith(scenario.inventory)) {
-                    println("Spend ${geodeMaker.getCost("ore")} ore and ${geodeMaker.getCost("obsidian")} obsidian to start building an geode-cracking robot")
-                    scenario.buyRobots.add(geodeMaker.make(scenario.inventory))
-                } else if (obsidianMaker.canMakeWith(scenario.inventory) && obsidianMaker.shouldMakeWith(scenario, listOf(geodeMaker))) {
-                    println("Spend ${obsidianMaker.getCost("ore")} ore and ${obsidianMaker.getCost("clay")} clay to start building an obsidian-collecting robot")
-                    scenario.buyRobots.add(obsidianMaker.make(scenario.inventory))
-                } else if (clayMaker.canMakeWith(scenario.inventory) && clayMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker))) {
-                    println("Spend ${clayMaker.getCost("ore")} ore to start building an clay-collecting robot")
-                    scenario.buyRobots.add(clayMaker.make(scenario.inventory))
-                } else if (oreMaker.canMakeWith(scenario.inventory) && oreMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker, clayMaker))) {
+
+                if (oreMaker.canMakeWith(scenario.inventory) && oreMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker, clayMaker), maxOreRequired)) {
                     println("Spend ${oreMaker.getCost("ore")} ore to start building an ore-collecting robot")
                     scenario.buyRobots.add(oreMaker.make(scenario.inventory))
+                } else if (clayMaker.canMakeWith(scenario.inventory) && clayMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker), maxClayRequired)) {
+                    println("Spend ${clayMaker.getCost("ore")} ore to start building an clay-collecting robot")
+                    scenario.buyRobots.add(clayMaker.make(scenario.inventory))
+                } else if (obsidianMaker.canMakeWith(scenario.inventory) && obsidianMaker.shouldMakeWith(scenario, listOf(geodeMaker), maxObsidianRequired)) {
+                    println("Spend ${obsidianMaker.getCost("ore")} ore and ${obsidianMaker.getCost("clay")} clay to start building an obsidian-collecting robot")
+                    scenario.buyRobots.add(obsidianMaker.make(scenario.inventory))
+                } else if (geodeMaker.canMakeWith(scenario.inventory)) {
+                    println("Spend ${geodeMaker.getCost("ore")} ore and ${geodeMaker.getCost("obsidian")} obsidian to start building an geode-cracking robot")
+                    scenario.buyRobots.add(geodeMaker.make(scenario.inventory))
                 }
 
                 scenario.robots.map { it.produces }.distinct().forEach { produces ->
