@@ -59,10 +59,6 @@ class DayNineteen(file: String) : Project() {
         }
 
         fun shouldMakeWith(scenario: Scenario, biggerBots: List<RobotMaker>): Boolean {
-            if (!canMakeWith(scenario.inventory)) {
-                return false
-            }
-
             val purchaseScenario = Scenario.clone(scenario)
             make(purchaseScenario.inventory)
 
@@ -185,13 +181,13 @@ class DayNineteen(file: String) : Project() {
                 if (geodeMaker.canMakeWith(scenario.inventory)) {
                     println("Spend ${geodeMaker.getCost("ore")} ore and ${geodeMaker.getCost("obsidian")} obsidian to start building an geode-cracking robot")
                     scenario.buyRobots.add(geodeMaker.make(scenario.inventory))
-                } else if (obsidianMaker.shouldMakeWith(scenario, listOf(geodeMaker))) {
+                } else if (obsidianMaker.canMakeWith(scenario.inventory) && obsidianMaker.shouldMakeWith(scenario, listOf(geodeMaker))) {
                     println("Spend ${obsidianMaker.getCost("ore")} ore and ${obsidianMaker.getCost("clay")} clay to start building an obsidian-collecting robot")
                     scenario.buyRobots.add(obsidianMaker.make(scenario.inventory))
-                } else if (clayMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker))) {
+                } else if (clayMaker.canMakeWith(scenario.inventory) && clayMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker))) {
                     println("Spend ${clayMaker.getCost("ore")} ore to start building an clay-collecting robot")
                     scenario.buyRobots.add(clayMaker.make(scenario.inventory))
-                } else if (oreMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker, clayMaker))) {
+                } else if (oreMaker.canMakeWith(scenario.inventory) && oreMaker.shouldMakeWith(scenario, listOf(geodeMaker, obsidianMaker, clayMaker))) {
                     println("Spend ${oreMaker.getCost("ore")} ore to start building an ore-collecting robot")
                     scenario.buyRobots.add(oreMaker.make(scenario.inventory))
                 }
