@@ -7,6 +7,7 @@ import java.lang.Integer.parseInt
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sqrt
 
 class DayNineteen(file: String) : Project() {
     private val bluePrints: List<BluePrint> = mapFileLines(file) { BluePrint(it) }
@@ -176,12 +177,29 @@ class DayNineteen(file: String) : Project() {
 
                     val turnsRemain = (max - scenario.minute + 1).toDouble()
 
+                    val obsidianCost = bluePrint.getMaker("obsidian").getCost("clay")
                     val geodeCost = bluePrint.getMaker("geode").getCost("obsidian")
+
+                    // If we bought an clay bot every turn, how long until we could get a obsidian bot?
+                    var clayBotCount = scenario.countRobots("clay").toDouble() + 1
+                    var clayStock = scenario.getStock("clay").toDouble() + clayBotCount
+                    var turnsToWait = 0.0
+
+                    while (clayStock < obsidianCost) {
+                        clayStock += clayBotCount
+                        clayBotCount++
+                        turnsToWait++
+                    }
+                    // =((0.5*-1)+sqrt(0.5^2-4*0.5*-F48))/(2*0.5)
+                    /*val turnsToWait2 = Math.ceil(-0.5 + sqrt(0.25 - 2.0 * (-1 * obsidianCost)))
+
+                    if (turnsToWait != turnsToWait2) {
+                        println("Come on now")
+                    }*/
 
                     // If we bought an obsidian bot every turn, how long until we could get a geode bot?
                     var obsidianBotCount = scenario.countRobots("obisidian").toDouble() + 1
-                    var obsidianStock = scenario.getStock("obsidian").toDouble()
-                    var turnsToWait = 0
+                    var obsidianStock = scenario.getStock("obsidian").toDouble() + obsidianBotCount
 
                     while (obsidianStock < geodeCost) {
                         obsidianStock += obsidianBotCount
@@ -190,7 +208,7 @@ class DayNineteen(file: String) : Project() {
                     }
 
                     // If we bought a geode bot every turn until the end, could we beat the best?
-                    val turnsWillRemain = max(turnsRemain - turnsToWait.toDouble(), 0.0)
+                    val turnsWillRemain = max(turnsRemain - turnsToWait, 0.0)
                     val geodeBotCount = scenario.countRobots("geode").toDouble()
                     val geodeStock = scenario.getStock("geode")
                     val maxGeodes = geodeStock + (geodeBotCount * turnsRemain) + (0.5 * Math.pow(turnsWillRemain, 2.0) + turnsWillRemain - 0.5 * turnsWillRemain)
