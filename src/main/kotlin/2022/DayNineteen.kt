@@ -4,110 +4,23 @@ package `2022`
 
 import Project
 import java.lang.Integer.parseInt
+import java.util.*
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sqrt
 
 class DayNineteen(file: String) : Project() {
     private val bluePrints: List<BluePrint> = mapFileLines(file) { BluePrint(it) }
 
-    class BluePrintState(val bluePrint: BluePrint, val robots: MutableMap<String, Int>, val inputs: HashMap<String, Int>) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is BluePrintState) return false
-
-            if (bluePrint != other.bluePrint) return false
-            if (robots != other.robots) return false
-            if (inputs != other.inputs) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = bluePrint.hashCode()
-            result = 31 * result + robots.hashCode()
-            result = 31 * result + inputs.hashCode()
-            return result
-        }
-
-        override fun toString(): String {
-            return "BluePrintState(robots=${robots.values.sum()}, inputs=${inputs.size})"
-        }
-
-        fun score(): Int {
-            return geodeScore() + obsidianScore() + clayScore() + oreScore()
-        }
-
-        private fun geodeScore(): Int {
-            return get("geode") * 100000
-        }
-
-        private fun obsidianScore(): Int {
-            return get("obsidian") * 100
-        }
-
-        private fun clayScore(): Int {
-            return get("clay") * 10
-        }
-
-        private fun oreScore(): Int {
-            return get("ore")
-        }
-
-        fun get(s: String): Int {
-            return robots[s] ?: 0
-        }
-
-        fun getCount(s: String): Int {
-            return inputs[s] ?: 0
-        }
-
-    }
-
     class BluePrint(line: String) {
+
+        fun getMaker(robot: String): RobotMaker {
+            return robotMakers.first { it.produces == robot }
+        }
+
         val lines = line.split(Regex("[.|:]")).filter { it.isNotBlank() }
-        val label = lines[0].split(" ")[1].replace(":", "")
-        private val robotMakers = lines.subList(1, lines.size).map { RobotMaker(it) }
-        private val priorities = listOf(
-            "geode",
-            "obsidian",
-            "clay",
-            "ore"
-        ).map { this.makerByType(it) }
-
-        private fun makerByType(s: String): RobotMaker {
-            return robotMakers.filter { it.produces == s }[0]
-        }
-
-        private fun canMake(inputs: HashMap<String, Int>, robotMaker: RobotMaker): Boolean {
-            return robotMaker.costs.all { (inputs[it.type] ?: 0) > it.amount }
-        }
-
-        override fun toString(): String {
-            return "BluePrint(label='$label', robotMakers=$robotMakers)"
-        }
-
-        fun pump(robots: MutableMap<String, Int>, inputs: HashMap<String, Int>): Set<Pair<MutableMap<String, Int>, HashMap<String, Int>>> {
-            robots.forEach {
-                val currentAmount = inputs[it.key] ?: 0
-                inputs[it.key] = currentAmount + it.value
-            }
-
-            val options = priorities.filter { canMake(inputs, it) }.map {
-                val newBots: MutableMap<String, Int> = mutableMapOf()
-                newBots.putAll(robots)
-
-                val newInputs = HashMap<String, Int>()
-                newInputs.putAll(inputs)
-
-                it.costs.forEach { i -> newInputs[i.type] = (newInputs[i.type] ?: 0) - i.amount }
-                val robotCount = newBots[it.produces] ?: 0
-                newBots[it.produces] = robotCount + 1
-
-                Pair(newBots, newInputs)
-            }.toMutableSet()
-
-            options.add(Pair(robots, inputs))
-
-            return options
-        }
+        val label = parseInt(lines[0].split(" ")[1].replace(":", ""))
+        val robotMakers = lines.subList(1, lines.size).map { RobotMaker(it) }.reversed()
     }
 
     class RobotMaker(s: String) {
@@ -124,9 +37,48 @@ class DayNineteen(file: String) : Project() {
             }
         }
 
+        fun make(inventory: MutableMap<String, Int>): Robot {
+            costs.forEach { inventory[it.type] = (inventory[it.type] ?: 0) - it.amount }
+            return Robot(produces)
+        }
+
         override fun toString(): String {
             return "RobotMaker(produces='$produces', costs=$costs)"
         }
+
+        fun canMakeWith(inventory: MutableMap<String, Int>): Boolean {
+            val depletableInventory = mutableMapOf<String, Int>()
+            depletableInventory.putAll(inventory)
+
+            costs.forEach {
+                depletableInventory[it.type] = (depletableInventory[it.type] ?: 0) - it.amount
+            }
+
+            return depletableInventory.all { it.value >= 0 }
+        }
+
+        fun getCost(robot: String): Int {
+            return costs.first { it.type == robot }.amount
+        }
+    }
+
+    class Robot(val produces: String) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Robot) return false
+
+            return produces == other.produces
+        }
+
+        override fun hashCode(): Int {
+            return produces.hashCode()
+        }
+
+        override fun toString(): String {
+            return "Robot(produces='$produces')"
+        }
+
+
     }
 
     class Cost(val type: String, val amount: Int) {
@@ -135,27 +87,164 @@ class DayNineteen(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
-        var bluePrintOutputs = bluePrints.map { setOf (BluePrintState(it, mutableMapOf(Pair("ore", 1)), HashMap())) }
+    class Scenario(val robots: MutableMap<String, Int>, val inventory: MutableMap<String, Int>) {
+        var minute = 1
+        val buyRobots = mutableListOf<String>()
 
-        for (minute in 1..25) {
-            bluePrintOutputs = bluePrintOutputs.map { bluePrint ->
-                bluePrint.flatMap {  state ->
-                    val out = state.bluePrint.pump(state.robots, state.inputs)
-                    out.map { o -> BluePrintState(state.bluePrint, o.first, o.second) }
-                }.toMutableSet()
+        companion object {
+            fun clone(it: Scenario): Scenario {
+                val scenario = Scenario(mutableMapOf(), mutableMapOf())
+                scenario.minute = it.minute
+                scenario.inventory.putAll(it.inventory)
+                scenario.robots.putAll(it.robots)
+                return scenario
             }
-
-            bluePrintOutputs = bluePrintOutputs.map { it.sortedByDescending { s -> s.score() }.take(1).toMutableSet()}
         }
 
-        val map = bluePrintOutputs.map { it.maxOf { inputs -> inputs.getCount("geode") * inputs.bluePrint.label.toInt() } }
+        fun countRobots(produces: String): Int {
+            return robots[produces] ?: 0
+        }
 
-        return map.sum()
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Scenario) return false
+
+            if (robots != other.robots) return false
+            return inventory == other.inventory
+        }
+
+        override fun hashCode(): Int {
+            return (countRobots("geode") * 547) +
+                (countRobots("obsidian") * 293) +
+                (countRobots("clay") * 73) +
+                countRobots("ore")
+        }
+
+        override fun toString(): String {
+            return "Scenario(minute=$minute, robots=$robots, inventory=$inventory)"
+        }
+
+        fun getStock(type: String): Int {
+            return inventory[type] ?: 0
+        }
+
+    }
+
+    override fun part1(): Any {
+        return doIt(24, bluePrints.size).sumOf { it.first * it.second }
     }
 
     override fun part2(): Any {
-        return -1
+        val second = doIt(32, 3)
+        return second.reduce { a, b -> Pair(0, a.second * b.second) }.second
     }
 
+    private fun doIt(max: Int, maxBps: Int): List<Pair<Int, Int>> {
+        return bluePrints.subList(0,min(maxBps,bluePrints.size)).map { bluePrint ->
+            val decisions = Stack<Scenario>()
+            decisions.push(Scenario(mutableMapOf(Pair("ore", 1)), mutableMapOf()))
+            var bestCountSoFar = 0
+            val geodeMaker = bluePrint.getMaker("geode")
+            val obsidianMaker = bluePrint.getMaker("obsidian")
+            val clayMaker = bluePrint.getMaker("clay")
+            val oreMaker = bluePrint.getMaker("ore")
+
+            val maxObsidianRequired = geodeMaker.getCost("obsidian")
+            val maxClayRequired = obsidianMaker.getCost("clay")
+            val maxOreRequired = maxOf(geodeMaker.getCost("ore"), obsidianMaker.getCost("ore"), clayMaker.getCost("ore"), oreMaker.getCost("ore"))
+
+            var skippedCount = 0
+            var processed = 0
+
+            while (decisions.isNotEmpty()) {
+                val scenario = decisions.pop()
+                val count = scenario.inventory["geode"] ?: 0
+                val oldBestCount = bestCountSoFar
+                bestCountSoFar = max(oldBestCount, count)
+
+                if (oldBestCount != bestCountSoFar) {
+                    println("New best count: $bestCountSoFar (processed count $processed, skipped count $skippedCount)")
+                }
+
+                if (scenario.minute <= max) {
+                    if (scenario.minute == max && scenario.countRobots("geode") == 0 ||
+                        scenario.minute == max - 1 && scenario.countRobots("obsidian") == 0 ||
+                        scenario.minute == max - 2 && scenario.countRobots("clay") == 0
+                    ) {
+                        skippedCount++
+                        continue
+                    }
+
+                    val turnsRemain = (max - scenario.minute + 1).toDouble()
+
+                    val obsidianCost = bluePrint.getMaker("obsidian").getCost("clay")
+                    val geodeCost = bluePrint.getMaker("geode").getCost("obsidian")
+
+                    // If we bought an clay bot every turn, how long until we could get a obsidian bot?
+                    var clayBotCount = scenario.countRobots("clay").toDouble() + 1
+                    var clayStock = scenario.getStock("clay").toDouble() + clayBotCount
+                    var turnsToWait = 0.0
+
+                    while (clayStock < obsidianCost) {
+                        clayStock += clayBotCount
+                        clayBotCount++
+                        turnsToWait++
+                    }
+                    // =((0.5*-1)+sqrt(0.5^2-4*0.5*-F48))/(2*0.5)
+                    /*val turnsToWait2 = Math.ceil(-0.5 + sqrt(0.25 - 2.0 * (-1 * obsidianCost)))
+
+                    if (turnsToWait != turnsToWait2) {
+                        println("Come on now")
+                    }*/
+
+                    // If we bought an obsidian bot every turn, how long until we could get a geode bot?
+                    var obsidianBotCount = scenario.countRobots("obisidian").toDouble() + 1
+                    var obsidianStock = scenario.getStock("obsidian").toDouble() + obsidianBotCount
+
+                    while (obsidianStock < geodeCost) {
+                        obsidianStock += obsidianBotCount
+                        obsidianBotCount++
+                        turnsToWait++
+                    }
+
+                    // If we bought a geode bot every turn until the end, could we beat the best?
+                    val turnsWillRemain = max(turnsRemain - turnsToWait, 0.0)
+                    val geodeBotCount = scenario.countRobots("geode").toDouble()
+                    val geodeStock = scenario.getStock("geode")
+                    val maxGeodes = geodeStock + (geodeBotCount * turnsRemain) + (0.5 * Math.pow(turnsWillRemain, 2.0) + turnsWillRemain - 0.5 * turnsWillRemain)
+
+                    if (maxGeodes < bestCountSoFar) {
+                        skippedCount++
+                        continue
+                    }
+
+                    processed++
+
+                    val newScenarios = mutableListOf<Scenario>()
+                    newScenarios.add(scenario)
+
+                    bluePrint.robotMakers.forEach { maker ->
+                        val robotCount = scenario.countRobots(maker.produces)
+                        val required = if (maker.produces == "obsidian") maxObsidianRequired else if (maker.produces == "clay") maxClayRequired else if (maker.produces == "ore") maxOreRequired else Int.MAX_VALUE
+                        if (robotCount < required  && maker.canMakeWith(scenario.inventory)) {
+                            val newScenario = Scenario.clone(scenario) // Make a scenario where we made it
+                            newScenario.buyRobots.add(maker.make(newScenario.inventory).produces)
+                            newScenarios.add(newScenario)
+                        }
+                    }
+
+                    newScenarios.forEach {
+                        it.robots.forEach { robot -> it.inventory[robot.key] = (it.inventory[robot.key] ?: 0) + robot.value }
+                        it.buyRobots.forEach { robot -> it.robots[robot] = (it.robots[robot] ?: 0) + 1 }
+                        it.buyRobots.clear()
+                        it.minute++
+
+                        decisions.push(it)
+                    }
+                }
+            }
+            println("Best count $bestCountSoFar")
+            Pair(bluePrint.label, bestCountSoFar)
+        }
+    }
 }
