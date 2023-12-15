@@ -3,7 +3,9 @@
 package `2023`
 
 import Project
+import java.lang.Integer.min
 import kotlin.math.abs
+import kotlin.math.max
 
 class DayEleven(val file: String) : Project() {
     private val space = getLines(file).map { it.split("").filter { it.isNotBlank() }.toMutableList() }.toMutableList()
@@ -25,16 +27,6 @@ class DayEleven(val file: String) : Project() {
 
         expandCols = expandCols.filter { it >= 0 }.toMutableList()
 
-        expandCols.reversed().forEach { pos ->
-            space.forEach { it.add(pos, ".") }
-        }
-
-        val blankRow = space.first { !it.contains("#") }
-
-        expandRows.reversed().forEach {
-            space.add(it, blankRow)
-        }
-
         for (y in space.indices) {
             for (x in space[y].indices) {
                 if (space[y][x] == "#") {
@@ -50,7 +42,14 @@ class DayEleven(val file: String) : Project() {
         var sum = 0
         for (i in 0 until galaxies.size) {
             for (j in i + 1 until galaxies.size) {
-                sum += abs(galaxies[i].second - galaxies[j].second) + abs(galaxies[i].first - galaxies[j].first)
+                val xStart:Int = min(galaxies[i].first, galaxies[j].first)
+                val xEnd:Int = max(galaxies[i].first, galaxies[j].first)
+                val yStart:Int = min(galaxies[i].second, galaxies[j].second)
+                val yEnd:Int = max(galaxies[i].second, galaxies[j].second)
+
+                val horizontalExpansion = expandCols.filter { (xStart..xEnd).contains(it) }.size
+                val verticalExpansion = expandRows.filter { (yStart..yEnd).contains(it) }.size
+                sum += abs(galaxies[i].second - galaxies[j].second) + abs(galaxies[i].first - galaxies[j].first) + horizontalExpansion + verticalExpansion
             }
         }
 
