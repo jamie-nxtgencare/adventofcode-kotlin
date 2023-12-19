@@ -8,7 +8,7 @@ import java.lang.Integer.parseInt
 class DayTwelve(file: String) : Project() {
     val records = getLines(file).map { it.split(" ") }
     override fun part1(): Any {
-        return records.map { record ->
+        return records.sumOf { record ->
             val springList = record[0]
             val damaged = record[1].split(",").map { parseInt(it) }
 
@@ -24,9 +24,9 @@ class DayTwelve(file: String) : Project() {
                 thisCombo
             }
 
-            val guessDamageCounts = guesses.map { it.split(".").filter { it.isNotBlank() }.map{it.length } }
+            val guessDamageCounts = guesses.map { it.split(".").filter { it.isNotBlank() }.map { it.length } }
             guessDamageCounts.filter { it == damaged }.size
-        }.sum()
+        }
     }
 
     // ...
@@ -37,7 +37,7 @@ class DayTwelve(file: String) : Project() {
     // #.#
     // ###
     private fun getCombos(options: List<String>, prefixed: List<String>, maxQs: Int): List<String> {
-        val out = mutableListOf<String>()
+        mutableListOf<String>()
 
         if (maxQs == 1) {
             return prefixed.flatMap { prefix ->
