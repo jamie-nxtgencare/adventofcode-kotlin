@@ -6,7 +6,6 @@ import Project
 import java.lang.Integer.parseInt
 
 class DayTwelve(file: String) : Project() {
-    private val memo = mutableMapOf<Pair<String, String>, List<String>>()
     private val records = getLines(file).map { it.split(" ") }
 
     private inline fun <T, R,> Iterable<T>.filterThenMap(predicate: (T) -> Boolean, transform: (T) -> R): List<R> {
@@ -23,7 +22,6 @@ class DayTwelve(file: String) : Project() {
 
     private fun doIt(folds: Int = 1): Any {
         return records.sumOf { record ->
-            memo.clear()
             var springList = record[0]
             var damagedStr = record[1]
 
@@ -58,10 +56,6 @@ class DayTwelve(file: String) : Project() {
     }
 
     private fun getNextMatches(group: String, option: String): Collection<String> {
-        if (memo[Pair(group, option)] != null) {
-            return memo[Pair(group, option)] ?: mutableListOf()
-        }
-
         var o = option
 
         // We need to start with a . to ensure we're starting a new block to match this group
@@ -96,9 +90,7 @@ class DayTwelve(file: String) : Project() {
             nextOptions.add(o)
         }
 
-        val nextMatches = nextOptions.filterThenMap({ it.length >= group.length && it.substring(group.indices).replace("?", "#").startsWith(group) }, { it.replaceRange(group.indices, "") })
-        memo[Pair(group, option)] = nextMatches
-        return nextMatches
+        return nextOptions.filterThenMap({ it.length >= group.length && it.substring(group.indices).replace("?", "#").startsWith(group) }, { it.replaceRange(group.indices, "") })
     }
 
     override fun part1(): Any {
