@@ -52,7 +52,12 @@ class DaySixteen(file: String) : Project() {
     }
 
     override fun part1(): Any {
-        var beams = listOf(Beam(0,0, Direction.RIGHT))
+        return runBeam(Beam(0,0, Direction.RIGHT))
+    }
+
+    private fun runBeam(beam: Beam): Int {
+        grid.forEach { it.forEach { it.visitedDirections.clear() } }
+        var beams = listOf(beam)
 
         while (beams.isNotEmpty()) {
             beams = beams.flatMap {
@@ -68,16 +73,25 @@ class DaySixteen(file: String) : Project() {
         return grid.sumOf { it.filter { it.visitedDirections.isNotEmpty() }.size }
     }
 
-    private fun printGrid(beams: List<Beam>) {
+    override fun part2(): Any {
+        val beams = mutableListOf<Beam>()
         for (y in grid.indices) {
             for (x in grid[0].indices) {
-                print(if (beams.any { it.x == x && it.y == y }) "*" else if (grid[y][x].visitedDirections.isNotEmpty()) "#" else ".")
+                if (x == 0) {
+                    beams.add(Beam(x, y, Direction.RIGHT))
+                }
+                if (x == grid[0].size - 1) {
+                    beams.add(Beam(x, y, Direction.LEFT))
+                }
+                if (y == 0) {
+                    beams.add(Beam(x, y, Direction.DOWN))
+                }
+                if (y == grid.size - 1) {
+                    beams.add(Beam(x, y, Direction.UP))
+                }
             }
-            println()
         }
-    }
 
-    override fun part2(): Any {
-        return -1
+        return beams.maxOf { runBeam(it) }
     }
 }
