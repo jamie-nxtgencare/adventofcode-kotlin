@@ -148,7 +148,7 @@ class Testing {
 
     @Test
     fun day14() {
-        test(14, 109661, -1)
+        test(14, 109661, 90176)
     }
 
     @Test
