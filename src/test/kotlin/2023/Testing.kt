@@ -153,12 +153,13 @@ class Testing {
 
     @Test
     fun day15Sample() {
-        testSample(15, -1, -1)
+        testSample(15, 52.0, null, "2")
+        testSample(15, 1320.0, 145.0)
     }
 
     @Test
     fun day15() {
-        test(15, -1, -1)
+        test(15, 513158.0, 200277.0)
     }
 
     @Test
@@ -261,7 +262,7 @@ class Testing {
         test(25, -1, -1)
     }
 
-    private fun testSample(number: Int, part1: Any?, part2: Any, customSampleFile: String = "") {
+    private fun testSample(number: Int, part1: Any?, part2: Any?, customSampleFile: String = "") {
         baseTest("2023/day%d.sample-input".format(number), number, part1, part2, true, customSampleFile)
     }
 
@@ -269,7 +270,7 @@ class Testing {
         baseTest("2023/day%d.input".format(number), number, part1, part2, false, customSampleFile)
     }
 
-    private fun baseTest(file: String, number: Int, part1: Any?, part2: Any, sample: Boolean, customSampleFile: String) {
+    private fun baseTest(file: String, number: Int, part1: Any?, part2: Any?, sample: Boolean, customSampleFile: String) {
         val day = Day.byNumber(number)
         val dayStr = getDayStr(day)
         @Suppress("UNCHECKED_CAST") val projectClass: Class<out Project> = Class.forName("2023.Day$dayStr") as Class<Project>
@@ -282,6 +283,8 @@ class Testing {
             assertEquals(part1, project?.part1())
         }
 
-        assertEquals(part2, project?.part2())
+        if (part2 != null) {
+            assertEquals(part2, project?.part2())
+        }
     }
 }
