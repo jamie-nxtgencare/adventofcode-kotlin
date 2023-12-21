@@ -9,9 +9,17 @@ class DayThirteen(file: String) : Project() {
     val grids: List<List<String>> = whitelineSeperatedGrouper(file, { it }, { it })
 
     override fun part1(): Any {
+        return doIt()
+    }
+
+    override fun part2(): Any {
+        return doIt(true)
+    }
+
+    private fun doIt(smudged: Boolean = false): Any {
         val out: List<Int> = grids.map {
-            var colMatch = getColMatch(it)
-            var rowMatch = getColMatch(transpose(it))
+            var colMatch = getColMatch(it, smudged)
+            var rowMatch = getColMatch(transpose(it), smudged)
 
             if (colMatch < 0) {
                 colMatch = 0
@@ -41,7 +49,7 @@ class DayThirteen(file: String) : Project() {
         return newRowStrings
     }
 
-    private fun getColMatch(it: List<String>): Int {
+    private fun getColMatch(it: List<String>, smudged: Boolean = false): Int {
         for (i in 0 until it[0].length - 1) {
             var left = 0..i
             var right = i + 1 until it[0].length
@@ -55,23 +63,24 @@ class DayThirteen(file: String) : Project() {
             val leftStrings = it.map { it.substring(left) }
             val rightStrings = it.map { it.substring(right).reversed() }
 
+            var countSmudgeErrors = 0
             var match = true
             for (j in leftStrings.indices) {
                 if (leftStrings[j] != rightStrings[j]) {
                     match = false
-                    break
+
+                    for (k in leftStrings[j].indices) {
+                       if (leftStrings[j][k] != rightStrings[j][k]) {
+                           countSmudgeErrors++
+                       }
+                    }
                 }
             }
 
-            if (match) {
-                val colMatch = i + 1
-                return colMatch
+            if ((!smudged && match) || (smudged && countSmudgeErrors == 1)) {
+                return i + 1
             }
         }
-        return -1
-    }
-
-    override fun part2(): Any {
         return -1
     }
 }
