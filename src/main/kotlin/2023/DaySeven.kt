@@ -6,7 +6,7 @@ import Project
 import java.lang.Character.isDigit
 import java.lang.Integer.parseInt
 
-class DaySeven(file: String) : Project() {
+class DaySeven(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val lines = getLines(file).map { it.split(" ") }
     val hands = lines.map { Hand(it[0].toList(), parseInt(it[1]))  }
 
@@ -95,7 +95,7 @@ class DaySeven(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val sortedHands = hands.sorted()
 
         var sum = 0
@@ -108,7 +108,7 @@ class DaySeven(file: String) : Project() {
         return sum
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         hands.forEach {
             it.useJokers = true
             it.rank = it.computeRank()

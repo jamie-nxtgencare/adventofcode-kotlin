@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DaySeventeen(file: String) : Project() {
+class DaySeventeen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val debug = false
     private var size = 25
 
@@ -50,12 +50,12 @@ class DaySeventeen(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         grid = clone(originalGrid3D)
         go(1, 6)
         return countActive()
     }
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         grid4 = clone2(originalGrid4D)
         go(2, 6)
         return countActive2()

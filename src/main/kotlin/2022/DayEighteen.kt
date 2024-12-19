@@ -6,7 +6,7 @@ import Project
 import java.lang.Integer.parseInt
 import kotlin.math.abs
 
-class DayEighteen(file: String) : Project() {
+class DayEighteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val cubes = mapFileLines(file) { Cube(it.split(",")) }
 
     class Cube(val x: Int, val y: Int, val z: Int) {
@@ -56,7 +56,7 @@ class DayEighteen(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var sides = cubes.size * 6
 
         for (cube in cubes) {
@@ -70,7 +70,7 @@ class DayEighteen(file: String) : Project() {
         return sides
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val minX = cubes.minOf { it.x }
         val minY = cubes.minOf { it.y }
         val minZ = cubes.minOf { it.z }

@@ -9,7 +9,7 @@ private infix fun Int.toward(to: Int): IntProgression {
     return IntProgression.fromClosedRange(this, to, step)
 }
 
-class DayFourteen(file: String) : Project() {
+class DayFourteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
 /*
     498,4 -> 498,6 -> 496,6
     503,4 -> 502,4 -> 502,9 -> 494,9
@@ -79,7 +79,7 @@ class DayFourteen(file: String) : Project() {
         return Point(point.x + 1, point.y + 1)
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var done = false
         var sandCount = 0
 
@@ -109,7 +109,7 @@ class DayFourteen(file: String) : Project() {
         return sandCount
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         stuff = HashMap()
         getStuff()
 

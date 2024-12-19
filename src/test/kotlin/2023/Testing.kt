@@ -1,12 +1,10 @@
 @file:Suppress("PackageName")
 package `2023`
-import Day
-import Project
-import getDayStr
-import org.junit.Assert.assertEquals
-import org.junit.Test
 
-class Testing {
+import TestBase
+import org.junit.jupiter.api.Test
+
+class Testing : TestBase("2023") {
     @Test
     fun day1Sample() {
         testSample(1, 281, 281)
@@ -260,31 +258,5 @@ class Testing {
     @Test
     fun day25() {
         test(25, -1, -1)
-    }
-
-    private fun testSample(number: Int, part1: Any?, part2: Any?, customSampleFile: String = "") {
-        baseTest("2023/day%d.sample-input".format(number), number, part1, part2, true, customSampleFile)
-    }
-
-    private fun test(number: Int, part1: Any, part2: Any, customSampleFile: String = "") {
-        baseTest("2023/day%d.input".format(number), number, part1, part2, false, customSampleFile)
-    }
-
-    private fun baseTest(file: String, number: Int, part1: Any?, part2: Any?, sample: Boolean, customSampleFile: String) {
-        val day = Day.byNumber(number)
-        val dayStr = getDayStr(day)
-        @Suppress("UNCHECKED_CAST") val projectClass: Class<out Project> = Class.forName("2023.Day$dayStr") as Class<Project>
-        val constructor = projectClass.getDeclaredConstructor(String::class.java)
-        val input = file.format(number) + customSampleFile
-        val project = constructor.newInstance(input)
-        project.sample = sample
-
-        if (part1 != null) {
-            assertEquals(part1, project?.part1())
-        }
-
-        if (part2 != null) {
-            assertEquals(part2, project?.part2())
-        }
     }
 }

@@ -3,12 +3,14 @@
 package `2022`
 
 import Project
+import checkCancellation
+
 import java.lang.Integer.min
 import java.lang.Long.max
 
 private val shapeIntersections = HashMap<Pair<ArrayList<String>, ArrayList<String>>, Boolean>()
 
-class DaySeventeen(file: String) : Project() {
+class DaySeventeen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val jets = getLines(file)[0]
     private val rocks = listOf(
         Rock(
@@ -81,7 +83,7 @@ class DaySeventeen(file: String) : Project() {
         val top = point.y
         val bottom = point.y - rock.height + 1
 
-        fun intersects(other: RockPosition): Boolean {
+        suspend fun intersects(other: RockPosition): Boolean {
             if (
                 other.left > right ||
                 other.right < left ||
@@ -100,7 +102,9 @@ class DaySeventeen(file: String) : Project() {
             return shapesIntersect(shape, otherShape)
         }
 
-        private fun shapesIntersect(shape: java.util.ArrayList<String>, otherShape: java.util.ArrayList<String>): Boolean {
+        private suspend fun shapesIntersect(shape: java.util.ArrayList<String>, otherShape: java.util.ArrayList<String>): Boolean {
+            checkCancellation()
+
             val key = Pair(shape, otherShape)
 
             if (shapeIntersections.containsKey(key)) {
@@ -135,7 +139,7 @@ class DaySeventeen(file: String) : Project() {
         }
     }
 
-    private fun getHeight(rocks: Long): Long {
+    private suspend fun getHeight(rocks: Long): Long {
         var jetIndex = 0
         var rockCount = 0L
         var rockIndex = 0
@@ -143,7 +147,7 @@ class DaySeventeen(file: String) : Project() {
         val rockReachableFrom = HashMap<Long, ArrayList<RockPosition>>()
         val lcd = this.rocks.size * jets.length
         var oldTowerHeight = 0L
-        println("===Start===")
+        if (Project.debug) println("===Start===")
 
         val diffs: ArrayList<Long> = ArrayList()
         var maxCycle = 0L
@@ -151,6 +155,8 @@ class DaySeventeen(file: String) : Project() {
         var maxCycleRepeatCount = 0
 
         while(rockCount < rocks) {
+            checkCancellation()
+
             rockIndex %= this.rocks.size
             val rock = this.rocks[rockIndex]
             rockIndex++
@@ -201,12 +207,12 @@ class DaySeventeen(file: String) : Project() {
             rockCount++
 
             if (rockCount % lcd == 0L) {
+                checkCancellation()
                 val diff = towerHeight - oldTowerHeight
                 oldTowerHeight = towerHeight
-                println("$diff")
-                diffs.add(diff)
 
                 for (i in 1L..400L) {
+                    if (i % 50 == 0L) checkCancellation()
                     if (hasCycleFor(diffs, i)) {
                         maxCycle = max(i, maxCycle)
                     }
@@ -255,11 +261,37 @@ class DaySeventeen(file: String) : Project() {
             }
 
             if (rockCount % 1_000_000_000L == 0L) {
+                checkCancellation()
                 println("${rockCount.toDouble() / rocks * 100.0}%")
             }
         }
 
         return towerHeight
+    }
+
+    private suspend fun shapesIntersect(shape: ArrayList<String>, otherShape: ArrayList<String>): Boolean {
+        checkCancellation()
+
+        val key = Pair(shape, otherShape)
+
+        if (shapeIntersections.containsKey(key)) {
+            return shapeIntersections[key]!!
+        }
+
+        for (y in 0 until min(shape.size, otherShape.size)) {
+            val row = shape[y]
+            val otherRow = otherShape[y]
+
+            for (x in 0 until min(row.length, otherRow.length)) {
+                if (row[x] == '#' && otherRow[x] == '#') {
+                    shapeIntersections[key] = true
+                    return true
+                }
+            }
+        }
+
+        shapeIntersections[key] = false
+        return false
     }
 
     private fun hasCycleFor(diffs: java.util.ArrayList<Long>, i: Long): Boolean {
@@ -278,7 +310,7 @@ class DaySeventeen(file: String) : Project() {
         return rockReachableFrom[rockPosition.top] ?: ArrayList()
     }
 
-    private fun getXPositionAfterJet(
+    private suspend fun getXPositionAfterJet(
         newX: Long, testPosition: RockPosition, rockPosition: RockPosition, freeFalling: Int, reachableRocks: ArrayList<RockPosition>
     ): Long {
         if (newX < 0 || testPosition.right == 7L) {
@@ -289,11 +321,11 @@ class DaySeventeen(file: String) : Project() {
         return newX
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return getHeight(2022)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return getHeight(1_000_000_000_000)
         //return -1
     }

@@ -5,7 +5,7 @@ package `2023`
 import Project
 import java.util.*
 
-class DayTen(file: String) : Project() {
+class DayTen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val expandedLines = expand(lines)
     private val nodeRows = expandedLines.mapIndexed { y, it -> it.split("").filter { it.isNotBlank() }.mapIndexed { x, symbol -> Node(x, y, symbol) }}
@@ -239,11 +239,11 @@ class DayTen(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return length / 3
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         nodeRows.forEach { row ->
             row.forEach { node ->
                 print(if (path.contains(node)) "▓" else if (node.outside) "O" else ".")

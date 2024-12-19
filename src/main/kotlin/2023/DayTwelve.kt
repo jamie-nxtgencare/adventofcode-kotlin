@@ -5,7 +5,7 @@ package `2023`
 import Project
 import java.lang.Integer.parseInt
 
-class DayTwelve(file: String) : Project() {
+class DayTwelve(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val records = getLines(file).map { it.split(" ") }
 
     private inline fun <T, R,> Iterable<T>.filterThenMap(predicate: (T) -> Boolean, transform: (T) -> R): List<R> {
@@ -93,11 +93,11 @@ class DayTwelve(file: String) : Project() {
         return nextOptions.filterThenMap({ it.length >= group.length && it.substring(group.indices).replace("?", "#").startsWith(group) }, { it.replaceRange(group.indices, "") })
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return doIt()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return doIt(5)
     }
 }

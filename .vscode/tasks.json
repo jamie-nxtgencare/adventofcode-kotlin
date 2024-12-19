@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Day",
+            "type": "shell",
+            "command": "./gradlew run --args=\"${config:adventofcode.year} ${config:adventofcode.runType} ${config:adventofcode.day}\"",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "./gradlew test",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "year",
+            "type": "promptString",
+            "description": "Which year?",
+            "default": "${config:adventofcode.year}"
+        },
+        {
+            "id": "runType",
+            "type": "pickString",
+            "description": "Sample or actual input?",
+            "options": ["sample", "actual"],
+            "default": "${config:adventofcode.runType}"
+        },
+        {
+            "id": "dayNumber",
+            "type": "promptString",
+            "description": "Which day to run?",
+            "default": "${config:adventofcode.day}"
+        }
+    ]
+} 

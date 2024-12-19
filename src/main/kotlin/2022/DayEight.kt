@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayEight(file: String) : Project() {
+class DayEight(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val grid = mapLettersPerLines(file) { it.map { it2 -> it2.toString().toInt() }.toList() }.toList()
 
     private fun isVisible(x: Int, y: Int): Boolean {
@@ -85,7 +85,7 @@ class DayEight(file: String) : Project() {
         return score
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var visible = 0
         for (y in grid.indices) {
             for (x in grid[y].indices) {
@@ -98,7 +98,7 @@ class DayEight(file: String) : Project() {
         return visible
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val scores: ArrayList<Int> = ArrayList()
 
         for (y in grid.indices) {

@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayFourteen(file: String) : Project() {
+class DayFourteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     val template = lines.first()
     var pairs = HashMap<String, String>()
@@ -15,11 +15,11 @@ class DayFourteen(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return doItNow(10)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return doItNow(40)
     }
 

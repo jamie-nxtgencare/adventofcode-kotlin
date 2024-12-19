@@ -3,19 +3,19 @@ package `2021`
 
 import Project
 
-class DayEight(file: String) : Project() {
+class DayEight(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val inputOutput: List<List<String>> = mapFileLines(file) { it.split(" | ") }
     private val input = inputOutput.map { it.first().split(" ") }
     private val output = inputOutput.map { it.last().split(" ") }
     private val digitLists = input.map { it.map { i -> Digit(i) }}
     private val outputList = output.map { it.map { i -> Digit(i) }}
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val oneFourSevenAndEight = output.flatten().filter { it.length == 2 || it.length == 4 || it.length == 3 || it.length == 7 }
         return oneFourSevenAndEight.size
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var sum = 0
         for (i in digitLists.indices) {
             val digitList = digitLists[i]

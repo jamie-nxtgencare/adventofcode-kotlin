@@ -1,12 +1,10 @@
 @file:Suppress("PackageName")
 package `2018`
-import Day
-import Project
-import getDayStr
-import org.junit.Assert.assertEquals
+
+import TestBase
 import org.junit.Test
 
-class Testing {
+class Testing : TestBase("2018") {
     @Test
     fun day1Sample() {
         testSample(1, 1, 14)
@@ -255,25 +253,5 @@ class Testing {
     @Test
     fun day25() {
         test(25, -1, -1)
-    }
-
-    private fun testSample(number: Int, part1: Any, part2: Any) {
-        baseTest("2018/day%d.sample-input".format(number), number, part1, part2)
-    }
-
-    private fun test(number: Int, part1: Any, part2: Any) {
-        baseTest("2018/day%d.input".format(number), number, part1, part2)
-    }
-
-    private fun baseTest(file: String, number: Int, part1: Any, part2: Any) {
-        val day = Day.byNumber(number)
-        val dayStr = getDayStr(day)
-        @Suppress("UNCHECKED_CAST") val projectClass: Class<out Project> = Class.forName("2018.Day$dayStr") as Class<Project>
-        val constructor = projectClass.getDeclaredConstructor(String::class.java)
-
-        val project = constructor.newInstance(file.format(number))
-
-        assertEquals(part1, project?.part1())
-        assertEquals(part2, project?.part2())
     }
 }

@@ -47,7 +47,7 @@ class DayEleven(val file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
 
         for (i in 0 until 20) {
             monkeys.forEach {
@@ -82,7 +82,7 @@ class DayEleven(val file: String) : Project() {
         return monkeyBusiness[0] * monkeyBusiness[1]
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         monkeys = getMonkeys() // reset monkeys
 
         var mod = BigDecimal.valueOf(1L)

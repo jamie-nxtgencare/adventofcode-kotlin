@@ -24,13 +24,13 @@ class DayNineteen(file: String): Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val startingRule = rules[0]
         val regex = ("^" + startingRule?.toRegex(rules) + "$").toRegex()
         return messages.filter { it.matches(regex) }.size
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         rules[8] = Rule("8: 42 | 42 8", "(" + rules[42]?.toRegex(rules) + ")+")
         rules[11] = Rule("11: 42 31 | 42 11 31", getGrossRepeatingBackreferenceRegex(rules[42]?.toRegex(rules), rules[31]?.toRegex(rules)))
 

@@ -9,7 +9,7 @@ class DayTwentytwo(val file: String): Project() {
     private var debug = false
     private var gameCounter = 2
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val winningDeck = playGame(whitelineSeperatedGrouper(file, { Deck(it) }, { it }), 1)
 
         var sum = 0
@@ -19,7 +19,7 @@ class DayTwentytwo(val file: String): Project() {
         return sum
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         debug = false
         val winningDeck = playGame(whitelineSeperatedGrouper(file, { Deck(it) }, { it }), 2)
 

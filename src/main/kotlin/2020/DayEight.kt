@@ -7,15 +7,15 @@ import program.OpCode
 import program.Program
 import program.ProgramContext
 
-class DayEight(file: String) : Project() {
+class DayEight(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val program = Program(getLines(file)/*, debug = true*/)
 
-    override fun part1(): Int {
+    override suspend fun part1(): Any {
         program.run()
         return program.context.acc
     }
 
-    override fun part2(): Int {
+    override suspend fun part2(): Any {
         var c = 0
         while(program.context.state != ProgramContext.State.COMPLETE) {
             program.reset()

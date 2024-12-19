@@ -3,14 +3,14 @@ package `2021`
 
 import Project
 
-class DayFour(file: String) : Project() {
+class DayFour(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val game = Game(getLines(file))
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return game.getScore()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return game.playToLoseScore()
     }
 

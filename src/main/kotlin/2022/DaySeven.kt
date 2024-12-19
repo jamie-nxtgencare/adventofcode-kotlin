@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DaySeven(file: String) : Project() {
+class DaySeven(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val io = getLines(file)
     private val root = Dir("/", null)
     private var pwd = root
@@ -65,11 +65,11 @@ class DaySeven(file: String) : Project() {
 
     class File(val name: String, val size: Int)
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return allDirs.filter { it.size() < 100000 }.sumOf { it.size() }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return allDirs.filter { (70_000_000 - root.size() + it.size()) > 30_000_000 }.minOf { it.size() }
     }
 

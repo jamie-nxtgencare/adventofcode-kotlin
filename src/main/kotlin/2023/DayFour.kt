@@ -6,7 +6,7 @@ import Project
 import java.lang.Integer.parseInt
 import kotlin.math.min
 
-class DayFour(file: String) : Project() {
+class DayFour(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val cards = mapFileLines(file) { Card(it) }
 
     class Card(s: String) {
@@ -19,11 +19,11 @@ class DayFour(file: String) : Project() {
         var copies = 1
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return cards.sumOf { it.score }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         cards.forEachIndexed { i, card ->
             for (copy in 1 .. card.copies) {
                 val winners = cards.subList(min(cards.size, i + 1), min(cards.size, i + 1 + card.matches))

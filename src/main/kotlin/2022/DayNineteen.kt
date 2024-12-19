@@ -8,8 +8,9 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
+import checkCancellation
 
-class DayNineteen(file: String) : Project() {
+class DayNineteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val bluePrints: List<BluePrint> = mapFileLines(file) { BluePrint(it) }
 
     class BluePrint(line: String) {
@@ -130,17 +131,19 @@ class DayNineteen(file: String) : Project() {
 
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return doIt(24, bluePrints.size).sumOf { it.first * it.second }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val second = doIt(32, 3)
         return second.reduce { a, b -> Pair(0, a.second * b.second) }.second
     }
 
-    private fun doIt(max: Int, maxBps: Int): List<Pair<Int, Int>> {
+    private suspend fun doIt(max: Int, maxBps: Int): List<Pair<Int, Int>> {
         return bluePrints.subList(0,min(maxBps,bluePrints.size)).map { bluePrint ->
+            checkCancellation()
+
             val decisions = Stack<Scenario>()
             decisions.push(Scenario(mutableMapOf(Pair("ore", 1)), mutableMapOf()))
             var bestCountSoFar = 0
@@ -157,30 +160,25 @@ class DayNineteen(file: String) : Project() {
             var processed = 0
 
             while (decisions.isNotEmpty()) {
+                if (processed % 10000 == 0) checkCancellation()
+
                 val scenario = decisions.pop()
                 val count = scenario.inventory["geode"] ?: 0
                 val oldBestCount = bestCountSoFar
                 bestCountSoFar = max(oldBestCount, count)
 
                 if (oldBestCount != bestCountSoFar) {
-                    println("New best count: $bestCountSoFar (processed count $processed, skipped count $skippedCount)")
+                    if (Project.debug) println("New best count: $bestCountSoFar...")
                 }
 
                 if (scenario.minute <= max) {
-                    if (scenario.minute == max && scenario.countRobots("geode") == 0 ||
-                        scenario.minute == max - 1 && scenario.countRobots("obsidian") == 0 ||
-                        scenario.minute == max - 2 && scenario.countRobots("clay") == 0
-                    ) {
-                        skippedCount++
-                        continue
-                    }
+                    checkCancellation()
 
                     val turnsRemain = (max - scenario.minute + 1).toDouble()
 
                     val obsidianCost = bluePrint.getMaker("obsidian").getCost("clay")
                     val geodeCost = bluePrint.getMaker("geode").getCost("obsidian")
 
-                    // If we bought an clay bot every turn, how long until we could get a obsidian bot?
                     var clayBotCount = scenario.countRobots("clay").toDouble() + 1
                     var clayStock = scenario.getStock("clay").toDouble() + clayBotCount
                     var turnsToWait = 0.0
@@ -190,14 +188,7 @@ class DayNineteen(file: String) : Project() {
                         clayBotCount++
                         turnsToWait++
                     }
-                    // =((0.5*-1)+sqrt(0.5^2-4*0.5*-F48))/(2*0.5)
-                    /*val turnsToWait2 = Math.ceil(-0.5 + sqrt(0.25 - 2.0 * (-1 * obsidianCost)))
 
-                    if (turnsToWait != turnsToWait2) {
-                        println("Come on now")
-                    }*/
-
-                    // If we bought an obsidian bot every turn, how long until we could get a geode bot?
                     var obsidianBotCount = scenario.countRobots("obisidian").toDouble() + 1
                     var obsidianStock = scenario.getStock("obsidian").toDouble() + obsidianBotCount
 
@@ -207,7 +198,6 @@ class DayNineteen(file: String) : Project() {
                         turnsToWait++
                     }
 
-                    // If we bought a geode bot every turn until the end, could we beat the best?
                     val turnsWillRemain = max(turnsRemain - turnsToWait, 0.0)
                     val geodeBotCount = scenario.countRobots("geode").toDouble()
                     val geodeStock = scenario.getStock("geode")
@@ -227,12 +217,13 @@ class DayNineteen(file: String) : Project() {
                         val robotCount = scenario.countRobots(maker.produces)
                         val required = if (maker.produces == "obsidian") maxObsidianRequired else if (maker.produces == "clay") maxClayRequired else if (maker.produces == "ore") maxOreRequired else Int.MAX_VALUE
                         if (robotCount < required  && maker.canMakeWith(scenario.inventory)) {
-                            val newScenario = Scenario.clone(scenario) // Make a scenario where we made it
+                            val newScenario = Scenario.clone(scenario)
                             newScenario.buyRobots.add(maker.make(newScenario.inventory).produces)
                             newScenarios.add(newScenario)
                         }
                     }
 
+                    if (newScenarios.size > 100) checkCancellation()
                     newScenarios.forEach {
                         it.robots.forEach { robot -> it.inventory[robot.key] = (it.inventory[robot.key] ?: 0) + robot.value }
                         it.buyRobots.forEach { robot -> it.robots[robot] = (it.robots[robot] ?: 0) + 1 }
@@ -243,7 +234,7 @@ class DayNineteen(file: String) : Project() {
                     }
                 }
             }
-            println("Best count $bestCountSoFar")
+            // Remove or comment out "Best count" print
             Pair(bluePrint.label, bestCountSoFar)
         }
     }

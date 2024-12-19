@@ -9,7 +9,7 @@ class DayTwentyfive(file: String): Project() {
     val cardPubKey = lines[0].toLong()
     val doorPubKey = lines[1].toLong()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var loop = 0L
         var cardLoop = 0L
         var doorLoop = 0L
@@ -42,7 +42,7 @@ class DayTwentyfive(file: String): Project() {
         return n
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return -1
     }
 }

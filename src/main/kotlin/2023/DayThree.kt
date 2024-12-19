@@ -8,7 +8,7 @@ import java.lang.Integer.parseInt
 import kotlin.math.max
 import kotlin.math.min
 
-class DayThree(file: String) : Project() {
+class DayThree(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val grid: List<List<Char>> = lines.map { it.split("").filter { it.isNotEmpty() }.map { it[0] } }
     private val gearParts = HashMap<Pair<Int, Int>, MutableList<String>>()
@@ -56,7 +56,7 @@ class DayThree(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return sum
     }
 
@@ -92,7 +92,7 @@ class DayThree(file: String) : Project() {
         return gears
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val gearRatioComponents: Collection<MutableList<String>> = gearParts.filter { it.value.size == 2 }.values
         println(gearRatioComponents)
 

@@ -7,12 +7,12 @@ import kotlin.math.floor
 class DayEighteen(val file: String) : Project() {
     private var equations = mapFileLines(file) { parse(it) }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val aaa = reducedSum(equations)
         return aaa.getMagnitude()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var max = Long.MIN_VALUE
         for (i in equations.indices) {
             for (j in equations.indices) {

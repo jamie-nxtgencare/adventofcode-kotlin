@@ -5,10 +5,10 @@ package `2023`
 import Project
 import kotlin.math.floor
 
-class DayFourteen(file: String) : Project() {
+class DayFourteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private var grid = getLines(file).map { it.split("").filter { it.isNotBlank() }.toMutableList()}.toMutableList()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         tiltNorth(grid)
 
         var load = 0
@@ -25,7 +25,7 @@ class DayFourteen(file: String) : Project() {
         return load
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val gridCodes = mutableListOf<Int>()
         var targetI = -1
         val cycleCount = 1000000000

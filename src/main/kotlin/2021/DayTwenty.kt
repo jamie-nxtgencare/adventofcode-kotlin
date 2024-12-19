@@ -3,12 +3,12 @@ package `2021`
 
 import Project
 
-class DayTwenty(file: String) : Project() {
+class DayTwenty(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val key = lines[0].split("").filter { it.isNotBlank() }.map { if (it == "#") 1 else 0 }
     private val image: List<List<Int>> = lines.subList(2, lines.size).map { it.split("").filter { s -> s.isNotBlank() }.map { pixel -> if (pixel == "#") 1 else 0 } }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var workingGrid = ArrayList(image.map { ArrayList(it) })
         workingGrid = growGrid(workingGrid)
 
@@ -24,7 +24,7 @@ class DayTwenty(file: String) : Project() {
         return workingGrid.sumOf { it.sum() }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var workingGrid = ArrayList(image.map { ArrayList(it) })
         workingGrid = growGrid(workingGrid)
 

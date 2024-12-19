@@ -4,7 +4,7 @@ import Project
 import java.util.*
 import kotlin.math.floor
 
-class DayTen(file: String) : Project() {
+class DayTen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val pairs = mapOf("(" to ")", "[" to "]", "<" to ">", "{" to "}")
     private val points = mapOf(")" to 3, "]" to 57, "}" to 1197, ">" to 25137)
@@ -12,7 +12,7 @@ class DayTen(file: String) : Project() {
 
     private val incomplete = ArrayList<Stack<String>>()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val illegalChars = ArrayList<String>()
 
         lines.forEach {
@@ -44,7 +44,7 @@ class DayTen(file: String) : Project() {
         return illegalChars.map { points[it] }.sumOf { it ?: 0 }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return incomplete.map {
             var score = 0L
             while (it.isNotEmpty()) {

@@ -4,7 +4,7 @@ package `2018`
 
 import Project
 
-class DayThree(file: String) : Project() {
+class DayThree(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val lines = getLines(file)
     val covered = HashMap<Int, HashMap<Int, ArrayList<String>>>()
 
@@ -33,11 +33,11 @@ class DayThree(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return covered.values.map { it.values.count { v -> v.size > 1 } }.sum()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val labels: Set<String> = covered.values.flatMap { it.values.filter { v -> v.size == 1 }.map { it.first() } }.toSet()
 
         val positions = covered.values.flatMap { it.values }

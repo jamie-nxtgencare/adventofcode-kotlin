@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayTwo(file: String) : Project() {
+class DayTwo(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val games = mapFileLines(file) { RPSGame(it) }
 
     enum class Move() {
@@ -98,11 +98,11 @@ class DayTwo(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
        return games.sumOf { it.matchScore() }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return games.sumOf { it.matchScore2() }
     }
 

@@ -1,24 +1,76 @@
 import java.io.File
+import java.io.FileNotFoundException
 import java.time.Duration
 import java.time.LocalDateTime
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.runBlocking
+
+suspend fun checkCancellation() {
+    if (!currentCoroutineContext().isActive) {
+        throw InterruptedException("Operation cancelled")
+    }
+}
 
 abstract class Project {
     var sample = false
+    private var testMode = false
 
-    abstract fun part1(): Any
-    abstract fun part2(): Any
+    companion object {
+        var debug = false
+    }
 
-    fun run(part1: LocalDateTime) {
+    constructor() {
+        testMode = false
+    }
+
+    constructor(file: String, isTest: Boolean) {
+        if (debug) println("Creating Project with file: $file, isTest: $isTest")
+        testMode = isTest
+        if (debug) println("testMode is now: $testMode")
+    }
+
+    // Make part1 and part2 suspendable for cancellation
+    abstract suspend fun part1(): Any
+    abstract suspend fun part2(): Any
+
+    // Non-suspending versions for Main.kt
+    fun part1Blocking(): Any = runBlocking { part1() }
+    fun part2Blocking(): Any = runBlocking { part2() }
+
+    fun run(part1Time: LocalDateTime) = runBlocking {
         println(part1())
-        println("Part One: %.${2}fms".format(Duration.between(part1, LocalDateTime.now()).toNanos()/1_000_000.0))
+        println("Part One: %.${2}fms".format(Duration.between(part1Time, LocalDateTime.now()).toNanos()/1_000_000.0))
 
-        val part2 = LocalDateTime.now()
+        val part2Time = LocalDateTime.now()
         println(part2())
-        println("Part Two: %.${2}fms".format(Duration.between(part2, LocalDateTime.now()).toNanos()/1_000_000.0))
+        println("Part Two: %.${2}fms".format(Duration.between(part2Time, LocalDateTime.now()).toNanos()/1_000_000.0))
     }
 
     fun getLines(file: String) : List<String> {
-        return File({}.javaClass.getResource(file)!!.file).readLines()
+        val path = if (testMode) {
+            "src/test/resources/$file"
+        } else {
+            val packagePath = if (file.contains("/")) {
+                file
+            } else {
+                "${javaClass.packageName}/$file"
+            }
+            "src/test/resources/$packagePath"
+        }
+
+        if (debug) {
+            println("getLines called with: $file")
+            println("testMode: $testMode")
+            println("Trying to load file: $path")
+        }
+        
+        val fileObj = File(path)
+        if (!fileObj.exists()) {
+            if (debug) println("File not found: $path")
+            throw FileNotFoundException("File not found: $path")
+        }
+        return fileObj.readLines()
     }
 
     fun <R> mapFileLines(file: String, mapper: (String) -> R) : List<R> {

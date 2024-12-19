@@ -3,7 +3,7 @@ package `2021`
 import Project
 import java.util.*
 
-class DayTwentythree(file: String) : Project() {
+class DayTwentythree(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private var rows = 0
     private var cols = 0
     private val grid = mapLettersPerLines(file) {
@@ -17,12 +17,12 @@ class DayTwentythree(file: String) : Project() {
 
     private val game: AmphipodGame = AmphipodGame(grid)
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val solve = game.solve()
         return solve
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val grid2 = ArrayList<List<Tile>>()
 
         grid.forEach {

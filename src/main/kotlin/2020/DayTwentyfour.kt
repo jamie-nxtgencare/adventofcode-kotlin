@@ -8,7 +8,7 @@ class DayTwentyfour(file: String): Project() {
     private val lines = getLines(file)
     private var grid = HashMap<String, Tile>()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val ns = listOf("n","s")
         val ew = listOf("e","w")
 
@@ -49,7 +49,7 @@ class DayTwentyfour(file: String): Project() {
         return tile.x.toString() + "|" + tile.y.toString()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         for (i in 0 until 100) {
             addNeighbours(grid)
             grid = flip(grid)

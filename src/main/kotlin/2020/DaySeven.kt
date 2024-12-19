@@ -4,7 +4,7 @@ package `2020`
 
 import Project
 
-class DaySeven(file: String) : Project() {
+class DaySeven(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val bagStrMap = mapFileLines(file) { it.replace("bags?".toRegex(), "").split("contain") }
     private val bags : Map<String, List<BagCount>> = getBags()
 
@@ -48,11 +48,11 @@ class DaySeven(file: String) : Project() {
         return contents?.any { contains(it.bag, needleBag) } == true
     }
 
-    override fun part1(): Int {
-       return bags.keys.filter { it != "shiny gold" && contains(it, "shiny gold") }.size
+    override suspend fun part1(): Any {
+        return bags.keys.filter { it != "shiny gold" && contains(it, "shiny gold") }.size
     }
 
-    override fun part2(): Int {
+    override suspend fun part2(): Any {
         return getBagCost("shiny gold") - 1 // -1 because don't include yourself
     }
 

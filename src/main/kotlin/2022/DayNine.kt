@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayNine(file: String) : Project() {
+class DayNine(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val motions = mapFileLines(file) { it.split(" ") }.map { Motion(it[0], it[1].toInt()) }
 
     class Point(val x: Int, val y: Int) {
@@ -90,7 +90,7 @@ class DayNine(file: String) : Project() {
         RIGHT("R")
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var head = Point(0, 0)
         var tail = Point(0, 0)
         val tailLocations = HashSet<Point>()
@@ -109,7 +109,7 @@ class DayNine(file: String) : Project() {
         return tailLocations.size
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var head = Point(0, 0)
         val tails = arrayListOf(Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0), Point(0,0))
         val tailLocations = HashSet<Point>()

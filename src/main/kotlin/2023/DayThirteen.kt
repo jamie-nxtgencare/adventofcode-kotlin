@@ -5,14 +5,14 @@ package `2023`
 import Project
 
 
-class DayThirteen(file: String) : Project() {
+class DayThirteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val grids: List<List<String>> = whitelineSeperatedGrouper(file, { it }, { it })
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return doIt()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return doIt(true)
     }
 

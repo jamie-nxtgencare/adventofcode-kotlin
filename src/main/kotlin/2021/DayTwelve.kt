@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayTwelve(file: String) : Project() {
+class DayTwelve(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val nodes = HashMap<String, Node>()
 
@@ -21,12 +21,12 @@ class DayTwelve(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return getPaths(1).filter { it.any { node -> node.isSmall }}.size
     }
 
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return getPaths(2).size
     }
 

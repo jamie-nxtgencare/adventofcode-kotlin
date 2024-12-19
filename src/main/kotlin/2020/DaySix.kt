@@ -4,18 +4,18 @@ package `2020`
 
 import Project
 
-class DaySix(file: String) : Project() {
+class DaySix(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val customsForms : List<CustomsFormGroup> = getCustomsForms(file)
 
     private fun getCustomsForms(file: String): List<CustomsFormGroup> {
         return whitelineSeperatedGrouper(file, { CustomsFormGroup(it) }, { CustomsForm(it.toCharArray().map { it2 -> it2 to true }.toMap()) })
     }
 
-    override fun part1(): Int {
+    override suspend fun part1(): Any {
         return customsForms.map { it.countAnswers() }.sum()
     }
 
-    override fun part2(): Int {
+    override suspend fun part2(): Any {
         return customsForms.map { it.countAllYes() }.sum()
     }
 }

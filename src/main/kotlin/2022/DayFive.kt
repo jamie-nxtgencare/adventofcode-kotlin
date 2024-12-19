@@ -5,7 +5,7 @@ package `2022`
 import Project
 import java.util.*
 
-class DayFive(file: String) : Project() {
+class DayFive(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val stackStrings = lines.takeWhile { it.isNotBlank() }
     private val moves = lines.takeLastWhile { it.isNotBlank() }.map { it.split(" ") }
@@ -27,7 +27,7 @@ class DayFive(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         moves.forEach {
             val count = it[1].toInt()
             val from = it[3].toInt() - 1
@@ -42,7 +42,7 @@ class DayFive(file: String) : Project() {
         return stacks.values.map { it.peek() }.joinToString("", "", "") { it }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         restack()
 
         moves.forEach {

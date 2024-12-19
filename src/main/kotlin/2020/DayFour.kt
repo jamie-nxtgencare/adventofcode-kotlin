@@ -4,18 +4,18 @@ package `2020`
 
 import Project
 
-class DayFour(file: String) : Project() {
+class DayFour(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val passports = getPassports(file)
 
     private fun getPassports(file: String): List<Passport> {
         return whitelineSeperatedGrouper(file, { Passport(it) }, { it })
     }
 
-    override fun part1(): Int {
+    override suspend fun part1(): Any {
         return passports.filter { it.isValid() }.size
     }
 
-    override fun part2(): Int {
+    override suspend fun part2(): Any {
         return passports.filter { it.isValid2() }.size
     }
 

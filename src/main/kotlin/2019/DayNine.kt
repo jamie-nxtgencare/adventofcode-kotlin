@@ -4,12 +4,12 @@ package `2019`
 
 import Project
 
-class DayNine(file: String) : Project() {
-    override fun part1(): Any {
+class DayNine(file: String, isTest: Boolean = false) : Project(file, isTest) {
+    override suspend fun part1(): Any {
         return -1
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return -1
     }
 

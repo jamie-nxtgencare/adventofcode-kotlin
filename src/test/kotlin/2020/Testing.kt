@@ -1,13 +1,11 @@
 @file:Suppress("PackageName")
 package `2020`
-import Day
-import Project
-import getDayStr
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import java.math.BigInteger
 
-class Testing {
+import TestBase
+import java.math.BigInteger
+import org.junit.jupiter.api.Test
+
+class Testing : TestBase("2020") {
     @Test
     fun day1Sample() {
         testSample(1, 514579, 241861950)
@@ -15,7 +13,7 @@ class Testing {
 
     @Test
     fun day1() {
-        test(1, 445536, 138688160)
+        test(1, 1019371, 278064990)
     }
 
     @Test
@@ -256,25 +254,5 @@ class Testing {
     @Test
     fun day25() {
         test(25, 18293391L, -1)
-    }
-
-    private fun testSample(number: Int, part1: Any, part2: Any) {
-        baseTest("2020/day%d.sample-input".format(number), number, part1, part2)
-    }
-
-    private fun test(number: Int, part1: Any, part2: Any) {
-        baseTest("2020/day%d.input".format(number), number, part1, part2)
-    }
-
-    private fun baseTest(file: String, number: Int, part1: Any, part2: Any) {
-        val day = Day.byNumber(number)
-        val dayStr = getDayStr(day)
-        @Suppress("UNCHECKED_CAST") val projectClass: Class<out Project> = Class.forName("2020.Day$dayStr") as Class<Project>
-        val constructor = projectClass.getDeclaredConstructor(String::class.java)
-
-        val project = constructor.newInstance(file.format(number))
-
-        assertEquals(project?.part1(), part1)
-        assertEquals(project?.part2(), part2)
     }
 }

@@ -38,7 +38,7 @@ class DayEleven(val file: String) : Project() {
 
 
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return doIt(2)
     }
 
@@ -60,7 +60,7 @@ class DayEleven(val file: String) : Project() {
         return sum
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return doIt(1_000_000)
     }
 }

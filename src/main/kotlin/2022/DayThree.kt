@@ -8,7 +8,7 @@ fun getPriority(char: Int): Int {
     return if (char.toChar().isLowerCase()) char - 96 else char - 38
 }
 
-class DayThree(file: String) : Project() {
+class DayThree(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val rucksacks = mapFileLines(file) { RuckSack(it) }
 
     class RuckSack(stuff: String) {
@@ -36,11 +36,11 @@ class DayThree(file: String) : Project() {
 
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return rucksacks.sumOf { it.getPriority() }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val badges = ArrayList<Int>()
         for (i in rucksacks.indices step 3) {
             val group = rucksacks.subList(i, i + 3)

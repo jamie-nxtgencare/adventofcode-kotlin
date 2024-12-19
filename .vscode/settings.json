@@ -1,0 +1,11 @@
+{
+    "adventofcode.year": "2024",
+    "adventofcode.day": "1",
+    "adventofcode.runType": "sample",
+    "kotlin.debugAdapter.enabled": true,
+    "kotlin.tests.codelens.enabled": true,
+    "java.test.config": {
+        "vmArgs": ["-ea"]
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
+} 

@@ -3,12 +3,12 @@ package `2021`
 import Project
 import kotlin.math.roundToInt
 
-class DayThree(file: String) : Project() {
+class DayThree(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val input: List<List<Int>> = mapLettersPerLines(file) { it.map { it2 -> (it2 + "").toInt() }}
     private var mostCommonBits: List<Int> = ArrayList()
     private var leastCommonBits: List<Int> = ArrayList()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val gammaSums: MutableList<Double> = ArrayList()
 
         for (row in input) {
@@ -32,7 +32,7 @@ class DayThree(file: String) : Project() {
 
     private fun flip(it: Double, mostCommon: Boolean) = if (mostCommon) it.toInt() else if (it.toInt() == 1) 0 else 1
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val oxygen = getCandidates(input, true).first().joinToString("").toInt(2)
         val co2 = getCandidates(input, false).first().joinToString("").toInt(2)
         return oxygen * co2

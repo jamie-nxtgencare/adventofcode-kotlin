@@ -3,10 +3,10 @@ package `2021`
 
 import Project
 
-class DayTwentyfive(file: String) : Project() {
+class DayTwentyfive(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val grid: ArrayList<ArrayList<String>> = ArrayList(mapLettersPerLines(file) { ArrayList(it.map { c -> c.toString() }) })
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
 
         var count = 0
         var moved = true
@@ -21,7 +21,7 @@ class DayTwentyfive(file: String) : Project() {
         return count
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return -1
     }
 

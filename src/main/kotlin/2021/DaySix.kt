@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DaySix(file: String) : Project() {
+class DaySix(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val input: List<Int> = if (lines.isNotEmpty()) lines.first().split(",").map { it.toInt() } else ArrayList()
     private val ageCounts: Array<Long> = Array(9) { 0L }
@@ -14,11 +14,11 @@ class DaySix(file: String) : Project() {
         ageCounts.copyInto(initialAgeCounts)
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return getAnswer(80)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         initialAgeCounts.copyInto(ageCounts)
         return getAnswer(256)
     }

@@ -45,11 +45,11 @@ class DayTwentyone(file: String): Project() {
 
     class Recipe(val allergens: ArrayList<String>, val ingredients: ArrayList<String>)
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return unmappedCount
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val allergens = HashSet<String>()
         recipes.clear()
         recipes.addAll(lines.map { line ->

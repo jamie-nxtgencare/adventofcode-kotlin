@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.abs
 
-class DaySeven(file: String) : Project() {
+class DaySeven(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val subs = getLines(file).first().split(",").map { it.toInt() }
     private val uniqueSubs = subs.distinct()
     private val sortedUnique = uniqueSubs.sorted()
@@ -11,11 +11,11 @@ class DaySeven(file: String) : Project() {
     private val end = sortedUnique.last()
     private val iMemo = HashMap<Int, Int>()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return getDistance(1)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return getDistance(2)
     }
 

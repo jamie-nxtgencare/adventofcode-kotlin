@@ -5,7 +5,7 @@ package `2020`
 import Project
 import kotlin.math.pow
 
-class DayFourteen (file: String) : Project() {
+class DayFourteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val instructions = mapFileLines(file) { getInstructions(it) }
     private var mask = 0L
     private var overwrite = 0L
@@ -65,12 +65,12 @@ class DayFourteen (file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         instructions.forEach { it(1) }
         return mem.values.sum()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         mem.clear()
         instructions.forEach { it(2) }
         return mem.values.sum()

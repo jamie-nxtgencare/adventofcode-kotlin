@@ -124,7 +124,7 @@ class DayTwenty(file: String): Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val fitCounts = HashMap<Long, Int?>()
 
         pieces.forEach { a ->
@@ -141,7 +141,7 @@ class DayTwenty(file: String): Project() {
         return fitCounts.filter { it.value == 2 }.map { it.key }.fold(1L, {a, b -> a * b})
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var assembledPuzzle:ArrayList<ArrayList<Piece>>? = null
 
         while (assembledPuzzle == null) {

@@ -3,7 +3,7 @@ package `2021`
 
 import Project
 
-class DayEleven(file: String) : Project() {
+class DayEleven(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val grid: List<List<Int>> = mapLettersPerLines(file) { it.map { c -> Character.getNumericValue(c) }}
     private var dumboGrid = ArrayList<ArrayList<Dumbo>>()
     private var dumbos: ArrayList<Dumbo> = ArrayList()
@@ -13,7 +13,7 @@ class DayEleven(file: String) : Project() {
         populateDumbos(grid)
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         partOneFlashes = 0
         for (i in 0 until 100) {
             step()
@@ -21,7 +21,7 @@ class DayEleven(file: String) : Project() {
         return partOneFlashes
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var step = 1
         populateDumbos(grid)
         while (!step()) {

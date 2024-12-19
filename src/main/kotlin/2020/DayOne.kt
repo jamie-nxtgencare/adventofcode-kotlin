@@ -4,10 +4,10 @@ package `2020`
 
 import Project
 
-class DayOne(file: String) : Project() {
+class DayOne(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val map = getIntLinesToExistsBoolean(file)
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         for (entry in map) {
             val a = entry.key
             val b = 2020 - a
@@ -19,7 +19,7 @@ class DayOne(file: String) : Project() {
         return -1
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         for (e1 in map) {
             for (e2 in map) {
                 val a = e1.key

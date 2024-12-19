@@ -5,14 +5,14 @@ package `2023`
 import Project
 import java.lang.Integer.parseInt
 
-class DayTwo(file: String) : Project() {
+class DayTwo(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val games = mapFileLines(file) { Game(it) }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
        return games.filter{ !it.isImpossible() }.sumOf { it.gameId }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return games.sumOf{ it.getPower() }
     }
 

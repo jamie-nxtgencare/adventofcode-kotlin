@@ -4,7 +4,7 @@ package `2023`
 
 import Project
 
-class DayEight(file: String) : Project() {
+class DayEight(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val instructions = lines[0].split("").filter { it.isNotBlank() }
 
@@ -18,7 +18,7 @@ class DayEight(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return getSteps(graph, instructions, "AAA") { location: String -> location != "ZZZ" }
     }
 
@@ -42,7 +42,7 @@ class DayEight(file: String) : Project() {
         return steps
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val rings = graph.keys.filter { it.endsWith("A") }.map { getSteps(graph, instructions, it) { location: String -> !location.endsWith("Z") } }
         return lcm(rings.toLongArray())
     }

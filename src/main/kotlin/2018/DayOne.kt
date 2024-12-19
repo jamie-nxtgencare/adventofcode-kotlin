@@ -4,14 +4,14 @@ package `2018`
 
 import Project
 
-class DayOne(file: String) : Project() {
+class DayOne(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val freqs = mapFileLines(file) { it.toInt() }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return freqs.sum()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val map = HashMap<Int, Int>()
         var sum = 0
         var i = 0

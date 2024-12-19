@@ -6,8 +6,9 @@ import Project
 import java.time.Duration
 import java.time.Instant
 import kotlin.math.min
+import checkCancellation
 
-class DaySixteen(file: String) : Project() {
+class DaySixteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val valves = mapFileLines(file) { Valve(it) }
     private val valveMap = HashMap<String, Valve>()
     private val distances = HashMap<Valve, HashMap<Valve, Int>>()
@@ -111,7 +112,7 @@ class DaySixteen(file: String) : Project() {
         return startMap[end]!!
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val closedValves = ArrayList<Valve>()
         closedValves.addAll(valves.filter { it.rate > 0 })
 
@@ -121,7 +122,8 @@ class DaySixteen(file: String) : Project() {
         return recurse(listOf(prev), pressure, prev, minutes, closedValves)
     }
 
-    private fun recurse(path: List<Valve>, pressure: Int, prev: Valve, minutes: Int, closedValves: ArrayList<Valve>): Int {
+    private suspend fun recurse(path: List<Valve>, pressure: Int, prev: Valve, minutes: Int, closedValves: ArrayList<Valve>): Int {
+        checkCancellation()
         return closedValves.map { closedValve ->
             val remaining = ArrayList<Valve>()
             remaining.addAll(closedValves)
@@ -145,11 +147,13 @@ class DaySixteen(file: String) : Project() {
         }.max()
     }
 
-    private fun recurse2(
+    private suspend fun recurse2(
         pressure: Int, closedValves: ArrayList<Valve>, path: List<Valve>, prev: Valve, minutes: Int, path2: List<Valve>, prev2: Valve, minutes2: Int
     ): Int {
+        checkCancellation()
         return closedValves.map { closedValve ->
             if (path.size == 1) {
+                checkCancellation()
                 println(closedValve)
                 val nextTime = Instant.now()
                 val seconds = Duration.between(time, nextTime).toSeconds()
@@ -220,7 +224,7 @@ class DaySixteen(file: String) : Project() {
         }.max()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val closedValves = ArrayList<Valve>()
         closedValves.addAll(valves.filter { it.rate > 0 })
 

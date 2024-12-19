@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.abs
 
-class DayNineteen(file: String) : Project() {
+class DayNineteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private lateinit var mergedScanners: java.util.ArrayList<Scanner>
     private val lines = getLines(file)
     private val scanners = ArrayList<Scanner>()
@@ -31,12 +31,12 @@ class DayNineteen(file: String) : Project() {
         scanners.add(scanner!!)
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         mergedScanners = merge(scanners)
         return mergedScanners.first().beacons.size
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var max = Int.MIN_VALUE
         val locs = mergedScanners.first().scanners.values
         locs.forEach { one ->

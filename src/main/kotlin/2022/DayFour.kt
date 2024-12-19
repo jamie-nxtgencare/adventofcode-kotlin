@@ -4,7 +4,7 @@ package `2022`
 
 import Project
 
-class DayFour(file: String) : Project() {
+class DayFour(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val sections = mapFileLines(file) { Section(it) }
 
     class Section(line: String) {
@@ -24,11 +24,11 @@ class DayFour(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return sections.filter { it.fullyOverlaps() }.count()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return sections.filter { it.overlaps() }.count()
     }
 

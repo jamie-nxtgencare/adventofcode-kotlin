@@ -4,12 +4,12 @@ package `2020`
 
 import Project
 
-class DayEleven(file: String) : Project() {
+class DayEleven(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val debug = false
     private var originalGrid = mapLettersPerLines(file) { it.map { it2 -> Seat.fromLetter(it2) }.toTypedArray() }.toTypedArray()
     private var grid = clone(originalGrid)
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         if (debug) {
             printGrid()
         }
@@ -18,7 +18,7 @@ class DayEleven(file: String) : Project() {
 
         return countOccupied()
     }
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         if (debug) {
             printGrid()
         }

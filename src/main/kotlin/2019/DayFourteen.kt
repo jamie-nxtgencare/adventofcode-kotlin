@@ -5,7 +5,7 @@ package `2019`
 import Project
 import kotlin.math.ceil
 
-class DayFourteen(file: String) : Project() {
+class DayFourteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val reactions : Map<String, Reaction> = getReactions(file)
 
     private fun getReactions(file: String): Map<String, Reaction> {
@@ -71,11 +71,11 @@ class DayFourteen(file: String) : Project() {
         return required[0].count
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return getOre(1)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val goal = 1000000000000L
 
         var ore: Long

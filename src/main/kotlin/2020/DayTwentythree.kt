@@ -94,7 +94,7 @@ class DayTwentythree(val file: String): Project() {
         var next: Cup? = null
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         go(100)
 
         while (cup.number != 1) {
@@ -111,7 +111,7 @@ class DayTwentythree(val file: String): Project() {
         return s.toInt()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         cache = HashMap()
         val newSegment = Cup(cache, 10)
         var next: Cup? = newSegment

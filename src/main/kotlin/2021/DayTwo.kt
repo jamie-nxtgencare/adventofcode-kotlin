@@ -3,14 +3,14 @@ package `2021`
 
 import Project
 
-class DayTwo(file: String) : Project() {
+class DayTwo(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val instructions = mapFileLines(file) { Instruction(it) }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return go(1)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return go(2)
     }
 

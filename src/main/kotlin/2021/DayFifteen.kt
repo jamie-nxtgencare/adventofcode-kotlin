@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.floor
 
-class DayFifteen(file: String) : Project() {
+class DayFifteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val grid = mapLettersPerLines(file) { it.map { c -> Character.getNumericValue(c) } }
     private val nodes = HashMap<Pair<Int, Int>, Density>()
     private val unvisited = HashMap<Pair<Int, Int>, Density>()
@@ -86,11 +86,11 @@ class DayFifteen(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return last?.shortestRisk!! - first?.risk!!
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         /*println(printGrid())
         println(path(last2))*/
         return last2?.shortestRisk!! - first2?.risk!!

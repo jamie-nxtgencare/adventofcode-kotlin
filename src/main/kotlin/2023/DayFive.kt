@@ -5,7 +5,7 @@ package `2023`
 import Project
 import java.lang.Long.parseLong
 
-class DayFive(file: String) : Project() {
+class DayFive(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val mappers = whitelineSeperatedGrouper(file, { Mapper(it) }, { it })
 
     class Mapper(lines: List<String>) {
@@ -96,7 +96,7 @@ class DayFive(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         println("Part 1 ---------")
         val seeds = mappers[0].seeds
         val rest = mappers.subList(1, mappers.size)
@@ -118,7 +118,7 @@ class DayFive(file: String) : Project() {
         return ranges.minOf { it.first }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         //println("Part 2 ---------")
         val seedRangeSetup = mappers[0].seeds
         val seedRanges = ArrayList<List<LongRange>>()

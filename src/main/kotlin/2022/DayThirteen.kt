@@ -8,7 +8,7 @@ import kotlin.math.max
 val numberRegex = Regex("^\\d+$")
 
 
-class DayThirteen(file: String) : Project() {
+class DayThirteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val signalPairs = whitelineSeperatedGrouper(file, { SignalPair(listOf(Signal(it[0]), Signal(it[1]))) }, { it })
 
     class SignalPair(val signals: List<Signal>) {
@@ -87,7 +87,7 @@ class DayThirteen(file: String) : Project() {
     }
 
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var sum = 0
         signalPairs.forEachIndexed { i, it ->
             println("== Pair ${i + 1} ==")
@@ -102,7 +102,7 @@ class DayThirteen(file: String) : Project() {
         return sum
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val allSignals = ArrayList<Signal>()
 
         signalPairs.forEach { allSignals.addAll(it.signals) }

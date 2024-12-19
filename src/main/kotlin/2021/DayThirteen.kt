@@ -3,7 +3,7 @@ package `2021`
 import Project
 import java.util.*
 
-class DayThirteen(file: String) : Project() {
+class DayThirteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private var grid: List<ArrayList<Boolean>>
     private val instructions = ArrayList<Pair<String, Int>>()
@@ -36,11 +36,11 @@ class DayThirteen(file: String) : Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return countDots(fold(grid, instructions.first()))
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var workingGrid = grid
         instructions.forEach {
             workingGrid = fold(workingGrid, it)

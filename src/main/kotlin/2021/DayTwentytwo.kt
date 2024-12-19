@@ -3,7 +3,7 @@ package `2021`
 import Project
 import kotlin.math.min
 
-class DayTwentytwo(file: String) : Project() {
+class DayTwentytwo(file: String, isTest: Boolean = false) : Project(file, isTest) {
     var i = 0
     val ins = mapFileLines(file) {
         val chunks = it.split(",")
@@ -17,7 +17,7 @@ class DayTwentytwo(file: String) : Project() {
         )
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var count = 0
         val range = -50..50
         for (x in range) {
@@ -38,7 +38,7 @@ class DayTwentytwo(file: String) : Project() {
         return count
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val prisms = ArrayList<RectangularPrism>()
         var count = 1
         var prev = 0L

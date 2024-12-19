@@ -3,17 +3,17 @@ package `2020`
 
 import Project
 
-class DayEighteen(file: String): Project() {
+class DayEighteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val brackets = "(\\([^()]*\\))".toRegex()
     private val addition = "((\\d+) \\+ (\\d+))".toRegex()
 
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return lines.map { solve(it, 1) }.sum()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return lines.map { solve(it, 2) }.sum()
     }
 

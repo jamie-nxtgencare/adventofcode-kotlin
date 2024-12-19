@@ -3,14 +3,14 @@ package `2021`
 import Project
 import kotlin.math.floor
 
-class DayTwentyfour(file: String) : Project() {
+class DayTwentyfour(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val ins = mapFileLines(file) { AluIns(it) }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return solve(true)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return solve(false)
     }
 

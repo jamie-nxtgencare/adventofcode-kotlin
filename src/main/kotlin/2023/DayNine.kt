@@ -5,10 +5,10 @@ package `2023`
 import Project
 import java.lang.Integer.parseInt
 
-class DayNine(file: String) : Project() {
+class DayNine(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val lines = getLines(file).map { it.split(" ").map { parseInt(it)}.toMutableList() }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return lines.sumOf { history ->
             val progressions = mutableListOf(history)
             while (progressions.last().any { it != 0 }) {
@@ -31,7 +31,7 @@ class DayNine(file: String) : Project() {
         }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return lines.sumOf { history ->
             val progressions = mutableListOf(history)
             while (progressions.last().any { it != 0 }) {

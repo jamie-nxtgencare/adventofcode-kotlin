@@ -62,11 +62,11 @@ class DaySixteen(file: String): Project() {
         }
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return tickets.map { ticket -> ticket.filter { num -> rules.values.all { !it.isValid(num) } } }.flatten().sum()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val validTickets = tickets.filter { ticket -> ticket.all { num -> rules.values.any { it.isValid(num) } } }
         val fieldRules: MutableMap<Int, Map<String, Rule>> = HashMap()
         // For each field, find all rules that match every ticket

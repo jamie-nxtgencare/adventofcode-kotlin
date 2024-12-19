@@ -3,14 +3,14 @@ package `2021`
 
 import Project
 
-class DayTwentyone(file: String) : Project() {
+class DayTwentyone(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val lines = getLines(file)
     val ip1 = lines[0].last().toString().toInt() - 1
     val ip2 = lines[1].last().toString().toInt() - 1
     var countUniverses = 0
     val v2StateCache = HashMap<UniverseState, Pair<Long, Long>>()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var roll = 1
         var p1Score = 0
         var p2Score = 0
@@ -32,7 +32,7 @@ class DayTwentyone(file: String) : Project() {
         return loser * (roll - 1)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val turn = true
         val p1Score = 0
         val p2Score = 0

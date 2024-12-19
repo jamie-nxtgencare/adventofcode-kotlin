@@ -3,11 +3,11 @@ package `2021`
 
 import Project
 
-class DayNine(file: String) : Project() {
+class DayNine(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val grid: List<List<Int>> = mapLettersPerLines(file) { it.map { c -> Character.getNumericValue(c) }}
     private val lowPoints = ArrayList<Pair<Int, Int>>()
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var out = 0
         for (i in grid.indices) {
             val row = grid[i]
@@ -25,7 +25,7 @@ class DayNine(file: String) : Project() {
         return out
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val basins = lowPoints.map { Basin(grid, it) }
         val threeLargest = basins.sortedBy { it.size()*-1 }.subList(0, 3)
         return threeLargest.fold(1) { acc, next -> acc * next.size() }

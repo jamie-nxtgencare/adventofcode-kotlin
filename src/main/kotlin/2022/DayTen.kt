@@ -5,7 +5,7 @@ package `2022`
 import Project
 import java.util.*
 
-class DayTen(file: String) : Project() {
+class DayTen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val instructions = mapFileLines(file) { Instruction(it) }
 
     class Instruction(val s: String) {
@@ -70,7 +70,7 @@ class DayTen(file: String) : Project() {
     }
 
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val program = Program(InstructionExecutionContext(0, instructions[0]))
         val interestingSignals = listOf(20, 60, 100, 140, 180, 220)
         var signalStrength = 0
@@ -90,7 +90,7 @@ class DayTen(file: String) : Project() {
         return signalStrength
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val program = Program(InstructionExecutionContext(0, instructions[0]))
 
         instructions.forEachIndexed { index, it ->

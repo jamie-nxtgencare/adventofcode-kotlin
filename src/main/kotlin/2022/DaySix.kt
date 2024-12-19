@@ -5,7 +5,7 @@ package `2022`
 import Project
 import java.util.*
 
-class DaySix(file: String) : Project() {
+class DaySix(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val signal = getLines(file)[0]
 
     private fun getStart(signal: String, size: Int): Any {
@@ -20,11 +20,11 @@ class DaySix(file: String) : Project() {
         return -1
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return getStart(signal, 4)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return getStart(signal, 14)
     }
 

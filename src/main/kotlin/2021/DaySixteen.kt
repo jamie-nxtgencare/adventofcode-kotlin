@@ -3,15 +3,15 @@ package `2021`
 
 import Project
 
-class DaySixteen(file: String) : Project() {
+class DaySixteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val packet = Packet(mapLettersPerLines(file) { it.map { c -> String.format("%04d", Integer.parseInt(Integer.toBinaryString(Integer.parseInt(c.toString(), 16)))) }}.flatten().joinToString(""))
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         //println(packet.toString())
         return packet.getVersionSum()
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return packet.getResult()
     }
 }

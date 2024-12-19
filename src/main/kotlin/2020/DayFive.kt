@@ -4,22 +4,23 @@ package `2020`
 
 import Project
 
-class DayFive(file: String) : Project() {
+class DayFive(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val passes : List<BoardingPass> = mapLettersPerLines(file) { BoardingPass( it ) }
     private val seats = passes.map { it.traverse() }
 
-    override fun part1(): Int {
+    override suspend fun part1(): Any {
         return seats.maxOrNull() ?: -1
     }
 
-    override fun part2(): Int {
+    override suspend fun part2(): Any {
         var lastPresent = false
 
         for (i in 0..1023) {
-            if (lastPresent && !seats.contains(i) && seats.contains(i+1)) {
+            val present = seats.contains(i)
+            if (!present && lastPresent && seats.contains(i + 1)) {
                 return i
             }
-            lastPresent = seats.contains(i)
+            lastPresent = present
         }
 
         return -1

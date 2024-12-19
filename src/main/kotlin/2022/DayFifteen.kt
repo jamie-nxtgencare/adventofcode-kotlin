@@ -7,7 +7,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class DayFifteen(file: String) : Project() {
+class DayFifteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val sensors = mapFileLines(file) { Sensor(it) }
 
     // Sensor at x=2, y=18: closest beacon is at x=-2, y=15
@@ -90,12 +90,12 @@ class DayFifteen(file: String) : Project() {
         return checked
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         val segmentY = if (sample) 10L else 2000000L
         return covered(segmentY, null).sumOf { it.size() }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val segmentY = if (sample) 20L else 4_000_000L
 
         for (y in segmentY downTo 0) {

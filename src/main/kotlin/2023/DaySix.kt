@@ -5,7 +5,7 @@ package `2023`
 import Project
 import java.lang.Long.parseLong
 
-class DaySix(file: String) : Project() {
+class DaySix(file: String, isTest: Boolean = false) : Project(file, isTest) {
     private val lines = getLines(file)
     private val timeArr = lines[0].replace(Regex("Time:\\s*"), "").split(" ")
     private val timeStr = timeArr.filter { it.isNotBlank() }
@@ -14,7 +14,7 @@ class DaySix(file: String) : Project() {
     private val distanceStr = distanceArr.split(" ").filter { it.isNotBlank() }
     private val distances = distanceStr.map { parseLong(it) }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return times.mapIndexed { i, time ->
             val distance = distances[i]
             var waysToWin = 0
@@ -30,7 +30,7 @@ class DaySix(file: String) : Project() {
         }.reduce { a, b -> a * b }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val time = parseLong(times.joinToString(""))
         val distance = parseLong(distances.joinToString(""))
         var waysToWin = 0

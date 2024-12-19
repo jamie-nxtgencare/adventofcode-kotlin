@@ -5,11 +5,11 @@ package `2020`
 import Project
 import kotlin.math.abs
 
-class DayTwelve(file: String) : Project() {
+class DayTwelve(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val debug = false
     val directions = mapFileLines(file) { Direction(it[0], it.removeRange(0,1).toInt()) }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         var facing = 90
         var x = 0
         var y = 0
@@ -55,7 +55,7 @@ class DayTwelve(file: String) : Project() {
         return abs(x) + abs(y)
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         var wx = 10
         var wy = 1
 

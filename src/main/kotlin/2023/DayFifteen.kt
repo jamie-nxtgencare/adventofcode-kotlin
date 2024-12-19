@@ -5,7 +5,7 @@ package `2023`
 import Project
 import java.lang.Integer.parseInt
 
-class DayFifteen(file: String) : Project() {
+class DayFifteen(file: String, isTest: Boolean = false) : Project(file, isTest) {
     val input = getLines(file).flatMap { it.split(",").filter { it.isNotBlank() }}
     val hashcodes = input.map { it.split("").filter { it.isNotBlank() }.map { it[0].code.toDouble() }.toMutableList()}.toMutableList()
     val operations = input.map { if (it.contains("=")) SetOperation(it, parseInt(it.split("=")[1])) else DeleteOperation(it) }
@@ -14,7 +14,7 @@ class DayFifteen(file: String) : Project() {
     class DeleteOperation(it: String) : Operation(it.replace("-", ""))
     open class Operation(val label: String)
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return hashcodes.sumOf { hashDoubles(it) }
     }
 
@@ -27,7 +27,7 @@ class DayFifteen(file: String) : Project() {
         return it.reduce { a,b -> (a + b) * 17.0 % 256.0 }
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         val boxes = mutableMapOf<Double, MutableList<Pair<String, Int>>>()
 
         for (operation in operations) {

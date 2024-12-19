@@ -6,7 +6,7 @@ import Project
 import java.lang.Integer.min
 import kotlin.streams.toList
 
-class DayTwelve(file: String) : Project() {
+class DayTwelve(file: String, isTest: Boolean = false) : Project(file, isTest) {
     var col = 0
     val grid = mapFileLines(file) {
         val rowData = it.chars().toList().mapIndexed { index, elem -> Node(elem, index, col) }
@@ -22,7 +22,7 @@ class DayTwelve(file: String) : Project() {
         var steps = Int.MAX_VALUE
     }
 
-    override fun part1(): Any {
+    override suspend fun part1(): Any {
         return shortestPath(start)
     }
 
@@ -60,7 +60,7 @@ class DayTwelve(file: String) : Project() {
         return grid[y][x]
     }
 
-    override fun part2(): Any {
+    override suspend fun part2(): Any {
         return grid.flatten().filter { it.height == 'a'.code }.minOf { shortestPath(it) }
     }
 
